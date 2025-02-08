@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+@use "./app/variables.scss";
+@use 'bootstrap/scss/bootstrap';
+
+html, body { height: 100%; background-color: #F1F1F1}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+header:not(.pad-0){
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+
+    .logo {
+        width: 100%;
+    }
+}
+
+.logo{
+    width: 150px !important;
+    cursor: pointer;
+
+    img{
+        width: 100% !important;
+    }
+}
+
+

@@ -1,0 +1,41 @@
+@media(max-width: 760px){
+    .course-banner{
+        width: 100% !important;
+
+        img{
+            width: 100% !important;
+        }
+    }
+
+    .course-container{
+        width: 100% !important;
+    }
+}
+.mdk-container{
+    overflow: hidden;
+}
+.course-banner{
+
+    width: 600px;
+    img{
+        width: 100%;
+    }
+   
+}
+
+.course-author-picture{
+    height: 200px;
+    width: 200px;
+    img{
+        width: 100%;
+    }
+}
+
+.course-container{
+    width: 75%;
+    text-align: justify;
+   
+}
+#add-to-calendar{
+    margin: 15px 0;
+}

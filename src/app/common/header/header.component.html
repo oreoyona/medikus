@@ -1,0 +1,30 @@
+<nav class="bigger-screen header-nav">
+    <div class="logo" routerLink="">
+        <img src="logo.png" alt="Logo de Medicus" width="100%">
+    </div>
+
+    <div class="nav-btn">
+        @for (item of navigation; track item) {
+            <button mat-button routerLink="/{{item.link}}">{{item.titre| uppercase}}</button>
+
+        }
+    </div>
+ 
+</nav>
+
+<nav class="mobile header-nav" >
+    <div class="logo" routerLink="">
+        <img src="logo.png" alt="Logo de Medicus" width="100%">
+    </div>
+    @if(mobile){
+
+        <button mat-button (click)="openDialog()">
+            @if(showMenu()){
+                <mat-icon >menu</mat-icon>
+
+            }
+        </button>
+    }
+</nav>
+
+

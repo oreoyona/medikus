@@ -1,0 +1,41 @@
+@media (max-width: 760px) {
+    .bigger-screen {
+        display: none !important;
+    }
+
+    .mobile {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        
+    }
+
+    .header-nav{
+        margin-bottom: 10px !important;
+    }
+}
+
+.bigger-screen{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    font-weight: 900 !important;
+}
+
+.mobile {
+    display: none;
+    position: relative;
+
+}
+
+nav{
+    padding: 20px;
+}
+
+.header-nav{
+    width: 100vw;
+    margin-bottom: 50px;
+}

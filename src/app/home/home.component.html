@@ -1,0 +1,86 @@
+<section class="mdk-container">
+  <header class="bigger-screen">
+    <div class="logo"><img src="logo.png" alt="Medikus Impulse Logo" width="150px "></div>
+    <div class="social-btn">
+      <div class="social-icon"> <img src="/facebook/white.png" alt="facebook logo">
+      </div>
+      <div class="social-icon"> <img src="/x/white.png" alt="x logo">
+      </div>
+      <div class="social-icon"> <img src="/linkedin/white.png" alt="linkedin logo">
+      </div>
+      <div class="social-icon"> <img src="/youtube/white.png" alt="youtube logo">
+      </div>
+    </div>
+  </header>
+
+  <header class="pad-0 mobile">
+    <app-header />
+  </header>
+
+  <nav class="ruban">
+    @for (item of ruban; track item) {
+    <button class="ruban-btn" routerLink="{{item.link}}">{{item.titre}}</button>
+    }
+
+  </nav>
+
+
+
+
+  <button id="find" color="primary" mat-flat-button class="centered-btn">Trouver un programme
+    <mat-icon>search</mat-icon></button>
+
+  <section class="banner">
+
+    <div class="writtings">
+      <span id="banner-title">
+        Medikus Impulse
+      </span>
+
+
+      <h4>
+        Pour la promotion de la formation médicale continue à Lubumbashi et partout en RDC !
+      </h4>
+    </div>
+  </section>
+
+  <div class="activity-container">
+    <h2 id="activity">
+      {{"Activités Vedettes" | uppercase}}
+    </h2>
+
+
+
+  </div>
+</section>
+
+
+
+<section class="course-cards">
+
+@for(item of tmp; track item){
+  <mat-card appearance="outlined" class="course-card">
+    <mat-card-header>
+      <mat-card-title>{{courseTitle}}</mat-card-title>
+      <mat-card-subtitle>{{courseDate | date}}</mat-card-subtitle>
+
+    </mat-card-header>
+    <img mat-card-image src="https://fakeimg.pl/600x400/" alt="Course Photo">
+    <mat-card-content>
+      <p>
+        {{courseDescription}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button routerLink="/learn/{{courseId}}">En Savoir Plus</button>
+    </mat-card-actions>
+  </mat-card>
+}
+
+
+</section>
+
+
+<footer>
+  <app-footer />
+</footer>
