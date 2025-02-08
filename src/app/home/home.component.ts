@@ -17,6 +17,7 @@ import { FooterComponent } from "../common/footer/footer.component";
 
 })
 export class HomeComponent {
+  banner = "banner.webp"
   tmp = [0,1,2,3,4]
   echo = "/public/echo.webp"
   ruban = [

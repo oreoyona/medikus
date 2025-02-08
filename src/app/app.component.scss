@@ -1,6 +1,14 @@
+@media (max-width: 760px){
+    .alrt{
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
 a{
     cursor: pointer;
     padding: 0 5px;
     font-style: italic;
 
 }
+
