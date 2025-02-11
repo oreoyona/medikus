@@ -2,17 +2,20 @@
 @use "./app/variables.scss";
 @use 'bootstrap/scss/bootstrap';
 
-html, body { height: 100%; background-color: #F1F1F1}
+html, body { height: 100%; background-color: #F1F1F1; transition: all .2s ease-in-out;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 header:not(.pad-0){
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 24px;
-
     .logo {
         width: 100%;
     }
+   
+}
+.info-banner{
+    height: 200px;
 }
 
 .logo{
@@ -23,5 +26,8 @@ header:not(.pad-0){
         width: 100% !important;
     }
 }
+
+
+
 
 

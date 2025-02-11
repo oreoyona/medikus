@@ -1,0 +1,26 @@
+@media(max-width: 760px){
+    .about-text{
+        max-width: 90% !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    
+    }
+}
+.about-container{
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.about-text{
+    text-align: justify;
+    overflow: hidden;
+    max-width: 75vw;
+    padding: 10px 5px;
+
+}
+
+.sidenav-container{
+    max-width: 80vw ;
+}

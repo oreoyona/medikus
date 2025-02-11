@@ -2,13 +2,13 @@
   <header class="bigger-screen">
     <div class="logo"><img src="logo.png" alt="Medikus Impulse Logo" width="150px "></div>
     <div class="social-btn">
-      <div class="social-icon"> <img src="/facebook/white.png" alt="facebook logo">
+      <div class="social-icon"> <img src="facebook/white.png" alt="facebook logo">
       </div>
-      <div class="social-icon"> <img src="/x/white.png" alt="x logo">
+      <div class="social-icon"> <img src="x/white.png" alt="x logo">
       </div>
-      <div class="social-icon"> <img src="/linkedin/white.png" alt="linkedin logo">
+      <div class="social-icon"> <img src="linkedin/white.png" alt="linkedin logo">
       </div>
-      <div class="social-icon"> <img src="/youtube/white.png" alt="youtube logo">
+      <div class="social-icon"> <img src="youtube/white.png" alt="youtube logo">
       </div>
     </div>
   </header>
@@ -19,7 +19,7 @@
 
   <nav class="ruban">
     @for (item of ruban; track item) {
-    <button class="ruban-btn" routerLink="{{item.link}}">{{item.titre}}</button>
+    <button class="ruban-btn" routerLink="{{item.link}}" fragment="{{item.fragment}}">{{item.titre}}</button>
     }
 
   </nav>

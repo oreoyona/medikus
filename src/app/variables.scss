@@ -12,8 +12,16 @@ $blue: #005cbb;
     color: $accent;
     border: 2px solid $rouge-icon;
 }
+.scrollable-icon:hover, .card-menu-icon{
+   color: $blue !important;
+}
+
 
 .course-card-title {
+    color: $rouge-icon;
+}
+
+.course-info-bottom:hover{
     color: $rouge-icon;
 }
 

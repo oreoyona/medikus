@@ -4,6 +4,7 @@
     }
 
     .mobile {
+        overflow: hidden;
         display: flex !important;
         justify-content: space-between;
         align-items: center;
@@ -16,6 +17,7 @@
 }
 
 .bigger-screen{
+    overflow: hidden;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,6 +35,7 @@ button {
 
 nav{
     padding: 20px;
+    
 }
 
 .header-nav{

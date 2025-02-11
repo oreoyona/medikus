@@ -2,6 +2,9 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { SingleCoursComponent } from './single-cours/single-cours.component';
 import { ProgressComponent } from './progress/progress.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -27,7 +30,7 @@ export const routes: Routes = [
 
     {
         path: 'learn',
-        redirectTo: ''
+        component: ProfileComponent
     },
     {
         path: 'events',
@@ -46,5 +49,14 @@ export const routes: Routes = [
     {
         path: 'progress',
         component: ProgressComponent
+    },
+
+    {
+        path: 'about',
+        component: AboutComponent
+    },
+    {
+        path: 'contact',
+        component: ContactComponent
     }
 ];

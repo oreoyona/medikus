@@ -1,1 +1,28 @@
-<p>about works!</p>
+<header class="pad-0">
+    <app-header></app-header>
+</header>
+<section class="fluid-container info-banner about-container d-flex justify-content-center align-items-center "style="background-image: url('info-banner.webp');">
+    <div class=" alert alert-light text-center h3 page-title">{{pageTitle | uppercase}}</div>
+
+</section>
+
+<section class="container-md about-text">
+    @for(item of aboutTextArray; track item){
+        @for(par of item.text; track par){
+            <p>{{par}}</p>
+        }
+        <h3 class="h3">Objectifs de Medikus Impulse</h3>
+        
+        @for(el of item.objectifs; track el){
+            <ul>
+                <li>{{el}}</li>
+            </ul>
+        }
+        
+      <p>{{item.conclusion}}</p>     
+        
+    }
+</section>
+<footer>
+    <app-footer />
+</footer>

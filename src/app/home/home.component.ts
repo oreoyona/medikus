@@ -28,7 +28,8 @@ export class HomeComponent {
 
     {
       titre: 'Abonnement',
-      link: 'subscribe'
+      link: 'about',
+      fragment: 'subscribe'
     },
     {
       titre: 'Prochaines Activités',
@@ -36,7 +37,8 @@ export class HomeComponent {
     },
     {
       titre: 'Nous Rejoindre',
-      link: 'join'
+      link: 'contact',
+      fragment: 'join'
     },
 
     {

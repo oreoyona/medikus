@@ -11,13 +11,15 @@ export interface ProjectTask{
 
 }
 const TASK_DATA: ProjectTask[] = [
+  {name: 'Construire la page APPRENDRE/COURS-ID', importance: "urgent", etat: "en cours", responsable: "Dr Chabu"},
+
   {name: 'Construire la page APPRENDRE', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
-  {name: 'Construire la page A PROPOS', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire la page CONTACT', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
+  {name: 'construire la page CONTACT', importance: "normale", etat: "terminé", responsable: "Dr Chabu"},
+  {name: 'Construire la page A PROPOS', importance: "normale", etat: "terminé", responsable: "Dr Chabu"},
   {name: 'Construire la page LE BLOG', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire la page ABONNEMENT', importance: "urgent", etat: "pas encore commencé", responsable: "Dr Chabu"},
+  {name: 'Construire la page ABONNEMENT', importance: "urgent", etat: "en cours", responsable: "Dr Chabu, Medikus pour le texte"},
   {name: 'Construire la page PROCHAINES ACTIVITES', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire la page NOUS REJOINDRE', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
+  {name: 'Construire la page NOUS REJOINDRE', importance: "normale", etat: "terminé", responsable: "Dr Chabu"},
   {name: 'Construire la page BLOG', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
   {name: 'Ajouter un lien aux icones sociales', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
   {name: 'Construire la page CATALOGUE', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
