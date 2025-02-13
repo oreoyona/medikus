@@ -1,28 +1,105 @@
 <header class="pad-0">
     <app-header></app-header>
 </header>
-<section class="fluid-container info-banner about-container d-flex justify-content-center align-items-center "style="background-image: url('info-banner.webp');">
+<section class="fluid-container info-banner about-container d-flex justify-content-center align-items-center "
+    style="background-image: url('info-banner.webp');">
     <div class=" alert alert-light text-center h3 page-title">{{pageTitle | uppercase}}</div>
 
 </section>
 
-<section class="container-md about-text">
-    @for(item of aboutTextArray; track item){
-        @for(par of item.text; track par){
+
+<section class="accordion-container container d-flex flex-column justify-content-center align-items-center">
+    
+<mat-accordion openAll>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Qui nous sommes </mat-panel-title>
+        </mat-expansion-panel-header>
+
+
+        <section id="about">
+            @for(item of aboutTextArray; track item){
+            @for(par of item.text; track par){
             <p>{{par}}</p>
-        }
-        <h3 class="h3">Objectifs de Medikus Impulse</h3>
+            }
+            <p>{{item.conclusion}}</p>
+
+            }
+        </section>
+    </mat-expansion-panel>
+
+</mat-accordion>
+
+
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Nos objectifs</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <section id="objectifs">
+            @for(item of aboutTextArray; track item){
+                @for(el of item.objectifs; track el){
+                    <ul>
+                        <li>{{el}}</li>
+                    </ul>
+                }
+            }
+        </section>
+    </mat-expansion-panel>
+</mat-accordion>
+
+
+
+<mat-accordion >
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>L'abonnement </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <section id="subscribe">
         
-        @for(el of item.objectifs; track el){
-            <ul>
-                <li>{{el}}</li>
-            </ul>
-        }
+            <p>
+                Dans un domaine en constante évolution, il est crucial pour les professionnels de la santé de rester à la pointe
+                des connaissances et des pratiques médicales. C'est pourquoi Medikus Impulse vous offre une opportunité unique
+                de renforcer vos compétences et de vous distinguer dans votre carrière grâce à un abonnement exclusif à notre
+                plateforme de formation médicale continue.
+            </p>
         
-      <p>{{item.conclusion}}</p>     
+            <p>
+                Avec Medikus Impulse, bénéficiez d'un accès privilégié à une multitude de formations organisées par des experts
+                renommés, couvrant une vaste gamme de sujets médicaux essentiels. Nos formations sont conçues pour vous offrir
+                les connaissances les plus récentes et les meilleures pratiques, vous permettant ainsi de fournir des soins de
+                qualité supérieure à vos patients.
+            </p>
         
-    }
+            <p>
+                Mais ce n'est pas tout ! En tant que membre de Medikus Impulse, vous avez également accès à notre salle de
+                réhabilitation physique de pointe. Profitez de nos installations modernes pour vous entraîner, récupérer et
+                optimiser vos performances physiques, le tout sous la supervision de professionnels qualifiés.
+            </p>
+        
+            <p>
+                Et ce n'est que le début des avantages que nous vous réservons. En vous abonnant à Medikus Impulse, vous
+                rejoignez une communauté dynamique de professionnels de la santé dévoués à l'excellence. Échangez, apprenez et
+                grandissez ensemble avec des collègues partageant les mêmes ambitions et passions.
+            </p>
+        
+            <p>
+                Pour profiter de tous ces avantages, il vous suffit de vous procurer notre carte de membre au prix symbolique de
+                7$. Une petite contribution pour un monde de possibilités infinies
+            </p>
+        
+            <P>
+                Ne manquez pas cette opportunité exceptionnelle de faire évoluer votre carrière et d'améliorer vos compétences.
+                Rejoignez Medikus Impulse aujourd'hui et prenez part à la révolution de la formation médicale continue.
+            </P>
+        </section>
+    </mat-expansion-panel>
+</mat-accordion>
 </section>
+
+
 <footer>
     <app-footer />
 </footer>

@@ -24,3 +24,12 @@
 .sidenav-container{
     max-width: 80vw ;
 }
+.accordion-container{
+    flex-wrap: wrap;
+    
+}
+mat-accordion{
+    display: inline-flex !important;
+    margin: 10px;
+}
+

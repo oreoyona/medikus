@@ -3,7 +3,26 @@ $rouge-icon: #B42C39;
 $gris: #2f3033;
 $blue: #005cbb;
 
+/* Thème clair */
+@media (prefers-color-scheme: light) {
+    header{
+        background-color: white;
 
+    }
+    /* Ajoutez d'autres styles spécifiques au thème clair ici */
+  }
+  
+  /* Thème sombre */
+  @media (prefers-color-scheme: dark) {
+ 
+
+   .header-nav, .mdk-footer{
+    box-shadow: none !important;
+    
+}
+    /* Ajoutez d'autres styles spécifiques au thème sombre ici */
+
+}
 .social-icon {
     background-color: $gris;
 }

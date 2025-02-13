@@ -1,9 +1,8 @@
-import { Component} from '@angular/core';
-import { MatIconModule} from '@angular/material/icon';
+import { Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UpperCasePipe, DatePipe } from '@angular/common';
 import { HeaderComponent } from "../common/header/header.component";
 import { MatGridListModule } from "@angular/material/grid-list";
@@ -18,7 +17,7 @@ import { FooterComponent } from "../common/footer/footer.component";
 })
 export class HomeComponent {
   banner = "banner.webp"
-  tmp = [0,1,2,3,4]
+  tmp = [0, 1, 2, 3, 4]
   echo = "/public/echo.webp"
   ruban = [
     {
@@ -46,13 +45,15 @@ export class HomeComponent {
       link: 'blog'
     }
   ]
-courseTitle = "Course Title"
-courseDate = new Date();
-courseDescription = `Join us to increase awareness about the Supreme Court 2023 Affirmative Action Ruling: What Does It Mean for Health Equity and Public Health?The Office of Faculty Development and Diversity is hosting a faculty webinar with the Health Equity Action Leadership (HEAL) Network and the Stanford Center for Continuing Medical Education (CME) to highlight Health Disparities. `
-courseId = 1;
-yellow: any = "yellow"
-  constructor(config: NgbCarouselConfig) {
-    config.showNavigationArrows = false;
-    config.showNavigationIndicators = false;
-  }
+  courseTitle = "Course Title";
+  courseDate = new Date();
+  courseDescription = `Join us to increase awareness about the Supreme Court 2023 Affirmative Action Ruling: What Does It Mean for Health Equity and Public Health?The Office of Faculty Development and Diversity is hosting a faculty webinar with the Health Equity Action Leadership (HEAL) Network and the Stanford Center for Continuing Medical Education (CME) to highlight Health Disparities. `
+  courseId = 1;
+  yellow: any = "yellow";
+
+
+
+
+
+ 
 }

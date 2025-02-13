@@ -1,12 +1,11 @@
-import { ChangeDetectorRef, Component, inject, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { bPoint760px, HeaderService } from '../services/header.service';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-header',
@@ -14,9 +13,9 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit{
   //inject the HomeService inside the homeService member
-  private homeService = inject(HeaderService);
+  private headerService = inject(HeaderService);
 
   //inject the BreakPointObserver to detect programmatically screen resizing
   private bo = inject(BreakpointObserver);
@@ -26,10 +25,17 @@ export class HeaderComponent implements OnInit {
 
   //inject the change detection strategy
   private cdr = inject(ChangeDetectorRef);
-  navigation = this.homeService.navigation;
+  navigation = this.headerService.navigation;
 
   mobile = false;
   showMenu = signal(true);
+
+
+
+  
+
+
+
 
   //component methods
   openDialog(): void {
@@ -59,8 +65,9 @@ export class HeaderComponent implements OnInit {
       this.mobile = true;
       this.cdr.markForCheck()
     })
-  }
 
+
+  }
 }
 
 

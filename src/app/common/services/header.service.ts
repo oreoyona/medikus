@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, inject, Injectable, signal } from '@angular/core';
 
 
 export const xSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1227" viewBox="0 0 1200 1227" fill="none">
@@ -26,7 +26,26 @@ export class HeaderService {
          link: 'contact'
       }
    ]
+   currentTheme = signal("light");
+   private mediaQueryList: MediaQueryList | null = null;
+   
+   detectTheme() {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        this.currentTheme.set('dark') ;
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        this.currentTheme.set('light');
+      } else {
+        this.currentTheme.set('light'); // Default to light if no preference is expressed
+      }
+    }
 
+
+    listenThemeDection(cdr: ChangeDetectorRef){
+      this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+      if (this.mediaQueryList) {
+        this.mediaQueryList.addEventListener('change', () => {this.detectTheme();   cdr.markForCheck()});
+      }
+    }
 
    constructor() { }
 }

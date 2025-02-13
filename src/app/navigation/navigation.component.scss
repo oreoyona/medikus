@@ -1,0 +1,29 @@
+.mdk-container {
+  min-height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 25% 75%;
+
+  .container {
+    height: 100%;
+  }
+
+  .left {
+    border: 1px solid gray;
+  }
+
+  ;
+
+  .right {
+    border: 1px solid gray;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.active {
+  font-weight: bold; /* Or any other styling you want for the active link */
+  background-color: lightgray; /* Example styling */
+}

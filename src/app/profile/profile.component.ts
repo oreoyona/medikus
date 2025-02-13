@@ -5,11 +5,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProfileService } from './profile.service';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
+import { HeaderComponent } from "../common/header/header.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [MatCardModule, MatMenuModule,MatIconModule, MatButtonModule, MatListModule, MatIconModule, MatTabsModule, MatButtonModule],
+  imports: [MatCardModule, RouterLink, MatMenuModule, MatIconModule, MatButtonModule, MatListModule, MatIconModule, MatTabsModule, MatButtonModule, HeaderComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -18,8 +20,9 @@ export class ProfileComponent implements OnInit {
   profileName = signal("");
   profileCertificats: WritableSignal<any[]> = signal([])
   courseAuthor = "Medikus"
- courseTitle = "Formation sur l'echographie"
- courseImage = "info-banner.webp"
+  courseTitle = "Formation sur l'echographie"
+  courseImage = "info-banner.webp"
+  courseId = 1;
 
 
 
