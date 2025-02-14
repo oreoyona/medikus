@@ -1,0 +1,33 @@
+@media (max-width: 560px){
+    .mdk-container{
+        display: flex !important;
+        flex-wrap: wrap;
+    }
+}
+footer{
+    position: absolute;
+    bottom: 0;
+}
+.catalogue-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+
+    .searchContainer{
+        width: 100%;
+        max-width: 600px;
+       
+    }
+}
+
+.mdk-container{
+    display: grid;
+    grid-template-columns: 25% 75%;
+    .left{
+        grid-column: 1;
+    }
+    .left, .right{
+        min-height: 400px;
+    }
+}

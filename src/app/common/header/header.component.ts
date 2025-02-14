@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit{
     this.showMenu.set(false);
     const dialogRef = this.dialog.open(HeaderMobileComponent, {
       height: '100vh',
-      width: '60vw',
+      width: '100vw',
     })
 
     //subscribe to the event emitted by the dialog once a link is clicked
@@ -95,6 +95,7 @@ export class HeaderComponent implements OnInit{
       align-items: center;
       justify-content: center;
       height: 100%;
+     
       flex-wrap: wrap;
   
       .close-btn{

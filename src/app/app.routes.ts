@@ -6,6 +6,9 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CoursComponent } from './cours/cours.component';
+import { CatalogueComponent } from './catalogue/catalogue.component';
+import { LoginComponent } from './auth/login/login.component';
+import { InscriptionComponent } from './auth/inscription/inscription.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -20,5 +23,8 @@ export const routes: Routes = [
     { path: 'blog', redirectTo: '' },
     { path: 'progress', component: ProgressComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'contact', component: ContactComponent }
+    { path: 'contact', component: ContactComponent },
+    { path: 'catalogue', component: CatalogueComponent},
+    { path: 'auth/login', component: LoginComponent},
+    { path: 'auth/inscription', component: InscriptionComponent}
 ];

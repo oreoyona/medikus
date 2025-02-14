@@ -12,13 +12,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationService } from './navigation.service';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
   standalone: true,
-  imports: [ModulesModule, MatListModule, NgFor, NgIf, MatTabsModule, AsyncPipe, MatIconModule, MatButtonModule, NgClass]
+  imports: [ModulesModule, MatListModule, NgFor, NgIf, MatTabsModule, AsyncPipe, MatIconModule, MatButtonModule, NgClass, MatCardModule]
 })
 export class NavigationComponent implements OnInit {
 

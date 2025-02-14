@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
   profileName = signal("");
   profileCertificats: WritableSignal<any[]> = signal([])
   courseAuthor = "Medikus"
-  courseTitle = "Formation sur l'echographie"
+  courseTitle = "Formation sur l'ECG"
   courseImage = "info-banner.webp"
   courseId = 1;
 

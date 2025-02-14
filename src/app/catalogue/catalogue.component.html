@@ -1,1 +1,30 @@
-<p>catalogue works!</p>
+<header class="pad-0">
+    <app-header />
+</header>
+
+<main class="container">
+    <div class="catalogue-header">
+        <mat-form-field class="searchContainer" appearance="outline">
+            <mat-label>Chercher un programme</mat-label>
+            <input matInput type="text" [(ngModel)]="searchValue.value">
+            <button matSuffix mat-icon-button aria-label="search" (click)="search()" class="search-btn m-2">
+                <mat-icon class="">search</mat-icon>
+            </button>
+
+        </mat-form-field>
+    </div>
+    <mat-card>
+        <mat-card-content>
+            <section class="mdk-container">
+                <div class="left .bg-primary"></div>
+
+                <div class="right .bg-alert"></div>
+            </section>
+        </mat-card-content>
+    </mat-card>
+</main>
+
+
+<footer>
+    <app-footer />
+</footer>

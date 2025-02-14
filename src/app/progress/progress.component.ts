@@ -11,7 +11,9 @@ export interface ProjectTask{
 
 }
 const TASK_DATA: ProjectTask[] = [
-  {name: 'Construire la page APPRENDRE/COURS-ID', importance: "urgent", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire les page LOGIN/INSCRIPTION', importance: "urgent", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire la page CATALOGUE', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire la page APPRENDRE/COURS-ID', importance: "urgent", etat: "terminé", responsable: "Dr Chabu"},
 
   {name: 'Construire la page APPRENDRE', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
   {name: 'construire la page CONTACT', importance: "normale", etat: "terminé", responsable: "Dr Chabu"},
@@ -21,11 +23,10 @@ const TASK_DATA: ProjectTask[] = [
   {name: 'Construire la page PROCHAINES ACTIVITES', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
   {name: 'Construire la page NOUS REJOINDRE', importance: "normale", etat: "terminé", responsable: "Dr Chabu"},
   {name: 'Construire la page BLOG', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Ajouter un lien aux icones sociales', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire la page CATALOGUE', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire une API: base de donnees', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire une API: routes', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
-  {name: 'Construire une API: cours', importance: "normale", etat: "pas encore commencé", responsable: "Dr Chabu"},
+  {name: 'Ajouter un lien aux icones sociales', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire une API: base de donnees', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire une API: routes', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
+  {name: 'Construire une API: cours', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
   {name: 'Publier le site web', importance: "urgent", etat: "pas encore commencé", responsable: "Medikus"}
 
 
