@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseService } from './course.service';
 import { HeaderComponent } from "../../common/header/header.component";
 import { FooterComponent } from "../../common/footer/footer.component";
@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { JsonPipe, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 
 @Component({
   selector: 'app-create-course',
@@ -23,13 +23,14 @@ import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
-    NgFor, NgSwitch, NgSwitchCase,FormsModule 
+    NgFor, NgSwitch, NgSwitchCase,FormsModule, JsonPipe
   ],
   templateUrl: './create-course.component.html',
   styleUrls: ['./create-course.component.scss']
 })
 export class CreateCourseComponent implements OnInit {
   courseService = inject(CourseService);
+  fb = inject(FormBuilder);
   options = this.courseService.options;
 
   newCourseForm = new FormGroup({
@@ -47,7 +48,8 @@ export class CreateCourseComponent implements OnInit {
       title: new FormControl(''),
       link: new FormControl(''),
       contentType: new FormControl("None", Validators.required), // Default to first option
-      parts: new FormArray([]) // Initialize parts as FormArray for questions
+      parts: new FormArray([]),// Initialize parts as FormArray for questione
+
     });
     this.modules.push(moduleFormGroup);
   }
@@ -114,35 +116,46 @@ export class CreateCourseComponent implements OnInit {
     return this.newCourseForm.get('modules') as FormArray; // Access the FormArray
   }
 
+
   toFormArray(control: any){
     return control as FormArray
   }
 
-  newPartType: string = 'Questions'; // Default part type
+  newPartType = this.fb.control("none"); // Default part type
 
-addPart(moduleIndex: number) {
+  addPart(moduleIndex: number) {
     const module = this.modules.at(moduleIndex) as FormGroup;
     const partsArray = module.get('parts') as FormArray;
-
-    if (this.newPartType === 'Questions') {
-        partsArray.push(new FormGroup({
-            contentType: new FormControl(this.newPartType),
-            question: new FormControl(''),
-            response: new FormControl('')
-        }));
-    } else if (this.newPartType === 'Text') {
-        partsArray.push(new FormGroup({
-            contentType: new FormControl(this.newPartType),
-            title: new FormControl(''),
-            content: new FormControl('')
-        }));
-    } else if (this.newPartType === 'Video') {
-        partsArray.push(new FormGroup({
-            contentType: new FormControl(this.newPartType),
-            title: new FormControl(''),
-            description: new FormControl(''),
-            videoUrl: new FormControl('')
-        }));
+  
+    const partType = module.get('newPartType')?.value; // Get the current part type
+  
+    if (!partType) {
+      console.error('Part type is not selected.');
+      return; // Exit if no part type is selected
     }
-}
+  
+    // Add the part based on the selected type
+    if (partType === 'Questions') {
+      partsArray.push(this.fb.group({
+        question: ['', Validators.required],
+        response: ['', Validators.required]
+      }));
+    } else if (partType === 'Text') {
+      partsArray.push(this.fb.group({
+        title: ['', Validators.required],
+        content: ['', Validators.required]
+      }));
+    } else if (partType === 'Video') {
+      partsArray.push(this.fb.group({
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+        videoUrl: ['', Validators.required]
+      }));
+    }
+  
+    // Optionally reset the newPartType after adding
+    module.get('newPartType')?.setValue('none'); // Reset selection
+  }
+
+
 }
