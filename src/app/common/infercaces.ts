@@ -7,6 +7,12 @@ export interface Video {
 
 }
 
+ 
+export interface User{
+    id: string,
+    password: string
+}
+
 
 export interface QuizQuestion {
     id: string;
@@ -44,6 +50,7 @@ export interface Cours {
     id: string;
     name: string;
     modules: CourseModule<Video | TextContent | QuizContent>[];
+    img?: ImageBitmap | string
 }
 
 

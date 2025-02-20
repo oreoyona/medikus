@@ -23,13 +23,22 @@ export class CatalogueComponent implements OnInit{
   
   ngOnInit(): void {
     
-    this.catalogueService.getTheUsers().subscribe((e)=>{console.log(e)})
-
   }
 
   searchValue = new FormControl("");
 
   search(){
+    let searchTerm = this.searchValue.valid ? this.searchValue.value: null;
+    this.catalogueService.search(searchTerm!).subscribe((res) => {
+    
+      this.catalogueService.search(searchTerm!).subscribe((e) => {
+       //DO SOMETHING WITH THE RESULT
+        console.log(e)
+      })
+    
+
+
+    })
 
   }
 

@@ -1,6 +1,6 @@
 import os
 import secrets
-# TODO: Should be env variables
+
 
 
 class Config(object):
@@ -17,5 +17,5 @@ class Config(object):
 
 class DevConfig(Config):
     """ Defines the developpement configuration object"""
-
+    DATABASE_URI = "postgresql://postgres:1234@localhost:5432/postgres"
     DEBUG = True

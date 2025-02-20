@@ -33,3 +33,16 @@ header:not(.pad-0){
 
 
 
+    .social-btn {
+        display: flex;
+    }
+
+    .social-icon {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        padding: 5px;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+    }
