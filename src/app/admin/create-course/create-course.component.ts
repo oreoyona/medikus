@@ -1,18 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CourseService } from './course.service';
 import { HeaderComponent } from "../../common/header/header.component";
 import { FooterComponent } from "../../common/footer/footer.component";
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Cours } from '../../common/infercaces';
-import { CourseService } from './course.service';
-import { NgFor, NgIf } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ModuleFormComponent } from "./module-form/module-form.component";
+import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 
 @Component({
   selector: 'app-create-course',
@@ -21,94 +18,131 @@ import { ModuleFormComponent } from "./module-form/module-form.component";
     FooterComponent,
     MatCardModule,
     MatButtonModule,
-    MatIconModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
-    ModuleFormComponent
-],
+    NgFor, NgSwitch, NgSwitchCase,FormsModule 
+  ],
   templateUrl: './create-course.component.html',
-  styleUrl: './create-course.component.scss'
+  styleUrls: ['./create-course.component.scss']
 })
-export class CreateCourseComponent implements OnInit{
-  ngOnInit(): void {
-    this.addModule()
-  }
-  
-  courseService = inject(CourseService)
-
+export class CreateCourseComponent implements OnInit {
+  courseService = inject(CourseService);
   options = this.courseService.options;
-  // Create a new form group for the course
+
   newCourseForm = new FormGroup({
-    name: new FormControl(""),
-    imgUrl: new FormControl(""),  // Added imgUrl field
-    modules: new FormArray([])      // Use FormArray to handle multiple modules
+    name: new FormControl(''),
+    imgUrl: new FormControl(''),
+    modules: new FormArray([]) // Initialize FormArray for modules
   });
+
+  ngOnInit(): void {
+    this.addModule(); // Start with one module
+  }
 
   addModule() {
     const moduleFormGroup = new FormGroup({
+      title: new FormControl(''),
+      link: new FormControl(''),
+      contentType: new FormControl("None", Validators.required), // Default to first option
+      parts: new FormArray([]) // Initialize parts as FormArray for questions
+    });
+    this.modules.push(moduleFormGroup);
+  }
+
+  addQuestion(moduleIndex: number) {
+    const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
+    partsArray.push(new FormGroup({
+      question: new FormControl(''),
+      response: new FormControl('')
+    }));
+  }
+
+
+  addText(moduleIndex: number){
+    const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
+    partsArray.push(new FormGroup({
       title: new FormControl(""),
-      link: new FormControl(""),
-      contentType: new FormControl(this.options[0]), // Default to "Questions"
-      content: new FormControl(""), // Initialize as FormArray for questions
-      parts: new FormArray([])
-    });
-    (this.newCourseForm.get('modules') as FormArray).push(moduleFormGroup);
-    this.addQuestion(moduleFormGroup); // Add initial question
+      content: new FormControl("")
+    }))
   }
 
-  addQuestion(moduleFormGroup: FormGroup) {
-    const questionFormGroup = new FormGroup({
-      question: new FormControl(""),
-      response: new FormControl(""),
-    });
-    (moduleFormGroup.get('content') as FormArray).push(questionFormGroup);
+  addVideo(moduleIndex: number){
+    const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
+    partsArray.push(new FormGroup({
+      title: new FormControl(""),
+      description: new FormControl(""),
+      videoUrl: new FormControl("")
+    }))
   }
 
-  onContentTypeChange(module: FormGroup | any) {
-    if (!module) {
-        return; // Exit if module is null
-    }
+  onContentTypeChange(moduleIndex: number) {
+    const module = this.modules.at(moduleIndex) as FormGroup;
+    const contentType = module.get('contentType')?.value;
+    const parts = module.get('parts') as FormArray;
 
-    const contentType = module.get('contentType')?.value; // Use optional chaining
-    const contentArray = module.get('content') as FormArray;
-
-    // Clear previous questions if the content type changes
-    contentArray.clear();
-
+    parts.clear(); // Clear any existing parts
     if (contentType === 'Questions') {
-        this.addQuestion(module); // Add a new question if Questions is selected
+      this.addQuestion(moduleIndex); // Add an initial question
     }
-    // You can add more conditions for other content types if needed
-}
 
-  // Method to submit the form
+    else if(contentType === 'Text'){
+      this.addText(moduleIndex)
+    }
+
+    else{
+      this.addVideo(moduleIndex)
+    }
+  }
+
   onSubmit() {
-    console.log(this.newCourseForm.value)
     if (this.newCourseForm.valid) {
-      const courseData = this.newCourseForm.value;
-      console.log(courseData)
-      // Call your API to create a new course
-      this.courseService.createCourse(courseData).subscribe({
-        next: (response: any) => {
-          // Handle successful response
-          console.log('Course created successfully:', response);
-        },
-        error: (error: any) => {
-          // Handle error
-          console.error('Error creating course:', error);
-        }
+      console.log(this.newCourseForm.value);
+      // Call the API to create a new course
+      this.courseService.createCourse(this.newCourseForm.value).subscribe({
+        next: (response) => console.log('Course created successfully:', response),
+        error: (error) => console.error('Error creating course:', error)
       });
     } else {
       console.error('Form is invalid');
     }
   }
 
-
   get modules(): FormArray {
-    return this.newCourseForm.get('modules') as FormArray; // Type assertion here
+    return this.newCourseForm.get('modules') as FormArray; // Access the FormArray
   }
 
+  toFormArray(control: any){
+    return control as FormArray
+  }
+
+  newPartType: string = 'Questions'; // Default part type
+
+addPart(moduleIndex: number) {
+    const module = this.modules.at(moduleIndex) as FormGroup;
+    const partsArray = module.get('parts') as FormArray;
+
+    if (this.newPartType === 'Questions') {
+        partsArray.push(new FormGroup({
+            contentType: new FormControl(this.newPartType),
+            question: new FormControl(''),
+            response: new FormControl('')
+        }));
+    } else if (this.newPartType === 'Text') {
+        partsArray.push(new FormGroup({
+            contentType: new FormControl(this.newPartType),
+            title: new FormControl(''),
+            content: new FormControl('')
+        }));
+    } else if (this.newPartType === 'Video') {
+        partsArray.push(new FormGroup({
+            contentType: new FormControl(this.newPartType),
+            title: new FormControl(''),
+            description: new FormControl(''),
+            videoUrl: new FormControl('')
+        }));
+    }
+}
 }

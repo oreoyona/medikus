@@ -2,20 +2,14 @@
     <app-header />
 </header>
 
-
-
 <div class="container">
     <h2 class="text-center">Créer un nouveau cours</h2>
 </div>
 
-
-
 <main class="container d-flex flex-column">
     <mat-card class="my-5">
-        <form [formGroup]="newCourseForm" class="d-flex flex-column">
+        <form [formGroup]="newCourseForm" (ngSubmit)="onSubmit()" class="d-flex flex-column">
             <mat-card-content class="card-container m-3">
-
-
                 <section class="left container d-flex flex-column align-items-center justify-content-center">
                     <h4>Informations sur le cours</h4>
                     <mat-form-field appearance="outline">
@@ -32,60 +26,88 @@
                 <section class="right container d-flex flex-column align-items-center justify-content-center">
                     <h4>Informations sur les modules du cours</h4>
                     <div formArrayName="modules">
-                        @for(module of modules.controls; track $index){
-                            <div class="py-2 my-3 d-flex flex-column align-items-center justify-content-center" [formGroupName]="$index">
-                                <mat-accordion >
+                        <div *ngFor="let module of modules.controls; let i = index" [formGroupName]="i">
+                            <div class="my-2">
+                                <mat-accordion>
                                     <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
-                                                <h3 >Module {{ modules.at($index).get('title')!.value || ($index + 1) }}</h3>
+                                                <h3>Module {{ module.get('title')?.value || (i + 1) }}</h3>
                                             </mat-panel-title>
-    
                                         </mat-expansion-panel-header>
     
                                         <mat-form-field appearance="outline" class="m-1">
-                                            <mat-label for="title">Titre du module:</mat-label>
+                                            <mat-label>Titre du module:</mat-label>
                                             <input matInput formControlName="title" required>
                                         </mat-form-field>
     
                                         <mat-form-field appearance="outline" class="m-1">
-                                            <mat-label for="link">Lien du module:</mat-label>
+                                            <mat-label>Lien du module:</mat-label>
                                             <input matInput formControlName="link" required>
                                         </mat-form-field>
     
                                         <mat-form-field appearance="outline" class="m-1">
-                                            <mat-label for="contentType">Type de contenu:</mat-label>
-                                     
-                                            <mat-select formControlName="contentType"  required>
-                                                @for(option of options; track $index){
-                                                    <mat-option value= "{{option}}">{{option}}</mat-option>
-    
-                                                }
-                                              </mat-select>
-    
+                                            <mat-label>Type de contenu:</mat-label>
+                                            <mat-select formControlName="contentType" (selectionChange)="onContentTypeChange(i)" required>
+                                                <mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
+                                            </mat-select>
                                         </mat-form-field>
     
-                                        <mat-form-field appearance="outline" class="m-1">
-                                            <mat-label for="content">Content:</mat-label>
-                                            <textarea matInput formControlName="content" required></textarea>
-                                        </mat-form-field>
+                                        <div formArrayName="parts" >
+                                            <div *ngFor="let part of (toFormArray(module.get('parts')) )?.controls; let j = index" [formGroupName]="j">
+                                                <ng-container [ngSwitch]="module.get('contentType')?.value">
+                                                    <ng-container *ngSwitchCase="'Questions'">
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Question:</mat-label>
+                                                            <input matInput formControlName="question" required>
+                                                        </mat-form-field>
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Réponse:</mat-label>
+                                                            <input matInput formControlName="response" required>
+                                                        </mat-form-field>
+                                                    </ng-container>
+    
+                                                    <ng-container *ngSwitchCase="'Text'">
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Titre:</mat-label>
+                                                            <input matInput formControlName="title" required>
+                                                        </mat-form-field>
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Contenu:</mat-label>
+                                                            <input matInput formControlName="content" required>
+                                                        </mat-form-field>
+                                                    </ng-container>
+    
+                                                    <ng-container *ngSwitchCase="'Video'">
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Titre:</mat-label>
+                                                            <input matInput formControlName="title" required>
+                                                        </mat-form-field>
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>Description:</mat-label>
+                                                            <input matInput formControlName="description" required>
+                                                        </mat-form-field>
+                                                        <mat-form-field appearance="outline" class="m-1">
+                                                            <mat-label>URL de la vidéo:</mat-label>
+                                                            <input matInput formControlName="videoUrl" required>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </div>
+                                        </div>
                                     </mat-expansion-panel>
                                 </mat-accordion>
-    
                             </div>
-                        }
-                       
+                           
+                        </div>
                     </div>
                 </section>
-
-
-
             </mat-card-content>
+            <mat-card-footer>
+                <button mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
+                <button mat-flat-button type="submit" class="m-2">Créer le cours</button>
+            </mat-card-footer>
         </form>
-        <mat-card-footer>
-            <button mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
-            <button mat-flat-button (click)="onSubmit()" class="m-2">Créer le cours</button>
-        </mat-card-footer>
     </mat-card>
 </main>
 

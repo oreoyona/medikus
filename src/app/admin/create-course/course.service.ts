@@ -1,6 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormArray, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
+
+
+// Course Interface
+export interface Course {
+  title: string;
+  imgUrl: string;
+  modules: Module[];
+}
+
+// Module Interface
+export interface Module {
+  title: string;
+  contentType: ContentType;
+  parts: Part[];
+}
+
+// Enum for Content Types
+export enum ContentType {
+  Text = 'Text',
+  Questions = 'Questions',
+  Videos = 'Videos'
+}
+
+// Part Interface (Common properties for all content types)
+export interface Part {
+  type: ContentType; // Add a 'type' property to distinguish parts
+}
+
+// Interfaces for specific Part types (extend the Part interface)
+export interface TextPart extends Part {
+  type: ContentType.Text;
+  content: string;
+}
+
+export interface QuestionPart extends Part {
+  type: ContentType.Questions;
+  question: string;
+  response: string;
+}
+
+export interface VideoPart extends Part {
+  type: ContentType.Videos;
+  videoUrl: string;
+}
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +103,15 @@ export class CourseService {
     return this.http.delete<any>(`${this.apiUrl}/${courseId}`);
   }
 
+ /**
+  * Add a Text Part to a Course Module
+  * @param the course module to which the part will be added
+  * @param the part to add
+  */
 
+ addpartToModule(module: FormArray, part: FormGroup){
+  module.push(part)
+ }
 
 }
 
