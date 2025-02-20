@@ -1,0 +1,94 @@
+<header class="pad-0">
+    <app-header />
+</header>
+
+
+
+<div class="container">
+    <h2 class="text-center">Créer un nouveau cours</h2>
+</div>
+
+
+
+<main class="container d-flex flex-column">
+    <mat-card class="my-5">
+        <form [formGroup]="newCourseForm" class="d-flex flex-column">
+            <mat-card-content class="card-container m-3">
+
+
+                <section class="left container d-flex flex-column align-items-center justify-content-center">
+                    <h4>Informations sur le cours</h4>
+                    <mat-form-field appearance="outline">
+                        <mat-label for="name">Nom du Cours:</mat-label>
+                        <input matInput id="name" formControlName="name" required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label for="imgUrl">l'URL de l'image:</mat-label>
+                        <input matInput id="imgUrl" formControlName="imgUrl" required>
+                    </mat-form-field>
+                </section>
+
+                <section class="right container d-flex flex-column align-items-center justify-content-center">
+                    <h4>Informations sur les modules du cours</h4>
+                    <div formArrayName="modules">
+                        @for(module of modules.controls; track $index){
+                            <div class="py-2 my-3 d-flex flex-column align-items-center justify-content-center" [formGroupName]="$index">
+                                <mat-accordion >
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <h3 >Module {{ modules.at($index).get('title')!.value || ($index + 1) }}</h3>
+                                            </mat-panel-title>
+    
+                                        </mat-expansion-panel-header>
+    
+                                        <mat-form-field appearance="outline" class="m-1">
+                                            <mat-label for="title">Titre du module:</mat-label>
+                                            <input matInput formControlName="title" required>
+                                        </mat-form-field>
+    
+                                        <mat-form-field appearance="outline" class="m-1">
+                                            <mat-label for="link">Lien du module:</mat-label>
+                                            <input matInput formControlName="link" required>
+                                        </mat-form-field>
+    
+                                        <mat-form-field appearance="outline" class="m-1">
+                                            <mat-label for="contentType">Type de contenu:</mat-label>
+                                     
+                                            <mat-select formControlName="contentType"  required>
+                                                @for(option of options; track $index){
+                                                    <mat-option value= "{{option}}">{{option}}</mat-option>
+    
+                                                }
+                                              </mat-select>
+    
+                                        </mat-form-field>
+    
+                                        <mat-form-field appearance="outline" class="m-1">
+                                            <mat-label for="content">Content:</mat-label>
+                                            <textarea matInput formControlName="content" required></textarea>
+                                        </mat-form-field>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+    
+                            </div>
+                        }
+                       
+                    </div>
+                </section>
+
+
+
+            </mat-card-content>
+        </form>
+        <mat-card-footer>
+            <button mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
+            <button mat-flat-button (click)="onSubmit()" class="m-2">Créer le cours</button>
+        </mat-card-footer>
+    </mat-card>
+</main>
+
+<footer>
+    <app-footer />
+</footer>

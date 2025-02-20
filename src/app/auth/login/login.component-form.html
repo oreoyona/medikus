@@ -1,0 +1,18 @@
+<div class="mdk-container d-flex align-items-center justify-content-center">
+    <form [formGroup]="LoginForm" (ngSubmit)="sendForm()" class="d-flex flex-column justify-content-center align-tems-center">
+        <mat-form-field  appearance="outline" class="field">
+            <mat-label>Votre identifiant</mat-label>
+            <input matInput formControlName="identifiant">
+        </mat-form-field>
+  
+    
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Mot De Passe</mat-label>
+            <input type="password" matInput formControlName="mdp">
+        </mat-form-field>
+        
+
+        <button mat-flat-button type="submit">Se Connecter</button>
+    </form>
+</div>
+

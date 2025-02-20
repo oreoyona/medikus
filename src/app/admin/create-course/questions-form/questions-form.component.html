@@ -1,0 +1,14 @@
+<div formArrayName="content">
+    <div *ngFor="let question of questionsFormArray.controls; let j = index" [formGroupName]="j">
+        <mat-form-field appearance="outline" class="m-1">
+            <mat-label>Question {{ j + 1 }}</mat-label>
+            <input matInput formControlName="question" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="m-1">
+            <mat-label>Réponse {{ j + 1 }}</mat-label>
+            <input matInput formControlName="response" required>
+        </mat-form-field>
+    </div>
+</div>
+<button mat-button (click)="addQuestion()">Ajouter une question</button>
