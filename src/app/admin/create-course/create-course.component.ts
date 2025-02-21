@@ -29,7 +29,7 @@ import { ConfirmDialogComponent } from './confirm-dialog.component';
     MatExpansionModule,
     MatDividerModule,
     MatIconModule, MatDialogModule,
-    NgFor, NgSwitch, NgSwitchCase,FormsModule, JsonPipe
+    NgFor, NgSwitch, NgSwitchCase,FormsModule
   ],
   templateUrl: './create-course.component.html',
   styleUrls: ['./create-course.component.scss']
@@ -50,7 +50,8 @@ export class CreateCourseComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.addModule(); // Start with one module
+    this.addModule(); 
+    this.addPart(0)
   }
 
   addModule() {
