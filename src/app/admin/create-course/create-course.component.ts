@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, NgModel, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseService } from './course.service';
 import { HeaderComponent } from "../../common/header/header.component";
 import { FooterComponent } from "../../common/footer/footer.component";
@@ -10,6 +10,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { JsonPipe, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
 
 @Component({
   selector: 'app-create-course',
@@ -23,20 +27,26 @@ import { JsonPipe, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
+    MatDividerModule,
+    MatIconModule, MatDialogModule,
     NgFor, NgSwitch, NgSwitchCase,FormsModule, JsonPipe
   ],
   templateUrl: './create-course.component.html',
   styleUrls: ['./create-course.component.scss']
 })
 export class CreateCourseComponent implements OnInit {
-  courseService = inject(CourseService);
-  fb = inject(FormBuilder);
-  options = this.courseService.options;
 
-  newCourseForm = new FormGroup({
-    name: new FormControl(''),
-    imgUrl: new FormControl(''),
-    modules: new FormArray([]) // Initialize FormArray for modules
+  courseService = inject(CourseService);
+  fb = inject(NonNullableFormBuilder);
+  options = this.courseService.options;
+  readonly dialog = inject(MatDialog);
+  
+  
+  
+  newCourseForm = this.fb.group({
+    name: [''],
+    imgUrl: [''],
+    modules: this.fb.array([]) // Initialize FormArray for modules
   });
 
   ngOnInit(): void {
@@ -44,11 +54,11 @@ export class CreateCourseComponent implements OnInit {
   }
 
   addModule() {
-    const moduleFormGroup = new FormGroup({
-      title: new FormControl(''),
-      link: new FormControl(''),
-      contentType: new FormControl("None", Validators.required), // Default to first option
-      parts: new FormArray([]),// Initialize parts as FormArray for questione
+    const moduleFormGroup = this.fb.group({
+      title: [''],
+      link: [''],
+      contentType: ['Type De Contenu'], // Default to first option
+      parts: this.fb.array([]),// Initialize parts as FormArray for questione
 
     });
     this.modules.push(moduleFormGroup);
@@ -56,48 +66,62 @@ export class CreateCourseComponent implements OnInit {
 
   addQuestion(moduleIndex: number) {
     const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
-    partsArray.push(new FormGroup({
-      question: new FormControl(''),
-      response: new FormControl('')
+    partsArray.push(this.fb.group({
+      question: [''],
+      response: ['']
     }));
   }
 
 
   addText(moduleIndex: number){
     const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
-    partsArray.push(new FormGroup({
-      title: new FormControl(""),
-      content: new FormControl("")
+    partsArray.push( this.fb.group({
+      title: [''],
+      content: ['']
     }))
   }
 
   addVideo(moduleIndex: number){
     const partsArray = this.modules.at(moduleIndex).get('parts') as FormArray;
-    partsArray.push(new FormGroup({
-      title: new FormControl(""),
-      description: new FormControl(""),
-      videoUrl: new FormControl("")
+    partsArray.push(this.fb.group({
+      title: [''],
+      description: [''],
+      videoUrl: ['']
     }))
   }
 
-  onContentTypeChange(moduleIndex: number) {
-    const module = this.modules.at(moduleIndex) as FormGroup;
-    const contentType = module.get('contentType')?.value;
-    const parts = module.get('parts') as FormArray;
+  onPartContentTypeChange(moduleIndex: number, partIndex: number) {
+    const module = this.modules.at(moduleIndex) as FormArray;
+    const part = this.toFormArray(module.get('parts'))?.at(partIndex) as FormGroup;
+    const contentType = part.get('contentType')?.value;
 
-    parts.clear(); // Clear any existing parts
+    // Clear existing values
+    part.get('question')?.setValue('');
+    part.get('response')?.setValue('');
+    part.get('title')?.setValue('');
+    part.get('content')?.setValue('');
+    part.get('description')?.setValue('');
+    part.get('videoUrl')?.setValue('');
+
     if (contentType === 'Questions') {
-      this.addQuestion(moduleIndex); // Add an initial question
+        part.get('question')?.setValidators([Validators.required]);
+        part.get('response')?.setValidators([Validators.required]);
+    } else if (contentType === 'Text') {
+        part.get('title')?.setValidators([Validators.required]);
+        part.get('content')?.setValidators([Validators.required]);
+    } else if (contentType === 'Video') {
+        part.get('title')?.setValidators([Validators.required]);
+        part.get('description')?.setValidators([Validators.required]);
+        part.get('videoUrl')?.setValidators([Validators.required]);
     }
 
-    else if(contentType === 'Text'){
-      this.addText(moduleIndex)
-    }
-
-    else{
-      this.addVideo(moduleIndex)
-    }
-  }
+    part.get('question')?.updateValueAndValidity();
+    part.get('response')?.updateValueAndValidity();
+    part.get('title')?.updateValueAndValidity();
+    part.get('content')?.updateValueAndValidity();
+    part.get('description')?.updateValueAndValidity();
+    part.get('videoUrl')?.updateValueAndValidity();
+}
 
   onSubmit() {
     if (this.newCourseForm.valid) {
@@ -116,46 +140,54 @@ export class CreateCourseComponent implements OnInit {
     return this.newCourseForm.get('modules') as FormArray; // Access the FormArray
   }
 
+  
 
   toFormArray(control: any){
     return control as FormArray
   }
 
-  newPartType = this.fb.control("none"); // Default part type
 
   addPart(moduleIndex: number) {
-    const module = this.modules.at(moduleIndex) as FormGroup;
+    const module = this.modules.at(moduleIndex) as FormArray;
     const partsArray = module.get('parts') as FormArray;
-  
-    const partType = module.get('newPartType')?.value; // Get the current part type
-  
-    if (!partType) {
-      console.error('Part type is not selected.');
-      return; // Exit if no part type is selected
-    }
-  
-    // Add the part based on the selected type
-    if (partType === 'Questions') {
-      partsArray.push(this.fb.group({
-        question: ['', Validators.required],
-        response: ['', Validators.required]
-      }));
-    } else if (partType === 'Text') {
-      partsArray.push(this.fb.group({
-        title: ['', Validators.required],
-        content: ['', Validators.required]
-      }));
-    } else if (partType === 'Video') {
-      partsArray.push(this.fb.group({
-        title: ['', Validators.required],
-        description: ['', Validators.required],
-        videoUrl: ['', Validators.required]
-      }));
-    }
-  
-    // Optionally reset the newPartType after adding
-    module.get('newPartType')?.setValue('none'); // Reset selection
-  }
+
+    // Initialize the new part with contentType
+    const newPart = this.fb.group({
+        contentType: ['Type De Contenu'], // Default content type
+        question: [''], // For Questions
+        response: [''], // For Questions
+        title: [''],    // For Text and Video
+        content: [''],  // For Text
+        description: [''], // For Video
+        videoUrl: [''], // For Video
+    });
+
+    partsArray.push(newPart);
+}
+removePart(moduleIndex: number, partIndex: number) {
+  const module = this.modules.at(moduleIndex) as FormArray;
+  const partsArray = module.get('parts') as FormArray
+
+  partsArray.removeAt(partIndex)
+
+}
+
+openDialog(moduleIndex: number) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent);
+  dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          this.removeModule(moduleIndex); // Call removeModule if confirmed
+      }
+      
+  });
+}
+
+removeModule(moduleIndex: number) {
+  this.modules.removeAt(moduleIndex); // Remove the module from the FormArray
+}
+
+
+
 
 
 }

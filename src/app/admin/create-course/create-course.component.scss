@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+
+
 @media (max-width: 760px){
     .card-container{
         display: flex !important;
@@ -18,3 +21,6 @@ mat-form-field{
     grid-template-columns: 40% 60%;
 }
 
+.remove{
+    color: white;
+}
