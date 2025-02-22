@@ -55,6 +55,7 @@ export interface VideoPart extends Part {
 export class CourseService {
   private apiUrl = 'http://localhost:5000/api/v1/courses';  // Adjust the URL as needed
   options = ['Questions', 'Text', 'Video']
+  typeOptions = ['Présentiel', 'En Ligne', 'Hybride']
   constructor(private http: HttpClient) {}
 
 

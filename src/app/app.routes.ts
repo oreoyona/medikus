@@ -9,6 +9,7 @@ import { CoursComponent } from './cours/cours.component';
 import { CatalogueComponent } from './catalogue/catalogue.component';
 import { AuthComponent } from './auth/auth.component';
 import { CreateCourseComponent } from './admin/create-course/create-course.component';
+import { SocialComponent } from './common/social/social.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -27,5 +28,6 @@ export const routes: Routes = [
     { path: 'catalogue', component: CatalogueComponent},
     { path: 'auth/login', component: AuthComponent},
     { path: 'auth/inscription', component: AuthComponent},
-    { path: 'courses/add', component: CreateCourseComponent}
+    { path: 'courses/add', component: CreateCourseComponent},
+    { path: 'test', component: SocialComponent }
 ];

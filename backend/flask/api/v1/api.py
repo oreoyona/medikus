@@ -53,3 +53,26 @@ def search_for_courses():
         logging.error(f"Error processing JSON data: {e}")  # Log error securely
         # Return a generic error response
         return jsonify({"message": "erreur", "erreur": "An error occurred."}), 400
+    
+
+
+
+#route to create a new course
+@api_v1.route("/courses/add", methods=['POST'])
+def create_course():
+    """
+    Handle POST requests to add a new course into the database
+
+    Returns:
+        JSON response indicating success or an error message.
+    """
+
+
+#   start by checking if the user logged in has the authorization to post to this route
+
+
+
+
+
+#   check if the form which comes an JSON is indeed valid
+    pass

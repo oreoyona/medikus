@@ -21,9 +21,12 @@
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
     "@angular/youtube-player": "^19.1.4",
+    "@ckeditor/ckeditor5-angular": "^9.1.0",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "ckeditor5": "^44.2.1",
+    "ckeditor5-premium-features": "^44.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

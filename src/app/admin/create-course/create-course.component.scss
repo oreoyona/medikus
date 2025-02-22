@@ -15,12 +15,22 @@
 mat-form-field{
     max-width: 400px;
 }
-
+.module-containner{
+    max-width: 100% !important;
+    
+}
 .card-container{
     display: grid;
     grid-template-columns: 40% 60%;
+
+    .left{
+        justify-content: start;
+        align-items: start;
+    }
 }
 
 .remove{
     color: white;
 }
+
+

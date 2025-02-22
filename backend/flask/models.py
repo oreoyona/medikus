@@ -29,6 +29,10 @@ class Course(db.Model):
     imgUrl = db.Column(db.String(250), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Creation timestamp
     updated_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Update timestamp
+    description = db.Column(db.String(250), nullable=False)
+    objectifs = db.Column(db.String(250), nullable=False)
+    courseType = db.Column(db.String(100), nullable=False)
+    target = db.Column(db.String(250), nullable=False)
     modules = db.relationship('CourseModule', backref='course', lazy=True)  # Relationship with CourseModule
 
     def __repr__(self):

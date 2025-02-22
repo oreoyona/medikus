@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, NgModel, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseService } from './course.service';
 import { HeaderComponent } from "../../common/header/header.component";
 import { FooterComponent } from "../../common/footer/footer.component";
@@ -14,6 +14,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { CkeditorComponent } from "../../ckeditor/ckeditor.component";
 
 @Component({
   selector: 'app-create-course',
@@ -28,9 +31,11 @@ import { ConfirmDialogComponent } from './confirm-dialog.component';
     MatSelectModule,
     MatExpansionModule,
     MatDividerModule,
-    MatIconModule, MatDialogModule,
-    NgFor, NgSwitch, NgSwitchCase,FormsModule
-  ],
+    MatIconModule, MatDialogModule, MatDatepickerModule,
+    NgFor, NgSwitch, NgSwitchCase, FormsModule,
+    CkeditorComponent
+],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './create-course.component.html',
   styleUrls: ['./create-course.component.scss']
 })
@@ -39,6 +44,7 @@ export class CreateCourseComponent implements OnInit {
   courseService = inject(CourseService);
   fb = inject(NonNullableFormBuilder);
   options = this.courseService.options;
+  typeOptions = this.courseService.typeOptions;
   readonly dialog = inject(MatDialog);
   
   
@@ -46,6 +52,11 @@ export class CreateCourseComponent implements OnInit {
   newCourseForm = this.fb.group({
     name: [''],
     imgUrl: [''],
+    date: [''],
+    description: [''],
+    objectifs: [''],
+    courseType: ['Choisissez un type'],
+    target: [''],
     modules: this.fb.array([]) // Initialize FormArray for modules
   });
 
@@ -125,8 +136,9 @@ export class CreateCourseComponent implements OnInit {
 }
 
   onSubmit() {
+    console.log(this.newCourseForm.value);
+
     if (this.newCourseForm.valid) {
-      console.log(this.newCourseForm.value);
       // Call the API to create a new course
       this.courseService.createCourse(this.newCourseForm.value).subscribe({
         next: (response) => console.log('Course created successfully:', response),
@@ -142,7 +154,9 @@ export class CreateCourseComponent implements OnInit {
   }
 
   
-
+  updateControl(event: any){
+    console.log(event)
+  }
   toFormArray(control: any){
     return control as FormArray
   }
