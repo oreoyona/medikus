@@ -16,6 +16,7 @@ const TASK_DATA: ProjectTask[] = [
   {name: "Configurer un service d'inscription aux cours", importance: 'urgent', etat: 'pas encore commencé', responsable: "Dr Chabu"},
   {name: "Configurer un service de suivi de progression des cours", importance: 'urgent', etat: 'pas encore commencé', responsable: "Dr Chabu"},
   {name: "Configurer le modele User", importance: 'urgent', etat: 'en cours', responsable: "Dr Chabu"},
+  {name: "Completer la page Single-Cours", importance: 'normale', etat: 'en cours', responsable: "Dr Chabu"},
   {name: 'Construire les page LOGIN/INSCRIPTION', importance: "urgent", etat: "en cours", responsable: "Dr Chabu"},
   {name: 'Construire la page CATALOGUE', importance: "normale", etat: "en cours", responsable: "Dr Chabu"},
   {name: 'Construire la page APPRENDRE/COURS-ID', importance: "urgent", etat: "terminé", responsable: "Dr Chabu"},
