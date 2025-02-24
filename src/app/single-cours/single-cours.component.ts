@@ -1,15 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from "../common/header/header.component";
 import { MatButtonModule } from '@angular/material/button';
 import { FooterComponent } from "../common/footer/footer.component";
+import { CourseData, CourseService } from '../admin/course.service';
+import { AuthService } from '../auth/auth.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-single-cours',
-  imports: [HeaderComponent, MatButtonModule, FooterComponent],
+  imports: [
+    HeaderComponent, 
+    MatButtonModule, 
+    FooterComponent,
+    MatCardModule
+  ],
   templateUrl: './single-cours.component.html',
   styleUrl: './single-cours.component.scss'
 })
-export class SingleCoursComponent {
+export class SingleCoursComponent implements OnInit{
+  course!: CourseData
+  courseService = inject(CourseService)
+  authService = inject(AuthService)
+  courseId = Number(this.authService.getLastUrlStr())
+
+  ngOnInit(): void {
+    this.courseService.getCourseById(this.courseId).subscribe((res: any)=>{
+      res.data? this.course = res.data : null
+    })
+    
+  }
   coursTitle = "Course Title"
   CourseDateAndLocation = `Thursday, February 6, 2025, 12:00 PM - 1:00 PM, A Live Webinar`
   courseCompleteDescription = `The Office of Faculty Development and Diversity is hosting a faculty webinar with the Health Equity Action Leadership (HEAL) Network and the Stanford Center for Continuing Medical Education (CME) to highlight Health Disparities. Join us to increase awareness about the Supreme Court 2023 Affirmative Action Ruling: What Does It Mean for Health Equity and Public Health?

@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormControl, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { HttpClient } from '@angular/common/http';
 import { CatalogueService } from './catalogue.service';
+import { CourseService } from '../admin/course.service';
 
 @Component({
   selector: 'app-catalogue',
@@ -20,8 +20,14 @@ import { CatalogueService } from './catalogue.service';
 export class CatalogueComponent implements OnInit{
 
   catalogueService = inject(CatalogueService);
+  courseService = inject(CourseService);
+  allCourses = []
   
   ngOnInit(): void {
+    this.courseService.getCourses().subscribe((res:any)=>{
+      this.allCourses = res.data
+      console.log(this.allCourses)
+    })
     
   }
 

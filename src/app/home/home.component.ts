@@ -1,21 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { UpperCasePipe, DatePipe } from '@angular/common';
+import { UpperCasePipe, DatePipe, SlicePipe } from '@angular/common';
 import { HeaderComponent } from "../common/header/header.component";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FooterComponent } from "../common/footer/footer.component";
+import { CourseData, CourseService, ServerDataResponse } from '../admin/course.service';
+import { DefaultImgDirective } from '../common/default-img.directive';
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, RouterLink, MatButtonModule, UpperCasePipe, DatePipe, HeaderComponent, MatCardModule, MatGridListModule, FooterComponent],
+  imports: [MatIconModule, RouterLink, MatButtonModule, UpperCasePipe, DatePipe, HeaderComponent, MatCardModule, MatGridListModule, FooterComponent, SlicePipe, DefaultImgDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [],
 
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  courseService = inject(CourseService)
+  courses!: CourseData[]
+  coursesFirstFive!:CourseData[]
+
+  constructor() {
+
+  }
+
+  ngOnInit(): void {
+    this.courseService.getCourses().subscribe((res: any) => {
+      const data: CourseData[] = res.data.slice(0, 5)
+      this.courses = data
+    })
+
+
+  }
   banner = "banner.webp"
   tmp = [0, 1, 2, 3, 4]
   echo = "/public/echo.webp"
@@ -55,5 +73,5 @@ export class HomeComponent {
 
 
 
- 
+
 }

@@ -10,6 +10,8 @@ import { CatalogueComponent } from './catalogue/catalogue.component';
 import { AuthComponent } from './auth/auth.component';
 import { CreateCourseComponent } from './admin/create-course/create-course.component';
 import { SocialComponent } from './common/social/social.component';
+import { EditCourseComponent } from './admin/edit-course/edit-course.component';
+import { DeleteDialogComponent } from './admin/edit-course/delete-dialog.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -29,5 +31,6 @@ export const routes: Routes = [
     { path: 'auth/login', component: AuthComponent},
     { path: 'auth/inscription', component: AuthComponent},
     { path: 'courses/add', component: CreateCourseComponent},
-    { path: 'test', component: SocialComponent }
+    { path: 'test', component: SocialComponent },
+    { path: 'courses/:id', component: EditCourseComponent},
 ];

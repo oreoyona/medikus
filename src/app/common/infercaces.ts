@@ -6,7 +6,9 @@ export interface Video {
     videoId?: string;
 
 }
-
+export interface ServerResponse{
+    message: string | number
+}
  
 export interface User{
     id: string,

@@ -3,12 +3,24 @@
 </header>
 
 <div class="container">
-    <h2 class="text-center">Créer un nouveau cours</h2>
+    <h2 class="text-center">Modifier le cours</h2>
 </div>
 
 <main class="container d-flex flex-column">
+    @if(edited()){
+        <div class="alert alert-success" id="success">
+            Le cours a été modifié avec succès
+        </div>
+    }
+
+    @if(errorInEditing()){
+        <div class="alert alert-danger" id="error">
+            Le sauvergarde du cours n'a pas été effectuée
+        </div>
+    }
+
     <mat-card class="my-5">
-        <form [formGroup]="newCourseForm" (ngSubmit)="onSubmit()" class="d-flex flex-column">
+        <form [formGroup]="editCourseForm" (ngSubmit)="onSubmit()" class="d-flex flex-column">
             <mat-card-content class="card-container m-3">
                 <section class="left container d-flex flex-column align-items-start justify-content-start">
                     <h4>Informations sur le cours</h4>
@@ -35,8 +47,7 @@
                         <mat-label>Quel est le type du cours ?</mat-label>
                         <mat-select formControlName="courseType" required>
                         <mat-option *ngFor="let option of typeOptions"
-                            [value]="option">{{
-                            option }}</mat-option>
+                            [value]="option">{{ option }}</mat-option>
                     </mat-select>
                     </mat-form-field>
 
@@ -49,16 +60,13 @@
                         <mat-label for="objectifs">Objectifs du cours:</mat-label>
                         <textarea matInput id="objectifs" formControlName="objectifs" required></textarea>
                         <mat-hint>Séparez les objectifs par un point virgule</mat-hint>
-
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="mb-3">
                         <mat-label for="target">Audience cible:</mat-label>
                         <input matInput id="target" formControlName="target">
                         <mat-hint>Séparez chaque cible par un point virgule</mat-hint>
-
                     </mat-form-field>
-
                 </section>
 
                 <section class="right container d-flex flex-column align-items-center justify-content-center">
@@ -71,11 +79,9 @@
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
                                                 <h3>Module {{ (i + 1) }}</h3>
-
                                             </mat-panel-title>
                                             <button class="mx-2" type="button" mat-icon-button
                                                 (click)="openDialog(i)"><mat-icon>close</mat-icon></button>
-
                                         </mat-expansion-panel-header>
 
                                         <mat-form-field appearance="outline" class="m-1">
@@ -88,21 +94,18 @@
                                             <input matInput formControlName="link" required>
                                         </mat-form-field>
 
-                                        <h4 class="my-2">Parties du module: {{
-                                            toFormArray(module.get('parts')).controls.length }}</h4>
+                                        <h4 class="my-2">Parties du module: {{ toFormArray(module.get('parts')).length }}</h4>
 
                                         <div formArrayName="parts">
                                             <div *ngFor="let part of (toFormArray(module.get('parts')))?.controls; let j = index"
                                                 [formGroupName]="j" class="d-flex flex-column justify-content-center">
                                                 <div class="border rounded border-dark-subtle m-2 p-2">
-
                                                     <mat-form-field appearance="outline" class="m-1">
                                                         <mat-label>Type de contenu:</mat-label>
                                                         <mat-select formControlName="contentType"
                                                             (selectionChange)="onPartContentTypeChange(i, j)" required>
                                                             <mat-option *ngFor="let option of options"
-                                                                [value]="option">{{
-                                                                option }}</mat-option>
+                                                                [value]="option">{{ option }}</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
 
@@ -125,7 +128,7 @@
                                                             </mat-form-field>
 
                                                             <div class="m-1" class="app-editor">
-                                                                <app-editor formControlName="content" />
+                                                                <app-editor innerValue="part.get('content')?.value" formControlName="content" />
                                                             </div>
                                                         </ng-container>
 
@@ -145,21 +148,12 @@
                                                         </ng-container>
                                                     </ng-container>
 
-                                                    
-                                                        <button type="button" class="btn btn-danger my-3"  (click)="removePart(i, j)">Supprimer cette partie</button>
-
-                                                    
-                                                    
-
-
+                                                    <button type="button" class="btn btn-danger my-3" (click)="removePart(i, j)">Supprimer cette partie</button>
                                                 </div>
-
                                             </div>
-
                                         </div>
 
-                                        <button type="button" mat-stroked-button (click)="addPart(i)">Ajouter une
-                                            nouvelle partie</button>
+                                        <button type="button" mat-stroked-button (click)="addPart(i)">Ajouter une nouvelle partie</button>
                                     </mat-expansion-panel>
                                 </mat-accordion>
                             </div>
@@ -169,14 +163,13 @@
             </mat-card-content>
             <mat-card-footer>
                 <button type="button" mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
-                <button mat-flat-button type="submit" class="m-2">Créer le cours</button>
+                <button mat-flat-button type="submit" class="m-2">Enregistrer</button>
+                <button mat-flat-button type="button" class="m-2 remove-btn" (click)="deleteCourse()">Supprimer le cours</button>
+
             </mat-card-footer>
         </form>
     </mat-card>
 </main>
-
-
-
 
 <footer>
     <app-footer />

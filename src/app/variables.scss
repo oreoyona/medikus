@@ -46,7 +46,9 @@ $blue: #005cbb;
 .course-info-bottom:hover{
     color: $rouge-icon;
 }
-
+.remove-btn{
+    background-color: $rouge-icon !important;
+}
 .ruban {
     background-color: $gris;
 

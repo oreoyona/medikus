@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component,ViewEncapsulation, type AfterViewInit, ElementRef, ViewChild, output, Output, EventEmitter, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component,ViewEncapsulation, type AfterViewInit, ElementRef, ViewChild, output, Output, EventEmitter, forwardRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChangeEvent, CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {
@@ -57,8 +57,7 @@ const LICENSE_KEY =
 
 })
 export class CkeditorComponent implements AfterViewInit{
- 
-  private innerValue: string = ""
+ @Input() innerValue = ""
 
     // ControlValueAccessor methods
     writeValue(value: any): void {
@@ -239,7 +238,7 @@ export class CkeditorComponent implements AfterViewInit{
 
 	public onReady(editor: DecoupledEditor): void {
 
-    editor.setData("")
+    editor.setData(this.innerValue)
 
     
 

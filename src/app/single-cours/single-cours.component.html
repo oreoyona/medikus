@@ -3,60 +3,80 @@
         <app-header />
     </header>
 
-    <main class="container">
+    <main class="container d-flex justify-content-center">
         <div class="course-container">
-            <h2>
-                {{coursTitle}}
-            </h2>
+            @if(course){
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title> {{course.name}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="course-banner">
+                        <img class="img-fluid rounded" mat-card-image [src]="course.imgUrl" alt="course image banner">
 
-            <div class="course-banner">
-                <img src="https://fakeimg.pl/600x400/" alt="course image banner">
-            </div>
-            <button mat-flat-button id="add-to-calendar">Ajouter au calendrier</button>
+                    </div>
+                    <mat-card-actions>
+                        <button mat-flat-button id="add-to-calendar">Ajouter au calendrier</button>
+
+                    </mat-card-actions>
+
+                    <div class="date-and-location">
+                        <h3>Date et Lieu</h3>
+                        <p>{{course.date}}</p>
+                    </div>
+
+                    <div class="overview">
+                        <h3>Vue d'ensemble</h3>
+                        <p>{{course.description}}</p>
+                    </div>
+
+                    <div class="course-author-picture">
+                        <img mat-card-sm-image src="https://fakeimg.pl/600x400/" alt="course author profile picture">
+                    </div>
+                    <div class="registration">
+                        <h3>Comment s'enregistrer ?</h3>
+                        <p>{{courseRegistrationDetails}}</p>
+                    </div>
 
 
-            <div class="date-and-location">
-                <h3>Date et Lieu</h3>
-                <p>{{CourseDateAndLocation}}</p>
-            </div>
+                    <div class="target-audience">
+                        <h3>Audience cible</h3>
+                        <ul>
+                            @for(list of course.target.split(";"); track $index){
+                            <li>{{list}}</li>
+                            }
+                        </ul>
 
-            <div class="overview">
-                <h3>Vue d'ensemble</h3>
-                <p>{{courseCompleteDescription}}</p>
-            </div>
+                    </div>
 
-            <div class="course-author-picture">
-                <img src="https://fakeimg.pl/600x400/" alt="course author profile picture">
-            </div>
 
-            <div class="registration">
-                <h3>Comment s'enregistrer ?</h3>
-                <p>{{courseRegistrationDetails}}</p>
-            </div>
+                    <div class="objectives">
+                        <h3>Objectifs du cours</h3>
+                        <ul>
+                            @for(list of course.objectifs.split(";"); track $index){
+                            <li>{{list}}</li>
+                            }
+                        </ul>
+                    </div>
 
-            <div class="target-audience">
-                <h3>Audience cible</h3>
-                <p>{{courseTargetAudience}}</p>
-            </div>
+                    <div class="activity-questions">
+                        <h3>Pour toutes les questions liées à cette activité, veuillez contacter:</h3>
 
-            <div class="objectives">
-                <h3>Objectifs du cours</h3>
-                <p>{{courseObjectives}}</p>
-            </div>
-
-            <div class="activity-questions">
-                <h3>Pour toutes les questions liées à cette activité, veuillez contacter:</h3>
-                
-                    <ul>
-                        @for (item of courseQuestion; track item) {
+                        <ul>
+                            @for (item of courseQuestion; track item) {
                             <li>Nom: {{item.name}}</li>
                             <li>Poste: {{item.Title}}</li>
                             <li>Email: {{item.Email}}</li>
-                          }
-                    </ul>
-                 
-                
-            </div>
+                            }
+                        </ul>
+
+
+                    </div>
+                </mat-card-content>
+                <mat-card-footer></mat-card-footer>
+            </mat-card>
+
+            }
 
         </div>
     </main>

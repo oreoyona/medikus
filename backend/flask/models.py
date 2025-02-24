@@ -6,6 +6,16 @@ from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
 from pytz import timezone
 
+
+# class CourseData():
+#     id = "",
+#     name = "",
+#     img_url = ""
+
+
+
+
+
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 
@@ -19,24 +29,6 @@ def init_db(app):
     db.init_app(app)  # Bind the database instance to the app
     with app.app_context():
         db.create_all()  # Create all database tables defined by models
-
-class Course(db.Model):
-    """Model representing a course."""
-    __tablename__ = 'courses'
-
-    id = db.Column(db.Integer, primary_key=True)  # Unique identifier for the course
-    name = db.Column(db.String(100), nullable=False)  # Name of the course
-    imgUrl = db.Column(db.String(250), nullable=False)
-    created_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Creation timestamp
-    updated_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Update timestamp
-    description = db.Column(db.String(250), nullable=False)
-    objectifs = db.Column(db.String(250), nullable=False)
-    courseType = db.Column(db.String(100), nullable=False)
-    target = db.Column(db.String(250), nullable=False)
-    modules = db.relationship('CourseModule', backref='course', lazy=True)  # Relationship with CourseModule
-
-    def __repr__(self):
-        return f"<Course(id='{self.id}', name='{self.name}')>"
 
 class User(db.Model, UserMixin):
     """Model representing a user."""
@@ -61,6 +53,30 @@ class User(db.Model, UserMixin):
         """Check the provided password against the stored hash."""
         return check_password_hash(self.password_hash, password)
 
+
+
+class Course(db.Model):
+    """Model representing a course."""
+    __tablename__ = 'courses'
+
+    id = db.Column(db.Integer, primary_key=True)  # Unique identifier for the course
+    name = db.Column(db.String(100), nullable=False)  # Name of the course
+    img_url = db.Column(db.String(250), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Creation timestamp
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Update timestamp
+    description = db.Column(db.String(550), nullable=False)
+    objectifs = db.Column(db.String(550), nullable=False)
+    courseType = db.Column(db.String(100), nullable=False)
+    target = db.Column(db.String(550), nullable=False)
+    registering = db.Column(db.String(550), nullable=True)
+    contact = db.Column(db.String(550), nullable=True)
+    instructor = db.Column(db.String(250), default="Medikus, I.")
+    instructor_img_url = db.Column(db.String(250), nullable=True)
+    modules = db.relationship('CourseModule', backref='course', lazy=True)  # Relationship with CourseModule
+
+    def __repr__(self):
+        return f"<Course(id='{self.id}', name='{self.name}')>"
+
 class CourseModule(db.Model):
     """Model representing a module within a course."""
     __tablename__ = 'course_modules'
@@ -68,7 +84,7 @@ class CourseModule(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Unique identifier for the module
     title = db.Column(db.String(100), nullable=False)  # Title of the module
     link = db.Column(db.String(100), nullable=False)  # Link associated with the module
-    content_type = db.Column(db.Integer, nullable=False)  # Type of content (e.g., Video, Text, Quiz)
+    content_type = db.Column(db.String(250), nullable=False)  # Type of content (e.g., Video, Text, Quiz)
     content = db.Column(JSON, nullable=False)  # Store content as JSON
     course_id = db.Column(db.Integer, ForeignKey('courses.id'), nullable=False)  # Foreign key to the course
 
@@ -78,7 +94,7 @@ class Video(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # Unique identifier for the video
     title = db.Column(db.String(100), nullable=False)  # Title of the video
-    description = db.Column(db.String(255), nullable=False)  # Description of the video
+    description = db.Column(db.String(555), nullable=False)  # Description of the video
     video_link = db.Column(db.String(255), nullable=False)  # Link to the video
     video_id = db.Column(db.Integer)  # Identifier for the video
 

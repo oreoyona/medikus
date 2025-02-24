@@ -58,21 +58,21 @@
 
 <section class="course-cards">
 
-@for(item of tmp; track item){
+@for(course of courses  | slice: 0:5; track $index){
   <mat-card appearance="outlined" class="course-card">
     <mat-card-header>
-      <mat-card-title>{{courseTitle}}</mat-card-title>
-      <mat-card-subtitle>{{courseDate | date}}</mat-card-subtitle>
+      <mat-card-title>{{course.name}}</mat-card-title>
+      <mat-card-subtitle>{{course.date| date}}</mat-card-subtitle>
 
     </mat-card-header>
-    <img mat-card-image src="https://fakeimg.pl/600x400/" alt="Course Photo">
+    <img appDefaultImg  class="img-fluid" mat-card-image src={{course.imgUrl}} alt="Course Photo">
     <mat-card-content>
       <p>
-        {{courseDescription}}
+        {{course.description}}
       </p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-flat-button routerLink="/learn/{{courseId}}">En Savoir Plus</button>
+      <button mat-flat-button routerLink="/learn/{{course.id}}">En Savoir Plus</button>
     </mat-card-actions>
   </mat-card>
 }
