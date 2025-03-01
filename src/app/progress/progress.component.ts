@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { HeaderComponent } from "../common/header/header.component";
+
 
 
 export interface ProjectTask{
@@ -47,7 +47,7 @@ const TASK_DATA: ProjectTask[] = [
 ]
 @Component({
   selector: 'app-progress',
-  imports: [MatTableModule, HeaderComponent],
+  imports: [MatTableModule],
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.scss'
 })

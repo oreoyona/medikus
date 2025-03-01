@@ -11,9 +11,16 @@ export interface ServerResponse{
 }
  
 export interface User{
-    id: string,
-    password: string
+    id: string | number,
+    password?: string,
+    role?: string,
+    name?: string,
+    email?: string
+
 }
+
+export type role = "subscriber" | "admin" | "editor" | "instructor"
+
 
 
 export interface QuizQuestion {

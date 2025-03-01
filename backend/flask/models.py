@@ -1,16 +1,16 @@
 import datetime
+from flask_jwt_extended import JWTManager
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from pygments.lexer import default
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
 from pytz import timezone
+from passlib.context import CryptContext
+from sqlalchemy.ext.hybrid import hybrid_property
+from api.v1 import pwd_context
 
-
-# class CourseData():
-#     id = "",
-#     name = "",
-#     img_url = ""
 
 
 
@@ -30,28 +30,34 @@ def init_db(app):
     with app.app_context():
         db.create_all()  # Create all database tables defined by models
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     """Model representing a user."""
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)  # Unique identifier for the user
+    name = db.Column(db.String(250), nullable=True)
     username = db.Column(db.String(100), nullable=False, unique=True)  # Unique username
     email = db.Column(db.String(120), nullable=False, unique=True)  # Unique email address
-    password_hash = db.Column(db.String(128), nullable=False)  # Store the hashed password
+    _password = db.Column("password", db.String(255), nullable=False)  # Store the hashed password
     is_instructor = db.Column(db.Boolean, default=False)  # Flag to indicate if the user is an instructor
     created_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Creation timestamp
     updated_at = db.Column(db.DateTime, default=lambda: datetime.datetime.now(tz=timezone('UTC')))  # Update timestamp
+    courses = db.Column(db.String(500), nullable=True)
+    role = db.Column(db.String(500), nullable=True, default="subscriber")
+    img_url = db.Column(db.String(500), nullable=True)
+    @hybrid_property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = pwd_context.hash(value)
+
 
     def __repr__(self):
-        return f"<User(id='{self.id}', username='{self.username}')>"
-    
-    def set_password(self, password):
-        """Hash the password before storing it."""
-        self.password_hash = generate_password_hash(password)
+        return f"<User(id='{self.id}', username='{self.username}, role = {self.role})>')>"
 
-    def check_password(self, password):
-        """Check the provided password against the stored hash."""
-        return check_password_hash(self.password_hash, password)
+
 
 
 
@@ -72,6 +78,7 @@ class Course(db.Model):
     contact = db.Column(db.String(550), nullable=True)
     instructor = db.Column(db.String(250), default="Medikus, I.")
     instructor_img_url = db.Column(db.String(250), nullable=True)
+    progression = db.Column(db.String(100), nullable=True)
     modules = db.relationship('CourseModule', backref='course', lazy=True)  # Relationship with CourseModule
 
     def __repr__(self):
@@ -126,3 +133,16 @@ class TextContent(db.Model):
     list_items = db.Column(JSON)  # Store list items as JSON
 
 # Additional models can be added following the same structure
+
+
+
+class TokenBLockList(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    jti = db.Column(db.String(36), nullable=False, unique=True)
+    token_type = db.Column(db.String(10), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    revoked_at = db.Column(db.DateTime)
+    expires =  db.Column(db.DateTime, nullable=False)
+
+    user = db.relationship("User")
+

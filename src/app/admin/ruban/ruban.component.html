@@ -1,0 +1,19 @@
+<main class="container-fluid d-flex">
+    <section class="left d-flex flex-column align-items-start justify-content-start">
+      @for (obj of ruban(); track $index) {
+        <div
+          class="action-btn d-flex justify-content-start align-items-center p-3 my-1"
+          matRipple
+          (click)="obj.icon === 'skip_previous' || obj.icon === 'skip_next' ? toggleRuban() : null"
+        >
+          <mat-icon>{{ obj.icon }}</mat-icon>
+          @if (!mobile() && bp.rubanExpanded()) {
+            <span class="icon-text">{{ obj.title }}</span>
+          }
+        </div>
+      }
+    </section>
+    <section class="right">
+      <button type="button" mat-fab>po</button>
+    </section>
+  </main>

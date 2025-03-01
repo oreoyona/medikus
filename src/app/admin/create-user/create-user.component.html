@@ -1,0 +1,83 @@
+
+<div class="mdk-container d-flex align-items-center justify-content-center">
+    <form [formGroup]="inscriptionForm" (ngSubmit)="sendForm()"
+        class="d-flex flex-column justify-content-center align-tems-center">
+
+        @if(showErrorMsg){
+            <div class="field alert alert-danger">
+                Could Not Create the User. Please try later
+            </div>
+
+        }
+
+        @if(showSuccessMsg){
+            <div class="field alert alert-success">
+                L'utilisateur {{createdUser()}} a bien été créé
+            </div>
+        }
+        
+        <mat-form-field appearance="outline" class="field">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="field">
+            <mat-label>Nom d'utilisateur</mat-label>
+            <input matInput formControlName="username">
+        </mat-form-field>
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Email: </mat-label>
+            <input type="email" matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Mot De Passe</mat-label>
+            <input type="password" matInput formControlName="password"
+                (blur)="inscriptionForm.get('password')?.markAsTouched()">
+        </mat-form-field>
+
+        @if(inscriptionForm.get('password')?.touched && inscriptionForm.get('password')?.errors?.['weakPassword']){
+        <mat-hint>
+            <p class="alert alert-danger field ">
+                Le mot de passe doit contenir au moins 8 caractères, une minuscule et un chiffre.
+            </p>
+        </mat-hint>
+
+        }
+
+
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Confirmer le mot de passe</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" />
+        </mat-form-field>
+        <mat-hint>
+            @if(inscriptionForm.errors?.['passwordsDoNotMatch'] && inscriptionForm.get('confirmPassword')?.touched){
+
+            <p class="alert alert-danger field">Les mots de passe doivent correspondre.</p>
+
+            }
+
+        </mat-hint>
+
+        <mat-form-field class="field" appearance="outline" >
+            <mat-label>Quel est le role du nouvel utilisateur ?</mat-label>
+            <mat-select required formControlName="role">
+                @for(role of roles; track $index){
+                    <mat-option [value]="role">{{role}}</mat-option>
+                }
+            </mat-select>
+          </mat-form-field>
+
+          
+
+        <span>
+            <small class="text-center">
+                En cliquant sur "Envoyer", vous acceptez les<button type="button" mat-button><a href="http://#">termes et
+                        conditions</a></button>
+            </small>
+        </span>
+
+
+        <button class="field" mat-flat-button type="submit" [disabled]="!inscriptionForm.valid">S'enregistrer</button>
+    </form>
+</div>

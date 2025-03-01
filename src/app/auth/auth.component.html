@@ -1,6 +1,4 @@
-<header class="pad-0">
-    <app-header />
-</header>
+
 
 <mat-card class="container my-3 ">
     <mat-card-content class="mdk-container">
@@ -15,23 +13,14 @@
 
             <mat-card class="my-2 p-2">
                 <mat-card-content>
-                    @if(actualText() == "inscription"){
+                @if(actualText() == "inscription"){
                     <app-inscription-form />
                     }
                     @else{
                     <app-login-form />
                     }
                 </mat-card-content>
-                <mat-card-footer>
-                    <div class="d-flex flex-column align-items-center justify-content-center my-3">
-                        <small class="text-center my-3"><em>{{socialTexte()}} </em></small> <br>
-                        <button mat-icon-button>
-                            <img width="48" height="48" src="https://img.icons8.com/color/48/google-logo.png"
-                                alt="google-logo" />
-                        </button>
-                    </div>
 
-                </mat-card-footer>
             </mat-card>
 
 

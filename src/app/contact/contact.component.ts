@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
 @Component({
   selector: 'app-contact',
-  imports: [HeaderComponent, MatIconModule,MatFormFieldModule, MatInputModule, MatButtonModule,ReactiveFormsModule, FormsModule],
+  imports: [MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })

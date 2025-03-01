@@ -7,11 +7,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
-import { HeaderComponent } from "../common/header/header.component";
+
 
 @Component({
   selector: 'app-profile',
-  imports: [MatCardModule, RouterLink, MatMenuModule, MatIconModule, MatButtonModule, MatListModule, MatIconModule, MatTabsModule, MatButtonModule, HeaderComponent],
+  imports: [MatCardModule, RouterLink, MatMenuModule, MatIconModule, MatButtonModule, MatListModule, MatIconModule, MatTabsModule, MatButtonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

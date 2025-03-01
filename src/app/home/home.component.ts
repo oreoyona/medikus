@@ -4,14 +4,15 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { UpperCasePipe, DatePipe, SlicePipe } from '@angular/common';
-import { HeaderComponent } from "../common/header/header.component";
+
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FooterComponent } from "../common/footer/footer.component";
 import { CourseData, CourseService, ServerDataResponse } from '../admin/course.service';
 import { DefaultImgDirective } from '../common/default-img.directive';
+
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, RouterLink, MatButtonModule, UpperCasePipe, DatePipe, HeaderComponent, MatCardModule, MatGridListModule, FooterComponent, SlicePipe, DefaultImgDirective],
+  imports: [MatIconModule, RouterLink, MatButtonModule, UpperCasePipe, DatePipe, MatCardModule, MatGridListModule, FooterComponent, SlicePipe, DefaultImgDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [],

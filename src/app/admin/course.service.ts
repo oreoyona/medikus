@@ -10,7 +10,6 @@ export interface ServerDataResponse {
   message: string,
   data?: any
 }
-
 export interface CourseData {
 
   id?: string | number,

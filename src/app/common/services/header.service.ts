@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, inject, Injectable, signal } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 
 
 export const xSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1227" viewBox="0 0 1200 1227" fill="none">
@@ -8,8 +9,8 @@ export const bPoint760px = "(max-width: 760px)";
 @Injectable({
    providedIn: 'root'
 })
-export class HeaderService {
-
+export class HeaderService{
+   authService = inject(AuthService)
    navigation = [
       {
          titre: 'Acceuil',
@@ -24,10 +25,33 @@ export class HeaderService {
       {
          titre: 'Contact',
          link: 'contact'
-      }
+      },
+
+
+
    ]
    currentTheme = signal("light");
    private mediaQueryList: MediaQueryList | null = null;
+
+   checkTheNav(headerService: HeaderService, authService: AuthService) {
+      const isAuthenticated = authService.isAuthenticated();
+      const navArrayLength = headerService.navigation.length;
+    
+      // Remove the last item in the navigation array if its length is not 3
+      if (navArrayLength !== 3) {
+        headerService.navigation.pop();
+      }
+    
+      // Determine the navigation item to push based on authentication status
+      const navItem = isAuthenticated
+        ? { titre: 'Déconnexion', link: 'logout' }
+        : { titre: 'Connexion', link: 'auth/login' };
+    
+      // Push the determined navigation item
+      headerService.navigation.push(navItem);
+    }
+
+    
    
    detectTheme() {
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -48,4 +72,5 @@ export class HeaderService {
     }
 
    constructor() { }
+ 
 }

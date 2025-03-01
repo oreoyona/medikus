@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
+
 import { MatButtonModule } from '@angular/material/button';
 import { FooterComponent } from "../common/footer/footer.component";
 import { CourseData, CourseService } from '../admin/course.service';
@@ -9,11 +9,10 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-single-cours',
   imports: [
-    HeaderComponent, 
-    MatButtonModule, 
+    MatButtonModule,
     FooterComponent,
     MatCardModule
-  ],
+],
   templateUrl: './single-cours.component.html',
   styleUrl: './single-cours.component.scss'
 })

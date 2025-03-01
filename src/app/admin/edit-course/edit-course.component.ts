@@ -71,6 +71,10 @@ export class EditCourseComponent implements OnInit {
       target: [''],
       date: [''],
       courseType: [''],
+      instructor: [''],
+      instructorImgUrl: [''],
+      contact: [''],
+      registering: [''],
       modules: this.fb.array([])
     });
   }
@@ -108,6 +112,10 @@ export class EditCourseComponent implements OnInit {
           target: course.target,
           date: new Date(course.date),
           courseType: course.courseType,
+          contact: course.contact,
+          instructor: course.instructor,
+          instructorImgUrl: course.instructorImgUrl,
+          registering: course.registering
         });
 
         //populate the modules

@@ -1,13 +1,20 @@
 <div class="mdk-container d-flex align-items-center justify-content-center">
     <form [formGroup]="inscriptionForm" (ngSubmit)="sendForm()"
         class="d-flex flex-column justify-content-center align-tems-center">
+        
         <mat-form-field appearance="outline" class="field">
             <mat-label>Votre nom</mat-label>
             <input matInput formControlName="name">
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+            <mat-label>Votre nom d'utilisateur: </mat-label>
+            <input matInput formControlName="username">
+            <mat-hint>ex: nom_postnom</mat-hint>
+        </mat-form-field>
         <mat-form-field class="field" appearance="outline">
-            <mat-label>Téléphone: </mat-label>
-            <input matInput formControlName="tel">
+            <mat-label>Email: </mat-label>
+            <input type="email" matInput formControlName="email">
         </mat-form-field>
 
         <mat-form-field class="field" appearance="outline">
@@ -41,12 +48,12 @@
 
         <span>
             <small class="text-center">
-                En cliquant sur "Envoyer", vous acceptez les<button mat-button><a href="http://#">termes et
+                En cliquant sur "Envoyer", vous acceptez les<button type="button" mat-button><a href="http://#">termes et
                         conditions</a></button>
             </small>
         </span>
 
 
-        <button mat-flat-button type="submit" [disabled]="!inscriptionForm.valid">Envoyer</button>
+        <button mat-flat-button type="submit" [disabled]="!inscriptionForm.valid">S'enregistrer</button>
     </form>
 </div>

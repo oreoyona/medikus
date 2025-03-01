@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
+
 import {MatDividerModule} from '@angular/material/divider';
 import { FooterComponent } from "../common/footer/footer.component";
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,7 @@ import { CourseService } from '../admin/course.service';
 
 @Component({
   selector: 'app-catalogue',
-  imports: [HeaderComponent, MatDividerModule, FooterComponent, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule],
+  imports: [MatDividerModule, FooterComponent, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule],
   templateUrl: './catalogue.component.html',
   styleUrl: './catalogue.component.scss'
 })
@@ -26,7 +26,7 @@ export class CatalogueComponent implements OnInit{
   ngOnInit(): void {
     this.courseService.getCourses().subscribe((res:any)=>{
       this.allCourses = res.data
-      console.log(this.allCourses)
+     
     })
     
   }

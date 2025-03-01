@@ -61,6 +61,10 @@ export class CreateCourseComponent implements OnInit {
     objectifs: [''],
     courseType: ['Choisissez un type'],
     target: [''],
+    instructor: [''],
+    instructorImgUrl: [''],
+    contact: [''],
+    registering: [''],
     modules: this.fb.array([]) // Initialize FormArray for modules
   });
 

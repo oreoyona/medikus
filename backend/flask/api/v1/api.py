@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from models import Course, CourseModule, User, db
 import logging
 
@@ -17,8 +18,9 @@ def get_all_courses():
 
     Returns:
         JSON response indicating success with the matching courses or an error message.
-    
+
     """
+
     courses = db.session.execute(db.select(Course).order_by(Course.id)).scalars()
     data = []
     for el in courses:
@@ -35,15 +37,17 @@ def get_all_courses():
             'contact': el.contact,
             'instructor': el.instructor,
             'instructorImgUrl': el.instructor_img_url,
+            'progression': el.progression,
             'modules': [{'title': part.title, 'link': part.link, 'content': part.content, 'contentType': part.content_type, 'parts': part.content} for part in el.modules]
         }
         data.append(obj)
 
-    return jsonify({'message': 201, 'data': data}), 201
+    return jsonify({'message': 200, 'data': data}), 200
 
 
 # Route to retrieve all users from the database
 @api_v1.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     """
     Handle GET requests to fetch all users.
@@ -54,7 +58,7 @@ def get_users():
     # Query all users from the User model
     users = User.query.all()
     # Return a JSON response with user details
-    return jsonify([{'id': user.id, 'username': user.username, 'email': user.email} for user in users])
+    return jsonify([{'id': user.id, 'name': user.name, 'username': user.username, 'email': user.email, 'role': user.role} for user in users])
 
 # Route to search for courses based on a search term
 @api_v1.route('/courses/search', methods=['POST'])
@@ -68,38 +72,38 @@ def search_for_courses():
     try:
         # Get JSON data from the request
         data = request.get_json()
-        
+
         # Validate the data
         if not data or 'term' not in data or not isinstance(data['term'], str):
             return jsonify({"message": "erreur", "erreur": "Term is required and must be a string."}), 400
-        
+
         # Search for courses that match the search term (case-insensitive)
         search_term = data['term'].lower()
         courses = Course.query.filter(Course.name.ilike(f'%{search_term}%')).all()
-        
+
         # Prepare the response data
         course_data = [{'id': course.id, 'name': course.name, 'imgUrl': course.imgUrl, } for course in courses]
 
         return jsonify({"message": "ok", "data": course_data})
-    
+
     except Exception as e:
         # Log any exceptions that occur during JSON processing
         logging.error(f"Error processing JSON data: {e}")  # Log error securely
         # Return a generic error response
         return jsonify({"message": "erreur", "erreur": "An error occurred."}), 400
-    
+
 #h route to retreive a single course by its id
 
 @api_v1.route('/courses/<int:course_id>', methods=['GET', 'PUT'])
 def get_course(course_id):
     """
-    Handles GET requests for a specific course 
+    Handles GET requests for a specific course
 
     Returns:
-    A JSON response of the success or not of the operation 
-    """ 
+    A JSON response of the success or not of the operation
+    """
     course = db.get_or_404(Course, course_id)
-    
+
     if request.method == 'GET':
 
         try:
@@ -116,12 +120,13 @@ def get_course(course_id):
                 'contact': course.contact,
                 'instructor': course.instructor,
                 'instructorImgUrl': course.instructor_img_url,
+                'progression': course.progression,
                 'modules': [{
                     'title': module.title,
                     'link': module.link,
                     'contentType': module.content_type,
                     'content': module.content,
-                    'parts': module.content 
+                    'parts': module.content
                 }   for module in course.modules]
             }
 
@@ -130,6 +135,8 @@ def get_course(course_id):
             logging.error(e)
             return jsonify({'message': 404, 'data': None}), 404
     elif request.method == "PUT":
+        jwt_required()(lambda: None)()  # Invoke the decorator
+
         # Update existing course
         if not course:
             return jsonify({"message": 404}), 404
@@ -137,7 +144,7 @@ def get_course(course_id):
         # Update course fields
         data = request.get_json()
         old_modules = db.session.execute(db.select(CourseModule).filter_by(course_id=course.id)).scalars()
-        
+
         course.name = data.get('name', course.name)
         course.img_url = data.get('imgUrl', course.img_url)
         course.description = data.get('description', course.description)
@@ -148,13 +155,14 @@ def get_course(course_id):
         course.registering = data.get('registering', course.registering)
         course.instructor = data.get('instructor', course.instructor)
         course.instructor_img_url = data.get('instructorImgUrl', course.instructor_img_url)
+        course.progression = data.get('progression', course.instructor)
         # Clear existing modules and set the new ones
-       
+
         for old_module in old_modules:
             db.session.delete(old_module)
-       
+
         for module_data in data.get('modules'):
-           
+
             module = CourseModule(
                 title=module_data['title'],
                 link=module_data['link'],
@@ -162,7 +170,7 @@ def get_course(course_id):
                 content_type="Type de Contenu"
             )
             parts = module_data['parts']
-        
+
             for key in parts:
                 # Handle content based on content type
                 if key['contentType'] == 'Questions':
@@ -187,7 +195,7 @@ def get_course(course_id):
                 else:
                     return jsonify({"error": f"Invalid content type: {key['contentType']}"}), 400
             course.modules.append(module)  # Append module to the course's modules
-        
+
         try:
             db.session.commit()
             return jsonify({"message": "200"}), 200
@@ -195,19 +203,20 @@ def get_course(course_id):
             db.session.rollback()  # Rollback in case of error
             print(e)
             return jsonify({"message": 500}), 500
-        
+
         finally:
             db.session.close()
 
-    
+
     return jsonify({'message': 404})
 
 
 
-        
-    
+
+
 #handle adding a new course
 @api_v1.route("/courses/add", methods=['POST'])
+@jwt_required()
 def create_course():
     """
     Handle POST requests to add a new course into the database.
@@ -242,19 +251,20 @@ def create_course():
         contact=data['contact'],
         instructor=data['instructor'],
         instructor_img_url= data['course.instructorImgUrl'],
+        progression=data['progression']
     )
 
     # Loop through modules and create CourseModule instances
     for module in data['modules']:
         parts = module['parts']
-        for  key in parts: 
+        for  key in parts:
             new_module = CourseModule(
                 title=module['title'],
                 link=module['link'],
                 content_type=key['contentType'],  # Ensure this matches your model
                 course=course  # Set the backref to the course
             )
-        
+
         # Handle content based on content type
             if key['contentType'] == 'Questions':
                 new_module.content = {
@@ -279,7 +289,7 @@ def create_course():
                 return jsonify({"error": f"Invalid content type: {module['contentType']}"}), 400
 
         course.modules.append(new_module)  # Append module to the course's modules
-        
+
         try:
             db.session.add(course)
             db.session.commit()
@@ -288,20 +298,21 @@ def create_course():
             db.session.rollback()  # Rollback in case of error
 
             return jsonify({"error": str(e)}), 500
-    
+
         finally:
             db.session.close()
 
 @api_v1.route("/courses/<int:course_id>/", methods=['DELETE'])
+@jwt_required()
 def delete_course(course_id):
     """
-    Handles DELETE requests for a specific course 
+    Handles DELETE requests for a specific course
 
     Returns:
-    A JSON response of the success or not of the operation 
+    A JSON response of the success or not of the operation
     """
     course = db.session.execute(db.select(Course).filter_by(id=int(course_id))).scalar_one()
-    
+
 
     try:
         for module in course.modules:
@@ -310,7 +321,7 @@ def delete_course(course_id):
         db.session.commit()
         return jsonify({"message": 200}), 200
     except Exception as e:
-        db.session.rollback() 
+        db.session.rollback()
         logging.info(e)
         return jsonify({'message': ''}), 404
 
