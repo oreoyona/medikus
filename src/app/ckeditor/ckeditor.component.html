@@ -1,0 +1,22 @@
+<div class="main-container">
+	<div class="editor-container editor-container_document-editor" #editorContainerElement>
+		<div class="editor-container__menu-bar" #editorMenuBarElement></div>
+		<div class="editor-container__toolbar" #editorToolbarElement></div>
+		<div class="editor-container__editor-wrapper">
+			<div class="editor-container__editor">
+				<div #editorElement>
+
+					@if(isLayoutReady){
+						<ckeditor 
+							[editor]="Editor" 
+							[config]="config" 
+							(change)="onEditorChange($event)"
+							(ready)="onReady($event)" 
+						/>
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

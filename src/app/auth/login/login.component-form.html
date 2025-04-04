@@ -1,0 +1,55 @@
+<div class="mdk-container d-flex align-items-center justify-content-center">
+    <form [formGroup]="LoginForm" (ngSubmit)="sendForm()"
+        class="d-flex flex-column justify-content-center align-items-center">
+        @if(LoginForm.controls['email'].errors?.['error']&& LoginForm.controls['email'].touched &&
+        LoginForm.controls['password'].errors?.['error']&& LoginForm.controls['password'].touched){
+        <div class="field alert alert-danger">
+            <mat-hint class="my-5">Email ou mot de passe éronné</mat-hint>
+
+        </div>
+        }
+
+        @if(LoginForm.controls['email'].errors?.['notFound']&& LoginForm.controls['email'].touched){
+        <div class="field alert alert-danger">
+            <mat-hint class="my-5">Cette adresse email n'est pas enregistrée chez Medikus, I.
+                Enregistrez-vous</mat-hint>
+
+        </div>
+        }
+        <mat-form-field appearance="outline" class="field">
+            <mat-label>Votre identifiant</mat-label>
+            <input matInput formControlName="email" type="email">
+            <mat-icon matSuffix>mail</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Mot De Passe</mat-label>
+            <input type="password" matInput formControlName="password" #pwd>
+            <mat-icon matSuffix (click)="changeInputType(pwd)">@if(showPwd){visibility}@else{visibility_off}</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" [disabled]="LoginForm.invalid">Se Connecter</button>
+
+
+        <div class="field d-flex justify-content-between">
+            <button type="button" mat-button routerLink="/auth/user/reset">Mot de passe oublié ?</button>
+            <button class="link-opacity-100" type="button" mat-button routerLink="/auth/inscription">Créer un
+                compte</button>
+        </div>
+        <div class="field d-flex justify-content-center">
+            <hr>
+            <span class="mx-3 d-flex align-items-center">ou</span>
+            <hr>
+        </div>
+
+        <div class="field d-flex justify-content-center">
+
+            <div class="btn d-flex justify-content-center align-items-center border rounded" matRipple>
+                <mat-icon svgIcon="google-icon" aria-hidden="false" aria-label="Se connecter avec Google"></mat-icon>
+
+                <span class="mx-1 text-center">Se connecter avec Google</span>
+            </div>
+
+        </div>
+    </form>
+</div>

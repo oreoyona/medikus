@@ -1,0 +1,195 @@
+<header class="pad-0">
+    <app-header>
+
+    </app-header>
+</header>
+
+@if(errorMessage()){
+<div class="alert alert-danger d-flex justify-content-center align-items-center m-5 p-5">
+    {{errorMessage()}}
+</div>
+}
+
+@else {
+<mat-tab-group dynamicHeight>
+    <mat-tab label="Apprendre">
+        <div class="container">
+            @if(loading){
+            <div class="center-loader d-flex flex-content-center align-items-center">
+                <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+
+            </div>
+            }
+
+
+
+
+            @else {
+            <h5 class="py-2 my-2">Mon apprentissage</h5>
+            @if(nonCompletedCourses.length === 0){
+            <div class="alert alert-success">
+                Inscrivez-vous à un cours pour suivre votre progression ici
+            </div>
+            }
+
+            @if(defaultMessage()){
+                <div class="alert alert-success">
+                    {{defaultMessage()}}
+                </div>
+            }
+            @for(course of nonCompletedCoursesArray; track $index){
+
+
+
+            <mat-card class="course-card-container">
+                <div class="card-menu">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="icon-button with a menu">
+                        <mat-icon class="card-menu-icon">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+
+                        <button mat-menu-item>
+                            <span (click)="unsubscribe(course.id)">Annuler l'inscription</span>
+                        </button>
+                        <!-- <button mat-menu-item>
+                                        <span (click)="askCertificate(course.id)">Demander un certificat</span>
+                                    </button> -->
+                    </mat-menu>
+                </div>
+
+
+
+
+                <!--course card-->
+                <mat-card-content>
+                    <div class="course-title-card" routerLink="/learn/cours/{{course.id}}">
+                        <div class="top">
+                            <div class="course-image">
+                                <img [src]="getImgUrl(course.imgUrl)" class="img-thumbnail round"
+                                    [alt]="'photo of' + course.name">
+                            </div>
+                            <div class="course-infos">
+                                <div class="course-info-top">
+                                    <h6>{{course.instructor?.split(";")![0] || 'Medikus,I.'}}</h6>
+                                </div>
+                                <div class="course-info-bottom">
+                                    <p>{{course.name}}</p>
+                                </div>
+                            </div>
+                            <div class="course-action">
+                                <button mat-flat-button>Aller en cours</button>
+                            </div>
+                        </div>
+
+                        <div class="bottom">
+                            <div class="course-progress">
+                                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" [style.width]=" getWidth(course.progression_info)">
+                                        {{getWidth(course.progression_info)}}
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="info-title">Progrès globaux</span>
+
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            }
+
+
+            }
+
+
+
+        </div>
+    </mat-tab>
+
+
+
+
+    <mat-tab label="Tableau de bord">
+
+        <div class="container mat-elevation-z4">
+
+            <section class="mdk-container">
+                <section class="left">
+                    <mat-card appearance="outlined">
+                        <mat-card-header class="d-flex flex-column justify-content-center align-items-center">
+                            <div class="edit-icon d-flex">
+                                <button mat-icon-button routerLink="/edit-profile/{{currentUser?.id}}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            </div>
+                            <div class="card-title ">
+                                <h5 class="text-center">Informations personnelles</h5>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="profile-img d-flex justify-content-center flex-column align-items-center">
+                                <img [src]='currentUser?.imgUrl || "https://fakeimg.pl/600x400/"' class="img-thumbnail"
+                                    alt="...">
+
+                                <div class="author-name">
+                                    <h4>{{currentUser?.name}}</h4>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </section>
+
+
+                <section class="right d-flex flex-column">
+
+                    <h4 class="d-flex align-self-start">Éducation</h4>
+
+                    <!-- <mat-card class="right-cards">
+    
+                            <mat-card-header class="d-flex flex-column">
+                                <mat-card-title>
+                                    Certificats
+                                </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                @for(certificat of profileCertificats(); track $index){
+                                <mat-list role="list" class="d-flex justify-content-space-between  align-items-center">
+                                    <mat-list-item role="listitem"> {{certificat.courseTitle}}</mat-list-item>
+                                    <mat-icon matListItemIcon class="scrollable-icon">download</mat-icon>
+                                </mat-list>
+                                }
+                            </mat-card-content>
+                        </mat-card>
+    
+                        -->
+
+                    <mat-card class="right-cards my-4 ">
+                        <h4 mat-card-title class="d-flex align-self-start mx-2 p-2">Cours terminés</h4>
+
+                        <mat-card-content>
+
+                            @for(course of completedCourses; track $index){
+                            <mat-list-item role="listitem" class="completed-course-item">
+                                <mat-icon class="ok-icon" matListItemIcon>check_circle</mat-icon>
+                                <span>{{ course.course_name }}</span>
+                                <span class="spacer"></span>
+                                <div>
+                                    <small class="completed-date">Terminé le: {{ course.completed_at | formatDate
+                                        }}</small>
+
+                                </div>
+                            </mat-list-item>
+                            }
+                        </mat-card-content>
+
+
+                    </mat-card>
+
+                </section>
+
+            </section>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+}

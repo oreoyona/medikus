@@ -1,0 +1,88 @@
+<div class="mdk-container d-flex align-items-center justify-content-center">
+
+    <mat-card class="my-5">
+        <form [formGroup]="editUserForm" (ngSubmit)="save()"
+        class="d-flex flex-column justify-content-center align-tems-center">
+        @if(loading){
+
+        <app-loading-spinner [visible]="loading" />
+        }
+        @else{
+        @if(errorMessage()){
+        <div class="alert alert-danger">{{errorMessage()}}</div>
+
+        }
+        @if(successMessage()){
+            <div class="alert alert-success">
+                {{successMessage()}}
+            </div>
+        }
+        <mat-card-header class="my-2">
+            <h2 mat-card-title>Modifier un utilisateur</h2>
+        </mat-card-header>
+        <mat-card-content>
+           
+
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Votre nom</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Email: </mat-label>
+                    <input matInput type="email" matInput formControlName="email">
+                </mat-form-field>
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Votre nom d'utilisateur </mat-label>
+                    <input matInput type="text" formControlName="username">
+                </mat-form-field>
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Le lien vers votre photo de profil </mat-label>
+                    <input matInput type="text" formControlName="imgUrl">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Role de l'utilisateur?</mat-label>
+                    <mat-select formControlName="role" required>
+                        <mat-option *ngFor="let role of roles" [value]="role">{{
+                            role }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="field">
+                    <mat-label>Image de profil</mat-label>
+                    <input type="file" (change)="onImageChange($event)" accept="image/*" />
+                </div>
+          
+
+
+
+
+
+          
+            
+        </mat-card-content>
+
+        <mat-card-footer>
+            <mat-card-actions>
+                <button type="submit" mat-flat-button [disabled]="!editUserForm.valid" class="mx-2">Enregistrer</button>
+                
+                <button 
+                mat-flat-button type="button" 
+                class="delete-btn mx-2"
+                (click)="deleteAdminUser()" 
+                [appLoadingButton]="deleteLoading"
+                >Supprimer</button>
+            
+            </mat-card-actions>
+        </mat-card-footer>
+   
+        }
+    </form>
+    </mat-card>
+
+</div>

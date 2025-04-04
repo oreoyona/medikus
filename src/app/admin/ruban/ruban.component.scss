@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+main{
+    overflow: hidden;
+    
+}
+.left{
+
+    background-color: var(--mat-sys-primary-container);
+    .action-btn{
+        height: 100px;
+        cursor: pointer;
+        text-align: right;
+        gap: 10px;
+        user-select: none;
+        min-width: 100%;
+        font-size: 0.9rem;
+
+        .icon-text{
+            overflow:hidden;
+           
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .action-btn:focus{
+        transform: scale(0.9);
+    }
+
+    .action-btn:hover{
+        background-color: var(--mat-sys-primary-container);
+        border: 1px solid inherit;
+        box-shadow: var(--mdc-fab-container-elevation-shadow, var(--mat-sys-level3));
+    }
+    .activeLink{
+        background-color: var(--mat-sys-primary-container);
+        border: 1px solid inherit;
+        box-shadow: var(--mdc-fab-container-elevation-shadow, var(--mat-sys-level3));
+        color: var(--mat-sys-error);
+    }
+   
+    
+  }
+
+.right {
+   
+    flex-grow: 1; /* Allow this section to grow and take the remaining space */
+    padding: 20px; /* Add some padding for better spacing */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+
+}

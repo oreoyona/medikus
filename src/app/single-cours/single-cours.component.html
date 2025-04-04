@@ -1,0 +1,163 @@
+<header class="pad-0">
+    <app-header />
+</header>
+
+@if(!course){
+<app-loading-spinner [visible]="!course" />
+}@else {
+
+
+
+<section class="mdk-container">
+
+
+    <main class="container d-flex justify-content-center">
+        <div class="course-container">
+            @if(course){
+            <mat-card>
+                <mat-card-header>
+                    <h2 mat-card-title class="my-3 overview-title">
+                        {{course.name}}
+                    </h2>
+                </mat-card-header>
+
+
+                <mat-card-content>
+                    <div class="course-banner">
+                        <img class="img-fluid rounded" mat-card-image-sm appDefaultImg [src]="course.imgUrl" alt="course image banner"
+                            style="width: 50%;">
+
+                    </div>
+                    <mat-card-actions>
+                        @if( subscribed() ){
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button mat-flat-button [appLoadingButton]="false" (click)="unsubscribe()"
+                                style="background-color: var(--mat-sys-error);">Se désinscrire</button>
+                            <button class="mx-2" mat-stroked-button [appLoadingButton]="false"
+                                routerLink="/learn/cours/{{course.id}}">Aller en cours</button>
+
+                        </div>
+
+                        }
+                        @else {
+                        @if(course.courseType == "Présentiel"){
+
+                        }
+
+                        @else if (course.courseType == "Hybride") {
+                        <button mat-flat-button [appLoadingButton]="loadingBtn()"
+                            (click)="subscribe()">S'incrire</button>
+
+                        }
+                        @else {
+                        <button mat-flat-button id="add-to-calendar">Ajouter au calendrier</button>
+                        }
+                        }
+
+
+                    </mat-card-actions>
+
+                    <div class="course-info-box">
+                        <div class="info-item">
+                            <span class="info-label">Date</span>
+                            <span class="info-value">{{course.date | formatDate }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Type de cours</span>
+                            <span class="info-value">{{course.courseType}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Instructeurs</span>
+                            <div class="instructors">
+                                @for(instructor of course.instructor?.split(";"); track $index){
+                                <span class="instructor">{{instructor}}</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 mat-card-title class="overview-title">Vue d'ensemble</h3>
+                    <mat-card class="overview-card">
+                        <mat-card-content>
+                            <p class="overview-description">{{course.description}}</p>
+                        </mat-card-content>
+                    </mat-card>
+
+                 
+                  
+                    <section class="registration-section">
+                        <h3 mat-card-title class="registration-title">Comment s'enregistrer ?</h3>
+                        <div class="registration-content">
+                            <p class="registration-text">{{course.registering}}</p>
+                        </div>
+                    </section>
+
+
+                    <section class="target-audience-section">
+                        <h3 mat-card-title class="target-audience-title">Audience cible</h3>
+                        <ul class="target-audience-list">
+                            @for(list of course.target.split(";"); track $index){
+                            <li class="target-audience-item">
+                                <mat-icon class="list-icon">person</mat-icon>
+                                <span class="list-text">{{list}}</span>
+                            </li>
+                            }
+                        </ul>
+                    </section>
+
+
+
+
+                    <section class="objectives-section">
+                        <h3 mat-card-title class="objectives-title">Objectifs du cours</h3>
+                        <ul class="objectives-list">
+                            @for(list of course.objectifs.split(";"); track $index){
+                            <li class="objectives-item">
+                                <mat-icon class="list-icon">check_circle</mat-icon>
+                                <span class="list-text">{{list}}</span>
+                            </li>
+                            }
+                        </ul>
+                    </section>
+
+                    <section class="activity-questions-section">
+                        <h3 mat-card-title class="activity-questions-title">Pour toutes les questions liées à cette activité, veuillez contacter:</h3>
+                        <ul class="activity-questions-list">
+                            @for (item of course.contact?.split(";"); track $index) {
+                            <li class="activity-questions-item">
+                                <mat-icon class="contact-icon">mail</mat-icon>
+                                <span class="contact-info">{{item}}</span>
+                            </li>
+                            }
+                        </ul>
+                    </section>
+
+
+
+                       <section class="instructors-section">
+                        <h3 mat-card-title class="instructors-title">Rencontrez vos instructeurs</h3>
+                        <div class="instructors-list">
+                            @for (instructor of course.instructor?.split(';'); track $index) {
+                                <div class="instructor-item">
+                                    <div class="instructor-picture">
+                                        <img mat-card-sm-image appDefaultImg [src]="course.instructorImgUrl?.split!(';')[$index] || 'https://fakeimg.pl/600x400'"
+                                            alt="Course instructor profile picture">
+                                    </div>
+                                    <div class="instructor-name">{{ instructor }}</div>
+                                </div>
+                            }
+                        </div>
+                    </section>
+
+                </mat-card-content>
+                <mat-card-footer></mat-card-footer>
+            </mat-card>
+
+            }
+
+        </div>
+    </main>
+</section>
+
+
+}

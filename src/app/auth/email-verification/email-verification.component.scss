@@ -1,0 +1,95 @@
+/* Variables for colors */
+$accent: #8f0045;
+$rouge-icon: #B42C39;
+$gris: #2f3033;
+$blue: #005cbb;
+$blue-logo: #22AEEE;
+$bg-light: #f8f9fa;
+$card-bg: #ffffff;
+$text-primary: #202124;
+$text-secondary: #5f6368;
+$border-radius: 8px;
+$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+$transition-duration: 0.3s;
+$transition-easing: ease;
+
+/* Styles globaux for the page */
+.verification-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  background-color: $bg-light;
+  padding: 40px 20px;
+}
+
+.verification-card {
+  text-align: center;
+  padding: 60px 40px;
+  background-color: $card-bg;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  width: 400px;
+  max-width: 90%;
+  box-sizing: border-box;
+}
+
+.verification-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.verification-spinner {
+  margin: 30px auto;
+  width: 50px;
+  height: 50px;
+  color: $blue;
+}
+
+.verification-icon {
+  font-size: 1.5em;
+  margin-bottom: 24px;
+
+  &.success-icon {
+    color: $blue-logo;
+  }
+
+  &.error-icon {
+    color: $rouge-icon;
+  }
+}
+
+.verification-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: $gris;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.verification-message {
+  font-size: 16px;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.verification-button {
+  padding: 12px 24px;
+  font-size: 14px;
+  border-radius: 6px;
+  margin-top: 20px;
+  background-color: $blue-logo;
+  color: white;
+  transition: box-shadow $transition-duration $transition-easing;
+
+  &:hover {
+    box-shadow: 0 2px 6px rgba(0, 92, 187, 0.4);
+  }
+}

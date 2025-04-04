@@ -1,0 +1,29 @@
+@if(courseComponent.allModulesCompleted()){
+    <div class="alert alert-success">
+        Vous avez déjà terminé ce cours
+    </div>
+}
+<mat-tab-group>
+   
+  @if (module) {
+      @for (part of module.parts; track $index; let i = $index) {
+          <mat-tab [label]="part.title!">
+              @if (part.contentType == "Video") {
+                  <div class="container p-3">
+                      <p>
+                          {{ part.description }}
+                      </p>
+                  </div>
+                  <youtube-player videoId="{{getVideoId(part.videoUrl!)}}" [height]="250" [width]="500">
+                  </youtube-player>
+              } @else if (part.contentType == "Text") {
+                  <div class="display-4">{{ part.title }}</div>
+                  <div [innerHTML]="showHtmlContent(part.content!)"></div>
+              }
+              <button class="m-5 btn btn-primary" type="button" [disabled]="partCompletionStatus[i]" (click)="markPartCompleted(i)">
+                  {{ partCompletionStatus[i] ? 'Terminé' : 'Marquer comme terminé' }}
+              </button>
+          </mat-tab>
+      }
+  }
+</mat-tab-group>

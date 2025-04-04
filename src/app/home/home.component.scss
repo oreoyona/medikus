@@ -1,0 +1,184 @@
+@media (max-width: 760px) {
+  .mobile {
+    display: flex !important;
+  }
+
+  .ruban {
+    display: none !important;
+  }
+
+  .bigger-screen {
+    display: none !important;
+  }
+
+  #find {
+    margin: 10px;
+  }
+
+  #activity {
+    font-size: 1.5em !important;
+  }
+
+  .banner {
+    height: 400px !important;
+
+    .writtings {
+      gap: 10px;
+      justify-content: center;
+    }
+
+    #banner-title {
+      font-size: 2rem !important;
+    }
+  }
+
+  .course-cards {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px !important;
+
+    .course-card {
+      width: 100% !important;
+
+      .card-image-section {
+        width: 100% !important;
+        height: 200px !important;
+        margin: 0 !important;
+
+        .course-image {
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: center;
+        }
+      }
+    }
+  }
+}
+
+.mobile {
+  display: none;
+}
+
+.mdk-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+
+  .centered-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ruban {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+
+  #find {
+    display: inline-flex;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .banner {
+    height: 370px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background-size: cover;
+    background-position: center;
+    filter: drop-shadow(12px);
+
+    .writtings {
+      background-color: #1eb0efb3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      height: 70%;
+      padding: 12px;
+
+      h4 {
+        text-align: center;
+      }
+    }
+
+    #banner-title {
+      font-size: 4.5em;
+    }
+  }
+
+  #activity {
+    display: inline-flex;
+    justify-self: center;
+    align-self: center;
+    font-size: 1.5em;
+  }
+
+  .activity-container {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    margin: 12px;
+  }
+}
+
+.course-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 0;
+  min-height: 200px;
+  gap: 20px;
+
+  mat-card {
+    max-width: 350px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+   
+  }
+  
+  mat-card:hover {
+    transform: translateY(-5px);
+    /* Slightly move the card up on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Add a subtle shadow on hover */
+  }
+  
+  mat-card:active {
+    transform: translateY(0);
+    /* Return to the original position on click */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Slightly reduce shadow on click */
+  }
+
+  .course-card {
+    .card-image-section {
+      height: 200px;
+      width: 300px;
+      overflow: hidden;
+      margin: 0 auto;
+
+      .course-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+      }
+    }
+  }
+}
+
+footer {
+  overflow: hidden;
+}
+

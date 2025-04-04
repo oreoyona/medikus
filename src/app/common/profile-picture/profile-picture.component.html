@@ -1,0 +1,22 @@
+<section>
+    @if(!imageUrl){
+    <div class="default-profile" [ngStyle]="{'background-color': backgroundColor}" mat-ripple routerLink="/dashboard">
+        <ng-content>
+            {{initials}}
+        </ng-content>
+
+    </div>
+    }
+
+    @else {
+    <div class="thumbnail rounded" mat-ripple routerLink="/dashboard">
+        <ng-content>
+            <img [src]="imageUrl" alt="{{ name }} profile" class="thumbnail round">
+
+        </ng-content>
+
+    </div>
+    }
+</section>
+
+<section #menu></section>

@@ -1,0 +1,54 @@
+<header class="pad-0">
+  <app-header></app-header>
+</header>
+
+<section class="mdk-container">
+  <nav class="ruban">
+    @for (item of ruban; track item) {
+    <button mat-stroked-button class="ruban-btn" [routerLink]="item.link"
+      [fragment]="item.fragment">{{item.titre}}</button>
+    }
+  </nav>
+  <div class="d-flex justify-content-center">
+    <button mat-raised-button color="primary" class="m-2" routerLink="/catalogue">
+      Trouver un programme <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+
+  <app-banner [imageUrl]="bannerImageUrl" [title]="bannerTitle" [subtitle]="bannerSubtitle"></app-banner>
+
+  <div class="activity-container">
+    <h2 id="activity">{{ "Activités Vedettes" | uppercase }}</h2>
+  </div>
+
+  <section class="course-cards">
+    @if (!courses) {
+    <mat-progress-spinner mode="indeterminate" style="margin: 20px auto;"></mat-progress-spinner>
+    } @else {
+    @for (course of courses | slice: 0:articlesToShow; track $index) {
+    <mat-card appearance="outlined" class="course-card" [routerLink]="'/learn/' + course.id">
+      <div class="card-header-section" style="height: 80px; overflow: hidden;">
+        <mat-card-header>
+          <mat-card-title>{{ course.name }}</mat-card-title>
+          <mat-card-subtitle>{{ course.date | date }}</mat-card-subtitle>
+        </mat-card-header>
+      </div>
+
+      <div class="card-image-section" style="height: 200px; width: 300px; overflow: hidden; margin: 0 auto;">
+        <div class="course-image" [style.background-image]="'url(' + getImgUrl(course.imgUrl) + ')'"></div>
+      </div>
+
+      <div class="card-button-section"
+        style="height: 60px; display: flex; align-items: center; justify-content: flex-end; padding: 0 16px;">
+        <mat-card-actions>
+          <button mat-raised-button color="primary" [routerLink]="'/learn/' + course.id">En Savoir Plus</button>
+        </mat-card-actions>
+        
+      </div>
+    </mat-card>
+    }
+    }
+  </section>
+</section>
+

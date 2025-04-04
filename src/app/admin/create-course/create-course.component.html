@@ -1,0 +1,225 @@
+
+@if(errorMessage()){
+       <div class="alert alert-danger p-5 m-5">
+        {{errorMessage()}}
+       </div>     
+}
+
+@if(successMessage()){
+    <div class="alert alert-success p-4 m-5">
+        {{successMessage()}}
+    </div>
+}
+<main class="d-flex flex-column">
+    <h2 class="text-center">Créer un nouveau cours</h2>
+    <mat-card class="my-5">
+
+      
+      
+        <form [formGroup]="newCourseForm" (ngSubmit)="onSubmit()" class="d-flex flex-column">
+            <mat-card-content class="card-container m-3">
+                <section class="left container d-flex flex-column align-items-start justify-content-start">
+                    <h4>Informations sur le cours</h4>
+
+                    <mat-form-field appearance="outline" class="field">
+                        <mat-label for="name">Nom du Cours:</mat-label>
+                        <input matInput id="name" formControlName="name" required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field">
+                        <mat-label for="imgUrl">L'URL de l'image:</mat-label>
+                        <input matInput id="imgUrl" formControlName="imgUrl" required>
+                    </mat-form-field>
+
+                    <app-image-upload [imgUrlControl]="newCourseForm.get('imgUrl')!" />
+
+
+                    <mat-form-field appearance="outline" class="field my-2">
+                        <mat-label>Choisissez une date:</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="date" required>
+                        <mat-hint>MM/JJ/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field">
+                        <mat-label>Quel est le type du cours ?</mat-label>
+                        <mat-select formControlName="courseType" required>
+                        <mat-option *ngFor="let option of typeOptions"
+                            [value]="option">{{
+                            option }}</mat-option>
+                    </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field">
+                        <mat-label for="description">Description du cours:</mat-label>
+                        <textarea matInput id="description" formControlName="description" required></textarea>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field mb-5">
+                        <mat-label for="objectifs">Objectifs du cours:</mat-label>
+                        <textarea matInput id="objectifs" formControlName="objectifs" required></textarea>
+                        <mat-hint>Séparez les objectifs par un point virgule</mat-hint>
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field mb-3 my-3">
+                        <mat-label for="target">Audience cible:</mat-label>
+                        <input matInput id="target" formControlName="target">
+                        <mat-hint>Séparez chaque cible par un point virgule</mat-hint>
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field mb-3 my-5">
+                        <mat-label for="registering">Infos sur comment s'enregistrer:</mat-label>
+                        <input matInput id="registering" formControlName="registering">
+                        <mat-hint>Séparez chaque point par un point virgule</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field my-5">
+                        <mat-label for="contact">Infos sur les contacts:</mat-label>
+                        <input matInput id="contact" formControlName="contact">
+                        <mat-hint>Séparez chaque contact par un point virgule</mat-hint>
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field my-5">
+                        <mat-label for="instructor">Qui donne ce cours:</mat-label>
+                        <input matInput id="instructor" formControlName="instructor">
+                        <mat-hint>Séparez chaque instructeur par un point virgule</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field my-5">
+                        <mat-label for="instructorImgUrl">URL de l'image de l'instructeur</mat-label>
+                        <input matInput id="instructorImgUrl" formControlName="instructorImgUrl">
+                        <mat-hint>Séparez chaque url par un point virgule</mat-hint>
+                    </mat-form-field>
+
+                    <app-image-upload [imgUrlControl]="newCourseForm.get('instructorImgUrl')" />
+
+                </section>
+
+                <section class="right container d-flex flex-column align-items-center justify-content-center">
+                    <h4>Informations sur les modules du cours</h4>
+                    <div formArrayName="modules">
+                        <div *ngFor="let module of modules.controls; let i = index" [formGroupName]="i">
+                            <div class="my-2 module-containner px-2">
+                                <mat-card>
+                                    <mat-card-content>
+                                        <mat-accordion >
+                                            <mat-expansion-panel>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <h3>Module {{ (i + 1) }}</h3>
+        
+                                                    </mat-panel-title>
+                                                    <button class="mx-2" type="button" mat-icon-button
+                                                        (click)="openDialog(i)"><mat-icon>close</mat-icon></button>
+        
+                                                </mat-expansion-panel-header>
+        
+                                                <mat-form-field appearance="outline" class="field m-1">
+                                                    <mat-label>Titre du module:</mat-label>
+                                                    <input matInput formControlName="title" required>
+                                                </mat-form-field>
+        
+                                                <mat-form-field appearance="outline" class="field m-1">
+                                                    <mat-label>Lien du module:</mat-label>
+                                                    <input matInput formControlName="link" required>
+                                                </mat-form-field>
+        
+                                                <h4 class="my-2">Parties du module: {{
+                                                    toFormArray(module.get('parts')).controls.length }}</h4>
+        
+                                                <div formArrayName="parts">
+                                                    <div *ngFor="let part of (toFormArray(module.get('parts')))?.controls; let j = index"
+                                                        [formGroupName]="j" class="d-flex flex-column justify-content-center">
+                                                        <div class="border rounded border-dark-subtle m-2 p-2">
+        
+                                                            <mat-form-field appearance="outline" class="field m-1">
+                                                                <mat-label>Type de contenu:</mat-label>
+                                                                <mat-select formControlName="contentType"
+                                                                    (selectionChange)="onPartContentTypeChange(i, j)" required>
+                                                                    <mat-option *ngFor="let option of options"
+                                                                        [value]="option">{{
+                                                                        option }}</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+        
+                                                            <ng-container [ngSwitch]="part.get('contentType')?.value">
+                                                                <ng-container *ngSwitchCase="'Questions'">
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>Question:</mat-label>
+                                                                        <input matInput formControlName="question" required>
+                                                                    </mat-form-field>
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>Réponse:</mat-label>
+                                                                        <input matInput formControlName="response" required>
+                                                                    </mat-form-field>
+                                                                </ng-container>
+        
+                                                                <ng-container *ngSwitchCase="'Text'">
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>Titre:</mat-label>
+                                                                        <input matInput formControlName="title" required>
+                                                                    </mat-form-field>
+        
+                                                                    <div class="m-1" class="app-editor">
+                                                                        <app-editor formControlName="content" />
+                                                                    </div>
+                                                                </ng-container>
+        
+                                                                <ng-container *ngSwitchCase="'Video'">
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>Titre:</mat-label>
+                                                                        <input matInput formControlName="title" required>
+                                                                    </mat-form-field>
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>Description:</mat-label>
+                                                                        <input matInput formControlName="description" required>
+                                                                    </mat-form-field>
+                                                                    <mat-form-field appearance="outline" class="field m-1">
+                                                                        <mat-label>URL de la vidéo:</mat-label>
+                                                                        <input matInput formControlName="videoUrl" required>
+                                                                    </mat-form-field>
+                                                                </ng-container>
+                                                            </ng-container>
+        
+                                                            
+                                                                <button type="button" class="btn btn-danger my-3"  (click)="removePart(i, j)">Supprimer cette partie</button>
+        
+                                                            
+                                                            
+        
+        
+                                                        </div>
+        
+                                                    </div>
+        
+                                                </div>
+        
+                                                <button type="button" mat-stroked-button (click)="addPart(i)">Ajouter une
+                                                    nouvelle partie</button>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </mat-card-content>
+                                </mat-card>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </mat-card-content>
+            <mat-card-footer>
+                <button type="button" mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
+                <button mat-flat-button type="submit" class="m-2">Créer le cours</button>
+            </mat-card-footer>
+        </form>
+    </mat-card>
+</main>
+
+<pre>
+    {{newCourseForm.value | json}}
+</pre>
+
+

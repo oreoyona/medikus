@@ -1,0 +1,68 @@
+<header class="pad-0">
+    <app-header></app-header>
+  </header>
+  
+  <section class="fluid-container info-banner about-container d-flex justify-content-center align-items-center"
+    style="background-image: url('info-banner.webp');">
+    <div class="alert alert-light text-center h3 page-title">{{pageTitle}}</div>
+  </section>
+  
+  <section class="mdk-container">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <mat-icon>location_on</mat-icon>
+          <h4 class="h4">Adresse physique</h4>
+        </div>
+        <div class="card-body">
+          <p>Le siège de Medikus Impulse se trouve au numéro 29bis, sur l'avenue Yav Tshibal, au quartier Golf Kabulamenshi.</p>
+        </div>
+      </div>
+  
+      <div class="card" id="whatsapp">
+        <div class="card-header">
+          <mat-icon>message</mat-icon>
+          <h4 class="h4">Contact Whatsapp</h4>
+        </div>
+        <div class="card-body">
+          <p class="link-opacity-100">+243 991 506 411</p>
+        </div>
+      </div>
+  
+      <div class="card" id="join">
+        <div class="card-header">
+          <mat-icon>group_add</mat-icon>
+          <h4 class="h4">Rejoindre Medikus Impulse</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" style="max-width: 400px;">
+            <div class="mb-3">
+              <div>
+                <mat-form-field>
+                  <mat-label>Nom</mat-label>
+                  <input matInput type="text" id="name" formControlName="name">
+                  <mat-icon matPrefix>contacts_product</mat-icon>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <mat-label>Email</mat-label>
+                  <input matInput type="email" id="email" formControlName="email">
+                  <mat-icon matPrefix>message</mat-icon>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <mat-label>Numéro de téléphone</mat-label>
+                  <input matInput type="tel" id="tel" formControlName="tel">
+                  <mat-icon matPrefix>phone</mat-icon>
+                  <mat-hint>Commencez par le code pays(ex. +243)</mat-hint>
+                </mat-form-field>
+              </div>
+              <button class="my-3" mat-stroked-button type="submit">Envoyer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>

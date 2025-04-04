@@ -1,0 +1,47 @@
+<nav class="bigger-screen header-nav">
+    <div class="logo" routerLink="">
+        <img src="logo.png" alt="Logo de Medicus" width="100%">
+    </div>
+
+    <div class="nav-btn">
+        @for (item of navigation; track $index) {
+            @if(item.link == "logout"){
+                <a routerLinkActive="active-route" mat-stroked-button class="ms-5"  (click)="logout()">{{item.titre | uppercase}}</a>
+            }
+            
+            @else{
+                <a routerLinkActive="active-route" mat-button routerLink="/{{item.link}}" >{{item.titre| uppercase}}</a>
+
+            }
+       
+        }
+    </div>
+
+</nav>
+
+<nav class="mobile header-nav">
+    <div class="logo" routerLink="">
+        <img src="logo.png" alt="Logo de Medicus" width="100%">
+    </div>
+    @if(mobile){
+
+    <section class="extreme-left-section d-flex justify-content-center align-items-center">
+
+        <button type="button" mat-button (click)="openDialog()" hasBackdrop = false>
+            @if(showMenu()){
+            <mat-icon>menu</mat-icon>
+
+            }
+        </button>
+
+            @if(isLogged()){
+            <div class="user-img">
+                <app-profile-picture [imageUrl]="user?.imgUrl!" [name]="user?.name!"></app-profile-picture>
+                
+            </div> 
+            }
+       
+    </section>
+
+    }
+</nav>

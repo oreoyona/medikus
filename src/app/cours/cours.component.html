@@ -1,0 +1,83 @@
+<header class="pad-0">
+  <app-header></app-header>
+</header>
+
+<main class="main-content" [class.mobile]="breakpointService.mobile()">
+  @if (breakpointService.mobile()) {
+    <button mat-icon-button class="menu-toggle-button" (click)="toggleLeftMenu()">
+      <mat-icon>{{ leftMenuVisible ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+    </button>
+  }
+
+  <aside
+    class="left-section-container"
+    [class.mobile]="breakpointService.mobile()"
+    [style.display]="breakpointService.mobile() && !leftMenuVisible ? 'none' : 'block'"
+  >
+    <mat-card class="left-section">
+      <mat-card-content>
+        <nav mat-list>
+          @if (courseData$ | async; as course) {
+            @for (module of asModuleArray(course.modules); track $index) {
+              <a
+                mat-list-item
+                class="module-link"
+                [routerLink]="['.', { outlets: { module: module.link } }]"
+                routerLinkActive="current-module"
+              >
+              @if (isModuleCompletedByLink(module.link, asModuleArray(course.modules))) {
+                <mat-icon class="module-icon completed-icon">check_circle</mat-icon>
+              } @else {
+                <mat-icon class="module-icon">view_module</mat-icon>
+              }
+                <span class="module-title">{{ module.title }}</span>
+              </a>
+              <mat-divider></mat-divider>
+            }
+          }
+        </nav>
+      </mat-card-content>
+    </mat-card>
+  </aside>
+
+  <section class="right-section" [class.mobile]="breakpointService.mobile()">
+    <div class="module-content">
+      <mat-card class="selected-module">
+        <mat-card-content>
+          <router-outlet name="module"></router-outlet>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  @if (breakpointService.mobile() && leftMenuVisible) {
+    <div class="overlay-background" (click)="closeOverlay()"></div>
+    <aside class="left-section-overlay">
+      <mat-card class="left-section">
+        <mat-card-header>
+          <button mat-icon-button class="close-overlay-button" (click)="closeOverlay()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <nav mat-list>
+            @if (courseData$ | async; as course) {
+              @for (module of asModuleArray(course.modules); track $index) {
+                <a
+                  mat-list-item
+                  class="module-link"
+                  [routerLink]="['.', { outlets: { module: module.link } }]"
+                  routerLinkActive="current-module"
+                >
+                  <mat-icon class="module-icon">view_module</mat-icon>
+                  <span class="module-title">{{ module.title }}</span>
+                </a>
+                <mat-divider></mat-divider>
+              }
+            }
+          </nav>
+        </mat-card-content>
+      </mat-card>
+    </aside>
+  }
+</main>

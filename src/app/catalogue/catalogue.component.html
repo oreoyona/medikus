@@ -1,0 +1,78 @@
+<header class="pad-0">
+    <app-header></app-header>
+</header>
+
+<main class="catalogue-container">
+    <div class="catalogue-search d-flex justify-content-center">
+        <form (ngSubmit)="search()" [formGroup]="searchForm">
+            <mat-form-field class="search-field" appearance="outline">
+                <mat-label>Chercher un programme</mat-label>
+                <input matInput type="text" formControlName="term" />
+                <button matSuffix mat-icon-button aria-label="search" type="submit" class="search-button">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <mat-card class="catalogue-card">
+        <mat-card-content class="catalogue-content-wrapper">
+            <aside class="catalogue-filters">
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Catégorie</mat-label>
+                    <mat-select [formControl]="categoryFilter" (selectionChange)="applyFilters()">
+                        <mat-option value="">Tous</mat-option>
+                        @for(category of categories; track $index){
+                        <mat-option [value]="category">{{category}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Instructeur</mat-label>
+                    <mat-select [formControl]="instructorFilter" (selectionChange)="applyFilters()">
+                        <mat-option value="">Tous</mat-option>
+                        <mat-option *ngFor="let instructor of instructors" [value]="instructor">{{ instructor
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </aside>
+
+            <section class="catalogue-grid">
+                <div class="grid-container">
+                    <div *ngIf="loadingCourses" class="spinner-container">
+                        <mat-spinner></mat-spinner>
+                    </div>
+                    <div *ngIf="noCoursesFound && !loadingCourses" class="alert alert-danger">Aucun cours ne correspond
+                        à votre recherche.</div>
+                    @if(!noCoursesFound && !loadingCourses){
+                    @for (course of getPagedCourses(); track $index) {
+                    <div class="grid-item">
+                        <mat-card class="course-item" [routerLink]="'/learn/' + course.id">
+                            <div class="course-header">
+                                <h3 class="course-title">{{ course.name }}</h3>
+                                <p class="course-date">{{ course.date | date }}</p>
+                            </div>
+                            <div class="course-image-container">
+                                <div class="course-image"
+                                    [style.backgroundImage]="'url(' + getImgUrl(course.imgUrl) + ')'"></div>
+                            </div>
+                            <div class="course-actions">
+                                <button mat-raised-button color="primary" class="learn-more-button">En Savoir
+                                    Plus</button>
+                            </div>
+                        </mat-card>
+                    </div>
+                    }
+                    }
+
+
+                </div>
+
+            </section>
+        </mat-card-content>
+
+        <mat-paginator [length]="filteredCourses.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            (page)="handlePageEvent($event)" showFirstLastButtons class="catalogue-pagination"></mat-paginator>
+    </mat-card>
+</main>

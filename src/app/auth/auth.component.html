@@ -1,0 +1,35 @@
+
+<header class="pad-0">
+    <app-header></app-header>
+  </header>
+
+<mat-card class="container my-3 ">
+    <mat-card-content class="mdk-container">
+        <div class="rounded left not-mobile" style="background-image: url('info-banner.webp');">
+            <mat-card>
+                <mat-card-content>
+                    {{actualText() | uppercase}}
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="right d-flex align-items-center justify-content-center">
+
+            <mat-card class="my-2 p-2">
+                <mat-card-content>
+                @if(actualText() == "inscription"){
+                    <app-inscription-form />
+                    }
+                    @else{
+                    <app-login-form />
+                    }
+                </mat-card-content>
+
+            </mat-card>
+
+
+
+
+
+        </div>
+    </mat-card-content>
+</mat-card>

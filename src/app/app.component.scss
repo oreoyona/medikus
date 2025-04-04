@@ -1,0 +1,26 @@
+@media (max-width: 760px) {
+    .alrt {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+a {
+    cursor: pointer;
+    padding: 0 5px;
+    font-style: italic;
+
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Ensure the container takes up at least the full viewport height */
+}
+
+.app-container>div {
+    /* Selects the router outlet container */
+    flex: 1;
+    /* Allows the content to grow and take up available space */
+}

@@ -1,0 +1,29 @@
+<main
+    [ngClass]="{'d-flex flex-column justify-content-center align-items-center': mobile(), 'main-grid': !mobile(), 'p-2 container': true}">
+    @for(ruban of dashboardRuban; track $index){
+    <div
+        [ngClass]="{'rounded mat-elevation-z8 card-content  p-3': !mobile(), 'mobile-card  border mat-elevation-z8': mobile()}">
+
+        <p>
+            {{ ruban.title }}
+        </p>
+
+
+
+        @if(!ruban.value){
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        }
+        @else {
+        <h1>
+            {{ruban.value}}
+        </h1>
+        }
+
+
+
+        <a [routerLink]="ruban.link">Voir détails</a>
+    </div>
+
+
+    }
+</main>

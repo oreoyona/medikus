@@ -1,0 +1,31 @@
+.mdk-footer {
+    /* Light background color */
+    padding: 20px;
+    color: white;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    /* Light border */
+}
+
+.footer-content {
+    display: inline-block;
+    /* Center the content */
+}
+
+.copyright {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.footer-links {
+    margin-top: 10px;
+}
+
+.footer-links a {
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}

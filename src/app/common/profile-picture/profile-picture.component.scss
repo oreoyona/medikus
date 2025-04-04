@@ -1,0 +1,28 @@
+.default-profile {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Text color */
+    font-weight: bold;
+    border-radius: 50%; /* Makes it circular */
+    font-size: 20px; /* Font size for initials */
+    cursor: pointer;
+    user-select: none;
+  }
+  .thumbnail {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    cursor: pointer;
+    user-select: none;
+    padding: 1px;
+    background-color: var(--mat-sys-error-container);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50% !important;
+  }
+  .round {
+    border-radius: 50%; /* Makes the image circular */
+  }

@@ -1,0 +1,149 @@
+@if(!courseId){
+<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+}
+@else {
+
+
+<mat-card>
+  <mat-card-content>
+
+    <section class="mdk-container container my-5 ">
+
+      @if(!mobile()){
+      <mat-card class="left my-2">
+        <mat-card-content>
+          <mat-nav-list>
+        
+            <a mat-list-item *ngFor="let module of cours.modules; trackBy: trackByFn" (click)="setCurrentModule(module)"
+              [class.active]="currentModule === module">
+              {{module.title}}
+            </a>
+          </mat-nav-list>
+        </mat-card-content>
+      </mat-card>
+      }
+
+      <div [ngClass]="{'right': true, 'rounded-1': true, 'border': !(isSmall | async), 'm-5': !(isSmall | async)}">
+        <ng-container *ngIf="currentModule">
+          <section class="container">
+
+            <div class="mobile menu" *ngIf="showMenuIcon">
+              <button mat-icon-button>
+                <mat-icon (click)="showSiding()" #menuIcon>menu</mat-icon>
+              </button>
+            </div>
+
+
+
+            @if(showSidingMenu){
+            <div [ngClass]="{'mobile': true, 'siding-left': true,' bringToView': showSidingMenu}">
+              <button mat-icon-button>
+                <mat-icon *ngIf="showCloseIcon" (click)="showSiding()" #closeIcon>close</mat-icon>
+              </button>
+              <mat-nav-list>
+                <a mat-list-item *ngFor="let module of cours.modules; trackBy: trackByFn"
+                  (click)="setCurrentModule(module)" [class.active]="currentModule === module">
+                  {{module.title}}
+                </a>
+              </mat-nav-list>
+            </div>
+            }
+
+
+
+
+
+
+            <h1 class="my-4">{{currentModule.title}}</h1>
+
+            <mat-tab-group *ngIf="currentModule.parts && currentModule.parts.length > 0">
+              <mat-tab *ngFor="let part of currentModule.parts; trackBy: trackByFn" [label]="part.title">
+                <ng-container *ngIf="isTextContent(part.content)">
+                  <div>
+                    <p *ngFor="let paragraph of part.content.text; trackBy: trackByFn">{{ paragraph }}</p>
+
+                    <blockquote class="blockquote"
+                      *ngIf="part.content.importantText && part.content.importantText.length > 0">
+                      <div *ngFor="let citation of part.content.importantText; trackBy: trackByFn">
+                        {{ citation }}
+                      </div>
+                    </blockquote>
+
+                    <h4 class="h4" *ngIf="part.content.list && part.content.list.length > 0">Que Retenir?</h4>
+                    <mat-nav-list *ngIf="part.content.list && part.content.list.length > 0">
+                      <a mat-list-item *ngFor="let item of part.content.list; trackBy: trackByFn">
+                        {{ item }}
+                      </a>
+                    </mat-nav-list>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="isVideoContent(part.content)">
+                  <div class="display-4">{{ part.content.title }}</div>
+                  <video width="100%" height="315" [src]="part.content.videoLink" controls></video>
+                </ng-container>
+
+                <ng-container *ngIf="isQuizContent(part.content)">
+                  <div class="display-4">{{ part.content.title }}</div>
+                  <div *ngFor="let question of part.content.questions; trackBy: trackByFn">
+                    <h4>{{ question.question }}</h4>
+                    <ul>
+                      <li *ngFor="let answer of question.answers; trackBy: trackByFn">
+                        <label>
+                          <input type="radio" name="question-{{ question.id }}" [value]="answer.id" />
+                          {{ answer.text }}
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-container>
+              </mat-tab>
+            </mat-tab-group>
+
+            <ng-container *ngIf="isTextContent(currentModule.content) && !currentModule.parts">
+              <p *ngFor="let paragraph of currentModule.content.text; trackBy: trackByFn">{{ paragraph }}</p>
+
+              <blockquote class="blockquote"
+                *ngIf="currentModule.content.importantText && currentModule.content.importantText.length > 0">
+                <div *ngFor="let citation of currentModule.content.importantText; trackBy: trackByFn">
+                  {{ citation }}
+                </div>
+              </blockquote>
+
+              <h4 class="h4" *ngIf="currentModule.content.list && currentModule.content.list.length > 0">Que Retenir?
+              </h4>
+              <mat-nav-list *ngIf="currentModule.content.list && currentModule.content.list.length > 0">
+                <a mat-list-item *ngFor="let item of currentModule.content.list; trackBy: trackByFn">
+                  {{ item }}
+                </a>
+              </mat-nav-list>
+            </ng-container>
+
+            <ng-container *ngIf="isVideoContent(currentModule.content) && !currentModule.parts">
+              <div class="display-4">{{ currentModule.content.title }}</div>
+              <video width="100%" height="315" [src]="currentModule.content.videoLink" controls></video>
+            </ng-container>
+
+            <ng-container *ngIf="isQuizContent(currentModule.content) && !currentModule.parts">
+              <div class="display-4">{{ currentModule.content.title }}</div>
+              <div *ngFor="let question of currentModule.content.questions; trackBy: trackByFn">
+                <h4>{{ question.question }}</h4>
+                <ul>
+                  <li *ngFor="let answer of question.answers; trackBy: trackByFn">
+                    <label>
+                      <input type="radio" name="question-{{ question.id }}" [value]="answer.id" />
+                      {{ answer.text }}
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </ng-container>
+
+          </section>
+        </ng-container>
+      </div>
+    </section>
+  </mat-card-content>
+</mat-card>
+
+}

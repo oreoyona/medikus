@@ -1,0 +1,68 @@
+@media (max-width: 560px){
+  .mdk-container{
+    grid-template-columns: 100% !important;
+
+    .left{
+      display: none !important;
+      border: none !important;
+    }
+
+    .right{
+      margin: 0 !important;
+      border: none !important;
+    }
+
+    
+
+    .mobile{
+      display: inline-flex !important;
+    }
+
+    .siding-left{
+      min-height: max-content;
+      transform: translateX(-100vw);
+
+      transition: transform 2s ease-in-out;
+
+    }
+
+    .bringToView{
+      transform: translateX(0) !important;
+      transition: transform 2s ease-in-out;
+      width: 70vw;
+      text-wrap: wrap;
+      z-index: 300000;
+      display: flex;
+      flex-direction: column;
+
+    }
+
+  }
+}
+
+
+.mdk-container {
+  min-height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 25% 75%;
+
+  .mobile{
+    display: none;
+  }
+
+  .container {
+    height: 100%;
+  }
+
+ 
+}
+
+.hidden {
+  display: none;
+}
+
+.active {
+  font-weight: bold; /* Or any other styling you want for the active link */
+  background-color: lightgray; /* Example styling */
+}

@@ -1,0 +1,62 @@
+<div class="container">
+    @if(loading){
+    <div class="d-flex justify-content-center align-items-center">
+        <app-loading-spinner [visible]="loading" />
+    </div>
+    }
+
+    @else if(message()){
+    <div class="alert alert-danger">{{message()}}</div>
+    }
+    @else {
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+
+        <!-- Id Column -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Id. </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name || "Not set"}} </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef> Role </th>
+            <td mat-cell *matCellDef="let element"> {{element.role || "subscriber"}} </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="goTo(element.id)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+
+
+    </table>
+
+    <mat-paginator #paginator [pageSizeOptions]="pageSizeOptions" aria-label="Select page of users"></mat-paginator>
+
+    }
+
+</div>

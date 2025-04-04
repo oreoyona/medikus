@@ -1,0 +1,45 @@
+
+<header class="pad-0">
+    <app-header></app-header>
+  </header>
+
+<div class="mdk-container d-flex align-items-center justify-content-center">
+    <mat-card class="my-5">
+        <mat-card-header>
+            <h2>Modifiez votre profile</h2>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="editProfileForm" (ngSubmit)="save()"
+                class="d-flex flex-column justify-content-center align-tems-center">
+
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Votre nom</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Email: </mat-label>
+                    <input matInput type="email" matInput formControlName="email">
+                </mat-form-field>
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Votre nom d'utilisateur </mat-label>
+                    <input matInput type="text" formControlName="username">
+                </mat-form-field>
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Le lien vers votre photo de profil </mat-label>
+                    <input matInput type="text" formControlName="imgUrl">
+                </mat-form-field>
+
+
+
+
+                <button mat-flat-button type="submit" [disabled]="!editProfileForm.valid">Enregistrer</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+</div>

@@ -1,0 +1,105 @@
+$accent: #8f0045;
+$rouge-icon: #B42C39;
+$gris: #2f3033;
+$blue: #005cbb;
+
+/* Thème clair */
+@media (prefers-color-scheme: light) {
+    header{
+        background-color: white;
+
+    }
+    /* Ajoutez d'autres styles spécifiques au thème clair ici */
+  }
+  
+  /* Thème sombre */
+  @media (prefers-color-scheme: dark) {
+ 
+
+   .header-nav, .mdk-footer{
+    box-shadow: none !important;
+    
+}
+    /* Ajoutez d'autres styles spécifiques au thème sombre ici */
+
+}
+.social-icon {
+    background-color: $gris;
+}
+
+.course-card-separator {
+    color: $accent;
+    border: 2px solid $rouge-icon;
+}
+.scrollable-icon:hover, .card-menu-icon{
+   color: $blue !important;
+}
+
+.search-btn{
+    background-color: $blue !important;
+    color: white !important;
+}
+.course-card-title {
+    color: $rouge-icon;
+}
+
+.white-color{
+    color: white;
+}
+
+.course-info-bottom:hover{
+    color: $rouge-icon;
+}
+.remove-btn{
+    background-color: $rouge-icon !important;
+}
+
+.active-route{
+    background-color: $rouge-icon !important;
+    color: white !important;
+}
+.ruban {
+    background-color: $gris;
+
+    button {
+        background-color: transparent;
+        border: 0px solid transparent;
+        cursor: pointer;
+        padding: 10px;
+        color: white !important;
+
+
+    }
+}
+
+.activity-container {
+    border-bottom: 3px solid $rouge-icon;
+
+}
+
+#activity {
+    color: $gris;
+
+}
+
+.course-card-inner {
+    border: 1px solid $gris;
+}
+#add-to-calendar{
+    background-color: $rouge-icon !important;
+}
+.ruban-btn:hover {
+    color: $blue !important;
+    transform: scaleX(0.9);
+    transition: transform .2s ease-in-out;
+
+}
+
+.header-nav, .mdk-footer{
+    box-shadow: 20px 20px 50px rgba(128, 128, 128, 0.411);
+    
+}
+
+.mdk-footer{
+    background-color: $gris;
+}

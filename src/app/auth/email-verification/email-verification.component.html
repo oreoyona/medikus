@@ -1,0 +1,33 @@
+<header class="pad-0">
+  <app-header />
+</header>
+ 
+<main class="verification-main">
+  <div class="verification-card d-flex justify-content-center">
+    @switch (verificationStatus) {
+      @case ('verifying') {
+        <div class="verification-state">
+          <mat-progress-spinner mode="indeterminate" class="verification-spinner"></mat-progress-spinner>
+          <p class="verification-message">Vérification de votre email...</p>
+        </div>
+      }
+      @case ('success') {
+        <div class="verification-state d-flex flex-column align-items-center justify-content-center">
+          <mat-icon class="verification-icon success-icon">check_circle_outline</mat-icon>
+          <h2 class="verification-title">Email Vérifié !</h2>
+          <p class="verification-message">Votre email a été vérifié avec succès.</p>
+          <button mat-button class="verification-button" (click)="navigateToLogin()">Se connecter</button>
+        </div>
+      }
+      @case ('error') {
+        <div class="d-flex flex-column align-items-center verification-state">
+          <mat-icon class="verification-icon error-icon">error_outline</mat-icon>
+          <h2 class="verification-title">Échec de la vérification</h2>
+          <p class="verification-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+          <p class="verification-message" *ngIf="!errorMessage">Une erreur est survenue lors de la vérification.</p>
+          <button mat-raised-button color="primary" class="verification-button" (click)="navigateToLogin()">Se connecter</button>
+        </div>
+      }
+    }
+  </div>
+</main>

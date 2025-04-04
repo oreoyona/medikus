@@ -1,0 +1,155 @@
+<div class="mdk-container d-flex flex-column align-items-center justify-content-center">
+    @if (registrationSuccess() === true) {
+    <p class="alert alert-success field">Inscription réussie! Redirection vers la page de connexion...</p>
+    } @else if (registrationSuccess() === false && registrationError()) {
+        <mat-card class="my-4">
+            <mat-card-header>
+                <mat-error>
+                    <mat-icon>warning</mat-icon>
+
+                </mat-error>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-error mat-title>
+                    {{ registrationError() }}
+                </mat-error>
+            </mat-card-content>
+            <mat-card-footer>
+                <mat-card-actions>
+                    <button mat-button type="button"  routerLink="/assistance">Demander une assistance  </button>
+                    <button type="button" mat-flat-button routerLink="/auth/login">Aller à la page de connexion</button>
+                </mat-card-actions>
+   
+            </mat-card-footer>
+        </mat-card>
+           
+        
+
+    }
+
+
+    <form [formGroup]="inscriptionForm" (ngSubmit)="sendForm()"
+        class="d-flex flex-column justify-content-center align-tems-center">
+
+        @let usernameControle = inscriptionForm.get('username');
+
+        <mat-form-field appearance="outline" class="field">
+            <mat-label>Votre nom</mat-label>
+            <input matInput formControlName="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field my-2" #username>
+            <mat-label>
+                @if(usernameControle?.touched && inscriptionForm.get('username')?.errors?.['notAvailable']){
+                Ce nom d'utilisateur exite déjà
+                }
+                @else {
+                Votre nom d'utilisateur:
+                }
+            </mat-label>
+            <input matInput formControlName="username"
+                (input)="checkUserNameAvailability(username._control.value, inscriptionForm.get('username'))">
+            <mat-icon matSuffix
+                [ngClass]="{'available': userNameAvailable === true, 'not-available': userNameAvailable === false}">
+                @if(usernameControle?.valid && userNameAvailable === true){
+                check_circle
+                }
+                @else if(usernameControle?.invalid && userNameAvailable === false){
+                cancel
+                }
+                @else if (isLoadingUsernameCheck){
+                <mat-spinner diameter="20"></mat-spinner>
+                }
+            </mat-icon>
+            <mat-hint>ex: nom_postnom</mat-hint>
+            @if(usernameControle?.errors?.['minlength']){
+            <mat-error>Le nom d'utilisateur doit contenir au moins 3 caractères.</mat-error>
+            }
+
+            @if(usernameControle?.errors?.['pattern']){
+            <mat-error>Le nom d'utilisateur ne doit contenir que des caractères alphanumériques et des
+                underscores.</mat-error>
+            }
+
+            @if(usernameControle?.errors?.['lastChar']){
+            <mat-error>Le dernier caractère doit être une lettre ou un chiffre.</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field class="field my-2" appearance="outline">
+            <mat-label>Email: </mat-label>
+            <input type="email" matInput formControlName="email">
+            <mat-error>
+                @let emailControl = inscriptionForm.get('email');
+                @if(emailControl?.errors?.['conflict']){
+                    Cet email est déjà enregistrée. Veuillez vous connecter
+                }
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Mot De Passe</mat-label>
+            <input type="password" matInput formControlName="password"
+                (blur)="inscriptionForm.get('password')?.markAsTouched()" #pwd>
+            <mat-icon matSuffix [showPwd]="isPwdVisible" (click)="showPwd(pwd)">
+                @if(isPwdVisible){
+                visibility
+                }@else {
+                visibility_off
+                }
+
+            </mat-icon>
+        </mat-form-field>
+
+        @if(inscriptionForm.get('password')?.touched && inscriptionForm.get('password')?.errors?.['weakPassword']){
+        <mat-hint>
+            <mat-error>
+                Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule ET un chiffre.
+            </mat-error>
+        </mat-hint>
+
+        }
+
+
+        <mat-form-field class="field" appearance="outline">
+            <mat-label>Confirmer le mot de passe</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" #confirmPwd />
+            <mat-icon matSuffix [showPwd]="isPwdVisible" (click)="showPwd(confirmPwd)">
+                @if(isPwdVisible){
+                visibility
+                }@else {
+                visibility_off
+                }
+
+            </mat-icon>
+
+        </mat-form-field>
+        <mat-hint>
+            @if(inscriptionForm.errors?.['passwordsDoNotMatch'] && inscriptionForm.get('confirmPassword')?.touched){
+
+            <mat-error>
+                Les mots de passe doivent correspondre
+            </mat-error>
+
+            }
+
+        </mat-hint>
+
+        <span>
+            <small class="text-center">
+                En cliquant sur "S'enregistrer", vous acceptez les<button type="button" mat-button><a
+                        routerLink="/terms">termes et
+                        conditions</a></button>
+            </small>
+        </span>
+
+
+        <button mat-stroked-button type="submit" [disabled]="!inscriptionForm.valid">
+            @if(isLoading()){
+            <mat-spinner diameter="30"></mat-spinner>
+            }@else{
+            S'enregistrer
+            }
+        </button>
+    </form>
+</div>

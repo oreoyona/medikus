@@ -1,0 +1,51 @@
+
+<section class="container progression">
+    <div class="p-3 mb-2 bg-primary text-white">Suivez la progression des taches ici</div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Tache </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="importance">
+            <th mat-header-cell *matHeaderCellDef>importance</th>
+            <td mat-cell *matCellDef="let element">
+                @if(element.importance == "urgent"){
+                <div class="p-3 mb-2 bg-danger text-white">{{element.importance}}</div>
+                }
+                @else {
+                <div class="p-3 mb-2 bg-primary text-info"> {{element.importance}}
+                </div>
+                }
+
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="etat">
+            <th mat-header-cell *matHeaderCellDef> Etat</th>
+            <td mat-cell *matCellDef="let element">
+                @if(element.etat == "en cours"){
+                    <div class="alert alert-success" role="alert">
+                        {{element.etat}}
+                      </div>
+                }
+                 @else {
+                    <div class="alert alert-dark" role="alert">
+                        {{element.etat}}
+                      </div>
+                 }
+                 </td>
+        </ng-container>
+
+        <ng-container matColumnDef="responsable">
+            <th mat-header-cell *matHeaderCellDef> responsable</th>
+            <td mat-cell *matCellDef="let element"> {{element.responsable}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+
+</section>

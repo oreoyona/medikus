@@ -1,0 +1,7 @@
+mat-progress-spinner {
+    position: absolute; /* Or fixed, depending on your layout */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the spinner */
+    z-index: 1000; /* Ensure it's on top */
+  }
