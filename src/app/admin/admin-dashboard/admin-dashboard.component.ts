@@ -6,7 +6,7 @@ import { rubanObject } from '../../common/infercaces'; // Ensure correct import 
 import { RouterLink } from '@angular/router';
 import { CourseService } from '../course.service';
 import { UserService } from '../users/user.service';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { BreakpointService } from '../../common/services/breakpoint-service.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -36,28 +36,45 @@ export class AdminDashboardComponent implements OnInit {
     
 
   }
-
   loadStatistics() {
     forkJoin({
-      courses: this.courseService.getCourses(),
-      users: this.userService.getAllUsers(),
-      activeUsers: this.userService.getActiveUsers(30),
-      completedCourses: this.courseService.getCompletedCourses(30),
-      certificates: this.courseService.getAllCertificates(),
+      courses: this.courseService.getCourses().pipe(this.handleApiError('Courses')),
+      users: this.userService.getAllUsers().pipe(this.handleApiError('Users')),
+      activeUsers: this.userService.getActiveUsers(30).pipe(this.handleApiError('Active Users')),
+      completedCourses: this.courseService.getCompletedCourses(30).pipe(this.handleApiError('Completed Courses')),
+      certificates: this.courseService.getAllCertificates().pipe(this.handleApiError('Certificates')),
     })
-    .pipe(
-      takeUntilDestroyed(this.destroyRef)
-    )
-    
-    .subscribe(({ courses, users, activeUsers, completedCourses, certificates }) => {
-      if (Array.isArray(courses)) { // Check if courses is an array
-        this.dashboardRuban[0].value = courses.length;
-      }
-      this.dashboardRuban[1].value = users.length;
-      this.dashboardRuban[2].value = activeUsers.length;
-      this.dashboardRuban[3].value = completedCourses.length;
-      this.dashboardRuban[4].value = certificates.length;
-    });
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data: any) => {
+        this.dashboardRuban[0].value = data.courses?.length ?? 0;
+        this.dashboardRuban[1].value = data.users?.length ?? 0;
+        this.dashboardRuban[2].value = data.activeUsers?.length ?? 0;
+        this.dashboardRuban[3].value = data.completedCourses?.length ?? 0;
+        this.dashboardRuban[4].value = data.certificates?.length ?? 0;
+      });
+  }
+
+  private handleApiError<T>(apiName: string) {
+    return (source: Observable<T>): Observable<T | undefined> => {
+      return source.pipe(
+        catchError((error) => {
+          if (error?.status === 401) {
+            console.info(`Ignoring 401 Error for ${apiName}`);
+            return of(undefined); // Or of(null) depending on your preference
+          } 
+
+          else if(error.status === 0){
+            console.warn("NO INTERNET")
+            return of(undefined)
+          }
+          
+          else {
+            console.warn(`API Call Failed - ${apiName}:`, error);
+            return of(undefined); // Return undefined to signal failure but allow forkJoin to complete
+          }
+        })
+      );
+    };
   }
 
 

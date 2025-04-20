@@ -31,7 +31,6 @@
       <div class="card-header-section" style="height: 80px; overflow: hidden;">
         <mat-card-header>
           <mat-card-title>{{ course.name }}</mat-card-title>
-          <mat-card-subtitle>{{ course.date | date }}</mat-card-subtitle>
         </mat-card-header>
       </div>
 
@@ -44,11 +43,33 @@
         <mat-card-actions>
           <button mat-raised-button color="primary" [routerLink]="'/learn/' + course.id">En Savoir Plus</button>
         </mat-card-actions>
-        
+
       </div>
     </mat-card>
     }
     }
   </section>
-</section>
 
+
+  @if(recentWebinaires){
+
+    <section class="webinaire-section">
+      @for(webinaire of recentWebinaires; track $index){
+        <div class="webinaire-container my-2"
+             [style.backgroundImage]="!imageLoading[webinaire.id!] ? 'url(' + getImgUrl(webinaire.imageUrl!) + ')' : null"
+             [routerLink]="'/learn/webinaires/' + webinaire.id">
+
+             @if(imageLoading[webinaire.id!]){
+              <mat-progress-spinner 
+              mode="indeterminate"
+              diameter="40"
+              class="spinner">
+</mat-progress-spinner>
+             }
+        
+        </div>
+      }
+    </section>
+  }
+
+</section>

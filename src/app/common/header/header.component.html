@@ -6,7 +6,15 @@
     <div class="nav-btn">
         @for (item of navigation; track $index) {
             @if(item.link == "logout"){
-                <a routerLinkActive="active-route" mat-stroked-button class="ms-5"  (click)="logout()">{{item.titre | uppercase}}</a>
+                <a routerLinkActive="active-route" mat-stroked-button class="ms-5"   (click)="logout()">
+                    @if(handlingLogginOut){
+                        <mat-spinner diameter="20" ></mat-spinner>
+                    }
+                    @else {
+                        {{item.titre | uppercase}}
+
+                    }
+                </a>
             }
             
             @else{

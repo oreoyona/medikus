@@ -24,11 +24,13 @@ import { TermsOfServiceComponent } from './terms-of-service/terms-of-service.com
 import { CreateWebinaireComponent } from './admin/create-webinaire/create-webinaire.component';
 import { ShowWebinaireComponent } from './show-webinaire/show-webinaire.component';
 import { ForgotPasswordComponent } from './auth/forgot-pwd.component';
-import { animation } from '@angular/animations';
 import { EmailVerificationComponent } from './auth/email-verification/email-verification.component';
 import { RegistrationSuccessComponent } from './auth/inscription/registration-success.component';
 import { ResendEmailComponent } from './auth/resend-email/resend-email-verification.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { AllEventsComponent } from './all-events/all-events.component';
+import { EditWebinaireComponent } from './admin/edit-webinaire-component/edit-webinaire-component.component';
+import { ShowAllWebinairesComponent } from './admin/show-all-webinaires/show-all-webinaires.component';
 
 export const routes: Routes = [
   //COMMON ROUTES
@@ -38,7 +40,7 @@ export const routes: Routes = [
   { path: 'join', redirectTo: '', data: { animation: 'HomePage' } },
   { path: 'learn/:id', component: SingleCoursComponent, data: { animation: 'SingleCoursPage' } },
   { path: 'dashboard', component: ProfileComponent, canActivate: [authGuard], data: { animation: 'ProfilePage' } },
-  { path: 'events', redirectTo: '', data: { animation: 'HomePage' } },
+  { path: 'events', component: AllEventsComponent },
   { path: 'subscribe', redirectTo: '', data: { animation: 'HomePage' } },
   { path: 'blog', redirectTo: '', data: { animation: 'HomePage' } },
   { path: 'progress', component: ProgressComponent, canActivate: [authGuard], data: { animation: 'ProgressPage' } },
@@ -57,6 +59,7 @@ export const routes: Routes = [
   { path: 'auth/activation', component: ResendEmailComponent, },
   { path: 'learn', redirectTo: 'catalogue', pathMatch: "full"},
   { path: 'auth/reset-password/:token', component: ResetPasswordComponent},
+  { path: 'learn/webinaires/:id', component: ShowWebinaireComponent },
   //LEARN ROUTES
   {
     path: 'learn/cours/:id',
@@ -83,6 +86,8 @@ export const routes: Routes = [
       { path: 'courses/:id', component: EditCourseComponent, outlet: 'admin', data: { animation: 'EditCoursePage' } },
       { path: 'courses', component: AllCoursesComponent, outlet: 'admin', data: { animation: 'AllCoursesPage' } },
       { path: 'webinaire/add',  component: CreateWebinaireComponent, outlet: 'admin', data: {animation: 'AddWebinairePage'}},
+      { path: 'webinaires', component: ShowAllWebinairesComponent, outlet: 'admin'},
+      { path: 'webinaires/:id', component: EditWebinaireComponent, outlet: 'admin'},
     ],
   },
 ];

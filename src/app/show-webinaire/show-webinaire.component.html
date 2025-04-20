@@ -1,1 +1,96 @@
-<p>show-webinaire works!</p>
+<header class="pad-0">
+    <app-header />
+</header>
+
+<div class="webinaire-container">
+    @if(loading){
+    <mat-card class="justify-content-center align-items-center">
+        <mat-card-content class="d-flex justify-content-center align-items-center flex-column">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+            <p class="loading-message">Loading webinaire details...</p>
+        </mat-card-content>
+    </mat-card>
+    }
+
+
+    @if(errorMessage){
+    <mat-card class="error-card justify-content-center align-items-center">
+        
+        <mat-card-content>
+           <div class="alert alert-danger">
+            {{errorMessage}}
+           </div>
+        </mat-card-content>
+    </mat-card>
+    }
+
+
+    @if(!loading && webinaire){
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ webinaire.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="webinaire-content">
+            @if (isLive) {
+            <div class="video-section d-flex justify-content-center align-items-center p-3 round">
+                @if(bs.mobile()){
+                    <youtube-player videoId="{{hs.extractYouTubeVideoId(webinaire.videoLink!)}}" placeholderImageQuality="standard" [height]="250" [width]="500" />
+
+                }
+                @else {
+                    <youtube-player videoId="{{hs.extractYouTubeVideoId(webinaire.videoLink!)}}" placeholderImageQuality="standard" class="rounded"/>
+
+                }
+            </div>
+            } @else if (!isPast) {
+            <div class="not-live-section">
+                <mat-icon color="primary" class="large-icon">schedule</mat-icon>
+                <p class="not-live-message">
+                    Le webinaire est programmé pour le 
+                    <strong>
+                        {{webinaire.date! | formatDate}}
+                    </strong>
+                    
+                </p>
+            </div>
+            } @else {
+            <div class="past-section">
+                <mat-icon color="warn" class="large-icon">event_busy</mat-icon>
+                <p class="past-message">
+                    Ce webinaire a pris fin le
+                    <strong>{{ webinaire.date! | formatDate }}</strong>.
+                    
+                </p>
+            </div>
+            }
+
+            <div class="details-section">
+                @let dateVar = getDate(webinaire.date!);
+                @let hour = dateVar.getHours();
+                @let minutes = dateVar.getMinutes();
+               
+                <h3 class="section-title">Details</h3>
+                <p>{{ webinaire.description }}</p>
+                <p><strong>Instructeur:</strong> {{ webinaire.instructor || "Medikus, I." }}</p>
+                <p><strong>Date:</strong> {{dateVar}}</p>
+                <p><strong>Heure de début:</strong> {{hour}}h:{{minutes < 10 ? '0' + minutes : minutes}}</p>
+
+                @let webinaireEnded = webinaire.date?.toLocaleString()! < now; 
+                @if (webinaireEnded) {
+                    <p>
+                        <strong>Terminé</strong>
+                    </p>
+                    }
+            </div>
+
+        </mat-card-content>
+        <mat-card-actions class="actions-section">
+            <button mat-stroked-button (click)="addToCalendar()">
+                <mat-icon>calendar_today</mat-icon> Ajouter au calendrier
+            </button>
+        </mat-card-actions>
+    </mat-card>
+    }
+
+
+</div>

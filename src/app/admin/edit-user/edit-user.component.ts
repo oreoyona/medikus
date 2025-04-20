@@ -95,7 +95,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
 
   })
-  cloudflareR2Service = inject(R2StorageService) // Inject the CloudflareR2Service
   authService = inject(AuthService)
   userService = inject(UserService)
   hs = inject(HelpersService)
@@ -123,9 +122,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
         role: this.editUserForm.value.role
 
       }
-     
-        this.updateUser(newUser);
-      
+
+      this.updateUser(newUser);
+
     }
 
   }
@@ -176,21 +175,22 @@ export class EditUserComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     //make the api call to cloudflare and store the image
 
-    if(file){
+    if (file) {
       this.hs.uploadImgeToBackend(file)
-      .pipe(
-        catchError( (error) => {
-          this.errorMessage.set("Une erreur est survenue. Veuillez réessayer plus tard")
-          return of(error)
-        })
-      )
-      .subscribe(
-        (res) => {
-          this.editUserForm.patchValue({imgUrl: res.url})
+        .pipe(
+          catchError((error) => {
+            this.errorMessage.set("Une erreur est survenue. Veuillez réessayer plus tard")
+            return of(error)
+          })
+        )
+        .subscribe(
+          (res) => {
+            this.editUserForm.patchValue({ imgUrl: res.url })
 
-        }
-      )}
-      
-        }
+          }
+        )
+    }
+
+  }
 
 }

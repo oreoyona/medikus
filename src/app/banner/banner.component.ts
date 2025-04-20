@@ -3,6 +3,8 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-banner',
   template: `
+ 
+  
     <section class="banner" [style.backgroundImage]="'url(' + imageUrl + ')'">
       <div class="writtings">
         <span id="banner-title">{{ title }}</span>
@@ -77,7 +79,15 @@ import { Component, Input } from '@angular/core';
   `]
 })
 export class BannerComponent {
-  @Input() imageUrl: string = '';
-  @Input() title: string = '';
-  @Input() subtitle: string = '';
+  /** The url of the image */
+  @Input() imageUrl: string | string[] = '';
+  /** The title of the banner */
+  @Input() title: string | string[] = '';
+  /** The subtitle of the banner */
+  @Input() subtitle: string | string[] = '';
+
+
+  isArray(arr: any){
+    return Array.isArray(arr)
+  }
 }

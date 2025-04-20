@@ -1,25 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHandlerFn, HttpHeaders, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-
-// /**
-//  * Passes a new header to every http requests of the app
-//  * @param req the request object
-//  * @param next the handler function
-//  * @returns HttpInterceptorFn
-//  */
-// export const setHeaderInterceptor: HttpInterceptorFn = (req, next) => {
-//   //set the headers for all http requests
-//   let token = localStorage.getItem("access_token")
-//   const newReq = req.clone({setHeaders: {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${token}`
-//   }})
-//   return next(newReq)
-// }
+import { catchError, switchMap, throwError } from 'rxjs';
 
 
+/** Responsible for sending refresh token api calls if the access token has expired */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const http = inject(HttpClient);
   const authService = inject(AuthService);
@@ -36,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } }));
           }),
           catchError((refreshError) => {
-            // authService.logout(); // Handle logout on refresh failure
+            authService.logout(); // Handle logout on refresh failure
             console.error(refreshError)
             return throwError(() => refreshError);
           })
@@ -46,6 +31,27 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       return throwError(() => err);
     })
   );
+};
+
+
+
+
+/** Places an access token auth header to every api calls from the app */
+
+export const authHeaderInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  const authService = inject(AuthService);
+  const accessToken =  authService.currentAcessTokenSubject.value || localStorage.getItem('access_token')
+
+  if (accessToken) {
+    const authReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return next(authReq); // Pass the modified request
+  }
+
+  return next(req); // Pass the original request if no token
 };
 
 

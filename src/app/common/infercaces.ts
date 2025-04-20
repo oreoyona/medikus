@@ -84,7 +84,8 @@ export interface Webinaire{
     videoLink?: string,
     imageUrl?: string,
     inscriptionLink?: string,
-    date?: string | Date
+    date?: string | Date,
+    endDate?: string | Date,
 
 }
   

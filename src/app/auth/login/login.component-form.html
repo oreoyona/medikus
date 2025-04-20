@@ -9,6 +9,12 @@
         </div>
         }
 
+        @if(errorMessage()){
+            <div class="alert alert-danger field">
+                {{errorMessage()}}
+            </div>
+        }
+
         @if(LoginForm.controls['email'].errors?.['notFound']&& LoginForm.controls['email'].touched){
         <div class="field alert alert-danger">
             <mat-hint class="my-5">Cette adresse email n'est pas enregistrée chez Medikus, I.
@@ -17,7 +23,7 @@
         </div>
         }
         <mat-form-field appearance="outline" class="field">
-            <mat-label>Votre identifiant</mat-label>
+            <mat-label>Votre mail</mat-label>
             <input matInput formControlName="email" type="email">
             <mat-icon matSuffix>mail</mat-icon>
         </mat-form-field>
@@ -28,13 +34,21 @@
             <mat-icon matSuffix (click)="changeInputType(pwd)">@if(showPwd){visibility}@else{visibility_off}</mat-icon>
         </mat-form-field>
 
-        <button mat-flat-button type="submit" [disabled]="LoginForm.invalid">Se Connecter</button>
+        <button mat-raised-button class="my-2" type="submit" [disabled]="LoginForm.invalid">
+            @if(isLoading()){
+                <mat-spinner diameter="20"></mat-spinner>
+            }
+            @else {
+                Se connecter
+
+            }
+        </button>
 
 
         <div class="field d-flex justify-content-between">
             <button type="button" mat-button routerLink="/auth/user/reset">Mot de passe oublié ?</button>
-            <button class="link-opacity-100" type="button" mat-button routerLink="/auth/inscription">Créer un
-                compte</button>
+            <!-- <button class="link-opacity-100" type="button" mat-button routerLink="/auth/inscription">Créer un
+                compte</button> -->
         </div>
         <div class="field d-flex justify-content-center">
             <hr>
@@ -44,12 +58,23 @@
 
         <div class="field d-flex justify-content-center">
 
-            <div class="btn d-flex justify-content-center align-items-center border rounded" matRipple>
+            <!-- <div class="btn d-flex justify-content-center align-items-center border rounded" matRipple>
                 <mat-icon svgIcon="google-icon" aria-hidden="false" aria-label="Se connecter avec Google"></mat-icon>
 
-                <span class="mx-1 text-center">Se connecter avec Google</span>
-            </div>
+                <span>
+                    <a class="mx-1 text-center"  href="{{googleUrl}}">
+                        Se connecter avec Google
+                      </a>
+                </span>
 
+                
+                
+            </div> -->
+
+            <div class="field d-flex justify-content-between">
+                <button class="link-opacity-100" type="button" mat-button routerLink="/auth/inscription">Créer un
+                    compte</button>
+            </div>
         </div>
     </form>
 </div>

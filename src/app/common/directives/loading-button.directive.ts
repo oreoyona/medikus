@@ -19,7 +19,6 @@ export class LoadingButtonDirective implements OnChanges {
       if (this.appLoadingButton) {
         // Store the original content
         this.originalContent = this.el.nativeElement.innerText || this.el.nativeElement.textContent || '';
-        console.log(this.originalContent)
 
         // Disable the button and clear its content
         this.renderer.setProperty(this.el.nativeElement, 'disabled', true);

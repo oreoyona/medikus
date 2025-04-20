@@ -1,49 +1,89 @@
 <div class="webinaire-form-container">
-    <h2 class="form-title">Créer un nouveau Webinaire</h2>
+  <h2 class="form-title">Créer un nouveau Webinaire</h2>
 
-    @if(errorMessage()){
-        <div class="alert alert-danger">
-            {{errorMessage()}}
-        </div>
-    }
-    @if(successMessage()){
-        <div class="alert alert-success">
-            {{successMessage()}}
-        </div>
-    }
-  
-    <form [formGroup]="newWebinaireFormGroup" (ngSubmit)="saveForm()" class="webinaire-form">
-      <mat-form-field appearance="outline" class="form-field" >
-        <mat-label>Title</mat-label>
-        <input matInput formControlName="title" placeholder="Enter title" required>
-        <mat-icon matSuffix>title</mat-icon>
-      </mat-form-field>
-  
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Video Link</mat-label>
-        <input matInput formControlName="videoLink" placeholder="Enter video link" required>
-        <mat-icon matSuffix>link</mat-icon>
-      </mat-form-field>
-  
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-icon matSuffix>calendar_today</mat-icon>
-      </mat-form-field>
-
-        <div class="form-field required">
-            <label for="description-field">Description</label>
-            <div class="m-1" class="app-editor" id="description-field">
-                <app-editor formControlName="description" />
-            </div>
-        </div>
-      
-      
-  
-      <div class="button-container">
-        <button mat-raised-button color="primary" type="submit" class="save-button" [disabled]="newWebinaireFormGroup.invalid">Save Webinaire</button>
-      </div>
-    </form>
+  @if(errorMessage()){
+  <div class="alert alert-danger">
+    {{errorMessage()}}
   </div>
+  }
+  @if(successMessage()){
+  <div class="alert alert-success">
+    {{successMessage()}}
+  </div>
+  }
+
+  <form [formGroup]="newWebinaireFormGroup" (ngSubmit)="saveForm()" class="webinaire-form">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Nom du Webinaire</mat-label>
+      <input matInput formControlName="title" placeholder="Enter title" required>
+      <mat-icon matSuffix>title</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Lien YouTube du live</mat-label>
+      <input matInput formControlName="videoLink" placeholder="Enter video link" required>
+      <mat-icon matSuffix>link</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>l'URL de la bannière</mat-label>
+      <mat-hint>Une URL valide ou choisissez une image à télécharger en cliquant sur le boutton ci-dessous</mat-hint>
+      <input matInput formControlName="imageUrl" placeholder="Enter image link" required>
+      <mat-icon matSuffix>link</mat-icon>
+    </mat-form-field>
+    @let imgControl = newWebinaireFormGroup.get("imageUrl");
+    <app-image-upload class="my-4" [imgUrlControl]="imgControl" />
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+
+
+    <mat-form-field class="field" appearance="outline" aria-hidden="false">
+      <mat-label>Choisissez une heure</mat-label>
+      <mat-icon matSuffix>timer</mat-icon>
+      <input matInput [ngxMatTimepicker]="hourPicker" formControlName="time">
+      <ngx-mat-timepicker #hourPicker></ngx-mat-timepicker>
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="outline">
+      <mat-label>Instructeur </mat-label>
+      <input matInput type="text" formControlName="instructor">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="outline">
+      <mat-label>Le lien d'inscription </mat-label>
+      <input matInput type="text" formControlName="inscriptionLink">
+    </mat-form-field>
+
+
+
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Desciption du webinaire </mat-label>
+      <textarea matInput formControlName="description" placeholder="Une petite description du webinaire"
+        required> </textarea>
+    </mat-form-field>
+
+
+
+
+
+
+    <div class="button-container">
+      <button mat-raised-button type="submit" [disabled]="newWebinaireFormGroup.invalid">
+        @if(loading){
+        <mat-spinner diameter="20" />
+        }
+        @else {
+        Enregistrer le webinaire
+        }
+
+      </button>
+    </div>
+  </form>
+</div>

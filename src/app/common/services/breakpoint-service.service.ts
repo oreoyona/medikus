@@ -17,13 +17,15 @@ export class BreakpointService {
   };
 
   ruban: rubanObject[] = [
+    { icon: 'skip_previous', title: 'Cacher le menu' },
+    { icon: 'skip_next', title: 'Montrer le menu' },
     { icon: 'home', title: 'Acceuil', link: '/admin/' },
     { icon: 'person', title: 'Utilisateurs', link: [{ outlets: { admin: ['users'] } }] }, 
     { icon: 'description', title: 'Cours', link: [{ outlets: { admin: ['courses'] } }] }, 
     { icon: 'edit_document', title: 'Créer un cours', link: [{ outlets: { admin: ['courses', 'add'] } }] }, 
-    { icon: 'movie', title: 'Créer un webinaire', link: [{ outlets: { admin: ['webinaire', 'add'] } }]},
-    { icon: 'skip_previous', title: 'Cacher le menu' },
-    { icon: 'skip_next', title: 'Montrer le menu' },
+    { icon: 'video_call', title: 'Créer un webinaire', link: [{ outlets: { admin: ['webinaire', 'add'] } }]},
+    { icon: 'movie_edit', title: 'Webinaires', link: [{ outlets: { admin: ['webinaires']}}]}
+   
 ];
 
   mobile = computed(() => this.isBreakpoint('xs'));

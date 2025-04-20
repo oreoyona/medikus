@@ -1,0 +1,247 @@
+@use '../variables.scss';
+
+
+.webinaire-container {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    background-color: #f4f6f8;
+    /* Light grey background */
+    min-height: 100vh;
+    /* Ensure full viewport height */
+}
+
+mat-card {
+    width: 100%;
+    max-width: 960px;
+    /* Adjust as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    /* For rounded corners on content */
+
+    &:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    mat-card-header {
+        padding: 16px 24px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* Align title and subtitle to the left */
+
+        .mat-card-title {
+            font-size: 24px;
+            font-weight: 500;
+            /* Primary color */
+            margin-bottom: 4px;
+        }
+
+        .mat-card-subtitle {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 16px;
+        }
+    }
+
+    mat-card-content.webinaire-content {
+        padding: 24px;
+
+        .video-section,
+        .not-live-section,
+        .past-section {
+            margin-bottom: 24px;
+            border-radius: 8px;
+            overflow: hidden;
+            /* For iframe */
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+
+        .not-live-section,
+        .past-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            text-align: center;
+
+            .large-icon {
+                font-size: 1.5em;
+                margin-bottom: 16px;
+            }
+
+            .not-live-message,
+            .past-message {
+                color: rgba(0, 0, 0, 0.7);
+                line-height: 1.6;
+                margin-bottom: 16px;
+            }
+        }
+
+        .details-section {
+            margin-bottom: 24px;
+
+            .section-title {
+                font-size: 20px;
+                font-weight: 500;
+                color: #3f51b5;
+                margin-bottom: 12px;
+                border-bottom: 2px solid #3f51b5;
+                padding-bottom: 8px;
+            }
+
+            p {
+                color: rgba(0, 0, 0, 0.7);
+                line-height: 1.6;
+                margin-bottom: 8px;
+
+                strong {
+                    font-weight: 500;
+                    color: #2c3e50;
+                    /* Darker text */
+                }
+            }
+        }
+
+        .direct-messages-section {
+            .section-title {
+                font-size: 20px;
+                font-weight: 500;
+                color: #3f51b5;
+                margin-bottom: 12px;
+                border-bottom: 2px solid #3f51b5;
+                padding-bottom: 8px;
+            }
+
+            .messages-container {
+                margin-bottom: 16px;
+                max-height: 300px;
+                overflow-y: auto;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background-color: #f9f9f9;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                /* Space between messages */
+
+                .message {
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    background-color: #fff;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                    word-break: break-word;
+
+                    .sender {
+                        font-weight: 500;
+                        color: #3f51b5;
+                        margin-right: 8px;
+                    }
+
+                    .text {
+                        color: rgba(0, 0, 0, 0.8);
+                    }
+                }
+
+                .no-messages {
+                    color: rgba(0, 0, 0, 0.6);
+                    font-style: italic;
+                    text-align: center;
+                    padding: 16px;
+                }
+            }
+
+            .message-input {
+                width: 100%;
+                margin-bottom: 16px;
+            }
+
+            button[mat-raised-button] {
+                display: block;
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    }
+
+    mat-card-actions.actions-section {
+        padding: 16px 24px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        /* Align button to the right */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .webinaire-container {
+        padding: 16px;
+    }
+
+    mat-card {
+        margin: 0;
+        /* Remove extra margin on smaller screens */
+    }
+
+    mat-card-header {
+        padding: 12px 16px;
+
+        .mat-card-title {
+            font-size: 20px;
+        }
+
+        .mat-card-subtitle {
+            font-size: 14px;
+        }
+    }
+
+    mat-card-content.webinaire-content {
+        padding: 16px;
+
+        .not-live-section,
+        .past-section {
+            padding: 24px;
+
+            .large-icon {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .not-live-message,
+            .past-message {
+                font-size: 14px;
+            }
+        }
+
+        .details-section .section-title,
+        .direct-messages-section .section-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+        }
+
+        .direct-messages-section .messages-container {
+            max-height: 200px;
+        }
+
+        .direct-messages-section button[mat-raised-button] {
+            font-size: 14px;
+        }
+    }
+
+    mat-card-actions.actions-section {
+        padding: 12px 16px;
+    }
+}
+
+.video-section{
+    min-width: 100% !important;
+}

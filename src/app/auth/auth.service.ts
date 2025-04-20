@@ -1,10 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { role, User } from '../common/infercaces';
-import { BehaviorSubject, catchError, from, Observable, switchMap, tap, throwError, timer } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, from, map, Observable, of, switchMap, tap, throwError, timer } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { baseUrl } from '../urls';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -237,6 +239,7 @@ export class AuthService {
       })
     )
   }
+  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * Logs out the user and reload the app
@@ -244,37 +247,72 @@ export class AuthService {
 
   logout(courseId?: number): void {
     let sendProgressObservable: Observable<any> | null = null;
-  
+    const refreshToken = localStorage.getItem('refresh_token');
+
     if (courseId !== undefined) {
       sendProgressObservable = this.sendUserProgressToBackend(courseId);
     }
-  
-    const logoutLogic = () => {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('currentUser');
-      this.currentUserSubject.next({ id: "" });
-      this.currentUser = { id: "" };
-      this.isAuthenticated.set(false);
-      this.route.navigate(["/"]);
-      window.location.reload();
-    };
-  
-    if (sendProgressObservable) {
-      sendProgressObservable.subscribe({
-        next: () => {
-          logoutLogic();
-        },
-        error: (error) => {
-          console.error('Error sending user progress:', error);
-          logoutLogic(); // Fallback logout logic if sending progress fails
-        }
+
+    const logoutSequence$ = (progressResult: any) => {
+      if (!refreshToken) {
+        console.warn('No refresh token found during logout.');
+        // Proceed with client-side logout even if no refresh token
+        return of(null).pipe(
+          tap(() => this.clearClientSideData())
+        );
+      }
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${refreshToken}`
       });
-    } else {
-      logoutLogic(); // If courseId is undefined, perform logout directly
-    }
+
+      return this.http.delete(`${baseUrl}auth/revoke_refresh`, { headers }).pipe(
+        catchError(error => {
+          console.error('Error revoking refresh token:', error);
+          // Proceed with client-side logout even if revocation fails
+          return of(null);
+        }),
+        tap((refreshResult) => {
+          console.log('Refresh token revocation successful:', refreshResult);
+        }),
+        concatMap(() =>
+          this.http.delete(`${baseUrl}auth/revoke_access`).pipe(
+            catchError(error => {
+              console.error('Error revoking access token:', error);
+              return of(null);
+            }),
+            map((accessResult) => ({ accessResult })),
+            tap(({ accessResult }) => {
+              this.clearClientSideData();
+            })
+          )
+        )
+      );
+    };
+
+    const finalLogout$ = sendProgressObservable ?
+      sendProgressObservable.pipe(
+        concatMap(() => logoutSequence$(null)),
+        catchError(error => {
+          console.error('Error sending user progress:', error);
+          return logoutSequence$(null); // Still attempt logout
+        })
+      ) :
+      logoutSequence$(null);
+
+    finalLogout$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
+  private clearClientSideData(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next({ id: "" } as User);
+    this.currentUser = { id: "" };
+    this.isAuthenticated.set(false);
+    this.route.navigate(["/"]);
+    window.location.reload();
+  }
   private sendUserProgressToBackend(courseId: number): Observable<any> {
     return from(this.dbService.getAll('userProgress')).pipe(
       switchMap(userProgressData => {

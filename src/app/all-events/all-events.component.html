@@ -1,0 +1,110 @@
+<header class="pad-0">
+  <app-header />
+</header>
+
+<main>
+  <div class="events-container">
+    <h2 class="section-title">Les prochaines activités</h2>
+
+    <div class="filter-section  d-flex flex-column align-items-center justify-content-center">
+      <mat-form-field>
+        <mat-label>Filtrer les cours par leur date:</mat-label>
+        <mat-select (selectionChange)="filterCourses($event)">
+          <mat-option value="0">Tous les cours</mat-option>
+          <mat-option value="1">Semaine prochaine</mat-option>
+          <mat-option value="2">2 semaines</mat-option>
+          <mat-option value="3">3 semaines</mat-option>
+          <mat-option value="4">4 semaines</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <h3 class="text-center ">Les cours à ne pas rater</h3>
+
+    <div class="course-cards">
+      @let courses = upcomingCourses();
+      @if (courses) {
+      @if (filteredCourses().length > 0) {
+      @for (course of filteredCourses().slice(0, 5); track course.id) {
+      <mat-card appearance="outlined" class="course-card" [routerLink]="'/learn/' + course.id">
+        <div class="card-header-section" style="height: 80px; overflow: hidden;">
+          <mat-card-header>
+            <mat-card-title>{{ course.name }}</mat-card-title>
+            <mat-card-subtitle>{{ course.date | date }}</mat-card-subtitle>
+          </mat-card-header>
+        </div>
+
+        <div class="card-image-section" style="height: 200px; width: 300px; overflow: hidden; margin: 0 auto;">
+          <div class="course-image" [style.background-image]="'url(' + getImgUrl(course.imgUrl) + ')'"></div>
+        </div>
+
+        <div class="card-button-section"
+          style="height: 60px; display: flex; align-items: center; justify-content: flex-end; padding: 0 16px;">
+          <mat-card-actions>
+            <button mat-raised-button color="primary" [routerLink]="'/learn/' + course.id">En Savoir Plus</button>
+          </mat-card-actions>
+
+        </div>
+      </mat-card>
+      }
+      } @else {
+      <p class="no-events">No upcoming courses matching the filter.</p>
+      }
+      } @else {
+      <mat-progress-spinner mode="indeterminate" />
+      }
+    </div>
+
+    <div class="event-section d-flex flex-column align-items-center justify-content-center">
+      <h3 class="event-type-title">Les webinaires à ne pas rater </h3>
+      <div class="filter-section">
+        <mat-form-field>
+          <mat-label>Filtrer les webinaires par leur date de début:</mat-label>
+          <mat-select (selectionChange)="filterWebinaires($event)">
+            <mat-option value="all">All</mat-option>
+            <mat-option value="1">Next Week</mat-option>
+            <mat-option value="2">Next 2 Weeks</mat-option>
+            <mat-option value="3">Next 3 Weeks</mat-option>
+            <mat-option value="4">Next 4 Weeks</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="course-cards">
+        @let webinaires = upComingWebinaires();
+        @if (webinaires) {
+        @if (filteredWebinaires().length > 0) {
+        @for (webinaire of filteredWebinaires().slice(0, 5); track webinaire.id) {
+        <mat-card class="course-card" [routerLink]="'/learn/webinaires/' + webinaire.id">
+          <mat-card-header>
+            <mat-card-title>{{ webinaire.title }}</mat-card-title>
+            <mat-card-subtitle>{{ webinaire.date | date }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <div class="card-image-section"
+            style="height: 200px; width: 100%; overflow: hidden; margin: 0 auto; background-size: cover;">
+            <div class="course-image" [style.background-image]="'url(' + getImgUrl(webinaire.imageUrl!) + ')'"></div>
+          </div>
+
+          <mat-card-footer>
+            <div class="card-button-section"
+              style="height: 60px; display: flex; align-items: center; justify-content: flex-end; padding: 0 16px;">
+              <mat-card-actions>
+                <button mat-raised-button color="primary" [routerLink]="'/learn/webinaires/' + webinaire.id">En Savoir
+                  Plus</button>
+              </mat-card-actions>
+            </div>
+          </mat-card-footer>
+        </mat-card>
+        }
+        } @else {
+        <p class="no-events">No upcoming webinars at this time.</p>
+        }
+        }
+        @else {
+        <mat-progress-spinner mode="indeterminate" />
+        }
+      </div>
+
+    </div>
+  </div>
+</main>

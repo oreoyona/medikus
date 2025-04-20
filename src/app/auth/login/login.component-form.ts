@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,12 +11,25 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatRippleModule } from '@angular/material/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderService } from '../../common/services/header.service';
+import { loginWithGoogleUrl } from '../../urls';
+import { single } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UserService } from '../../admin/users/user.service';
 
 
 const googleSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>`
 @Component({
   selector: 'app-login-form',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, RouterLink, MatRippleModule],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    RouterLink,
+    MatRippleModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login.component-form.html',
   styles: ` .mdk-container{
       min-height: 100%;
@@ -44,7 +57,10 @@ export class LoginFormComponent implements OnInit {
   router = inject(Router)
   route = inject(ActivatedRoute)
   hs = inject(HeaderService)
-
+  googleUrl = loginWithGoogleUrl;
+  isLoading = signal(false)
+  errorMessage: WritableSignal<string | null> = signal(null)
+  us = inject(UserService)
 
   //Login Form
 
@@ -59,10 +75,13 @@ export class LoginFormComponent implements OnInit {
   }
 
   sendForm() {
+    this.isLoading.set(true)
     if (this.LoginForm.valid) {
       localStorage.setItem("email", this.LoginForm.value.email!)
       this.authService.logInUser(this.LoginForm.value).subscribe({
+
         next: (res) => {
+          this.isLoading.set(false)
           localStorage.setItem('access_token', res.access_token);
           localStorage.setItem('currentUser', JSON.stringify(res.user));
           localStorage.setItem('refresh_token', res.refresh_token);
@@ -111,6 +130,12 @@ export class LoginFormComponent implements OnInit {
 
         },
         error: (error: HttpErrorResponse) => {
+          this.isLoading.set(false)
+
+          if (error.status === 0) {
+            this.errorMessage.set(this.us.printElegantMessageErrors(0))
+          }
+
           const setErrorsAndReset = (errors: any) => {
             //reset the form value
             //using forme.reset will dissable the control erros msg
@@ -138,7 +163,10 @@ export class LoginFormComponent implements OnInit {
               break;
             case 404:
               this.LoginForm.controls['email'].setErrors({ notFound: true });
-            
+
+              break;
+            case 0:
+              this.errorMessage.set(this.us.printElegantMessageErrors(0))
               break;
             default:
               setErrorsAndReset({ error: true });
@@ -146,7 +174,8 @@ export class LoginFormComponent implements OnInit {
 
         },
         complete: () => {
-          // Optional: Handle completion logic if needed
+          this.isLoading.set(false)
+
         }
       });
     } else {

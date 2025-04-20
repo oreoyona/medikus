@@ -1,0 +1,111 @@
+<div class="mdk-container d-flex align-items-center justify-content-center">
+
+    <mat-card class="my-5">
+        <form [formGroup]="editWebinaireForm" (ngSubmit)="save()"
+            class="d-flex flex-column justify-content-center align-tems-center">
+            @if(loading){
+
+            <app-loading-spinner [visible]="loading" />
+            }
+            @else{
+            @if(errorMessage()){
+            <div class="alert alert-danger">{{errorMessage()}}</div>
+
+            }
+            @if(successMessage()){
+            <div class="alert alert-success">
+                {{successMessage()}}
+            </div>
+            }
+            <mat-card-header class="my-2">
+                <h2 mat-card-title>Modifier un webinaire</h2>
+            </mat-card-header>
+            <mat-card-content class="d-flex flex-column justify-content-center">
+
+
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Le titre</mat-label>
+                    <input matInput formControlName="title">
+                </mat-form-field>
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Date</mat-label>
+                    <input matInput formControlName="date" [matDatepicker]="datepicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker>
+                    </mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="field" appearance="outline" aria-hidden="false">
+                    <mat-label>Choisissez une heure</mat-label>
+                    <mat-icon matSuffix>timer</mat-icon>
+                    <input matInput [ngxMatTimepicker]="picker" formControlName="time">
+                    <ngx-mat-timepicker #picker ></ngx-mat-timepicker>
+                </mat-form-field>
+
+
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Instructeur </mat-label>
+                    <input matInput type="text" formControlName="instructor">
+                </mat-form-field>
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Le lien de la photo de couverture </mat-label>
+                    <input matInput type="text" formControlName="imgUrl">
+                </mat-form-field>
+
+                @let imgControl = editWebinaireForm.get('imgUrl');
+                <app-image-upload [imgUrlControl]="imgControl"  />
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Le lien de la vidéo </mat-label>
+                    <input matInput type="text" formControlName="videoLink">
+                </mat-form-field>
+
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>Le lien d'inscription </mat-label>
+                    <input matInput type="text" formControlName="inscriptionLink">
+                </mat-form-field>
+
+                <mat-form-field class="field description" appearance="outline">
+                    <mat-label>Description </mat-label>
+                    <textarea matInput type="text" formControlName="description">
+                    </textarea>
+                </mat-form-field>
+
+
+
+
+
+
+            </mat-card-content>
+
+            <mat-card-footer>
+                <mat-card-actions>
+                    <button type="submit" mat-stroked-button [disabled]="!editWebinaireForm.valid" class="mx-2">
+                        @if(saveLoading){
+                        <mat-spinner diameter="20"></mat-spinner>
+                        }
+
+                        @else {
+                        Enregistrer
+                        }
+
+                    </button>
+
+                    <button mat-flat-button type="button" class="delete-btn mx-2" (click)="deleteWebinaire()"
+                        [appLoadingButton]="deleteLoading">Supprimer</button>
+
+                </mat-card-actions>
+            </mat-card-footer>
+
+            }
+        </form>
+    </mat-card>
+
+   
+
+
+</div>

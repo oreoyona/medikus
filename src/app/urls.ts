@@ -17,6 +17,13 @@ export const forgotPasswordUrl = baseUrl + 'forgot_password';
 export const webinaireBaseUrl = baseUrl + 'webinaires'
 
 
+//connexion with Google
 
+export const loginWithGoogleUrl = baseUrl + 'auth/google'
+
+
+//contact
+export const medikusMailAdress = `contact@medikus-impulse.com`
+export const contactWithMedikusUrl = `https://mailto:${medikusMailAdress}`
 
 

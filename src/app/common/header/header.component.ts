@@ -9,10 +9,19 @@ import { bPoint760px, HeaderService } from '../services/header.service';
 import { AuthService } from '../../auth/auth.service';
 import { ProfilePictureComponent } from "../profile-picture/profile-picture.component";
 import { User } from '../infercaces';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatIconModule, MatButtonModule, RouterLink, ProfilePictureComponent, RouterLinkActive],
+  imports: [
+    CommonModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    RouterLink, 
+    ProfilePictureComponent, 
+    RouterLinkActive,
+    MatProgressSpinner
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -38,6 +47,7 @@ export class HeaderComponent implements OnInit {
   isLogged = computed(() => this.authService.isAuthenticated()); // Use computed signal
   user: User | null = null
   navigation!: any
+  handlingLogginOut = false
 
 
 
@@ -49,6 +59,7 @@ export class HeaderComponent implements OnInit {
 
 
   logout() {
+    this.handlingLogginOut = true
     this.authService.logout()
   }
 
