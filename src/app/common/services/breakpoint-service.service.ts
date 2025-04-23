@@ -24,7 +24,8 @@ export class BreakpointService {
     { icon: 'description', title: 'Cours', link: [{ outlets: { admin: ['courses'] } }] }, 
     { icon: 'edit_document', title: 'Créer un cours', link: [{ outlets: { admin: ['courses', 'add'] } }] }, 
     { icon: 'video_call', title: 'Créer un webinaire', link: [{ outlets: { admin: ['webinaire', 'add'] } }]},
-    { icon: 'movie_edit', title: 'Webinaires', link: [{ outlets: { admin: ['webinaires']}}]}
+    { icon: 'movie_edit', title: 'Webinaires', link: [{ outlets: { admin: ['webinaires']}}]},
+    { icon: 'settings', title: 'Paramètres', link: [{ outlets: { admin: ['settings']}}]},
    
 ];
 

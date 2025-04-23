@@ -1,0 +1,75 @@
+.maintenance-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4; /* Light gray background */
+  }
+  
+  .maintenance-card {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 24px;
+  }
+  
+  .mat-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .mat-card-title {
+    color: #3f51b5; /* Indigo primary color */
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .mat-card-content {
+    p {
+      margin-bottom: 12px;
+      color: #333; /* Dark gray text */
+      line-height: 1.6;
+    }
+  
+    .countdown {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      font-size: 1.2em;
+      color: #e91e63; /* Pink accent color */
+  
+      .mat-icon {
+        margin-right: 8px;
+      }
+    }
+  
+    .contact-info {
+      margin-top: 24px;
+      color: #777; /* Secondary text color */
+  
+      p {
+        margin-bottom: 8px;
+      }
+  
+      a {
+        color: #3f51b5; /* Indigo primary color */
+        text-decoration: none;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+  
+      .mat-icon {
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  }

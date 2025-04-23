@@ -21,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } }));
           }),
           catchError((refreshError) => {
-            authService.logout(); // Handle logout on refresh failure
+            // authService.logout(); // Handle logout on refresh failure
             console.error(refreshError)
             return throwError(() => refreshError);
           })

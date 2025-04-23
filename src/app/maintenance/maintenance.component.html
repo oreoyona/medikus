@@ -1,0 +1,39 @@
+<mat-card class="maintenance-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar color="warn">engineering</mat-icon>
+    <mat-card-title>Maintenance en Cours</mat-card-title>
+    <mat-card-subtitle>Nous effectuons une maintenance programmée</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="maintenance-content">
+      @if(isLoading){
+        <div class="loading-spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Vérification du statut du système...</p>
+        </div>
+      }
+     
+      @if(!isLoading){
+        <div>
+          <p>Nos services sont actuellement en maintenance pour améliorer votre expérience.</p>
+          <p>Temps restant estimé : <strong>{{ formattedTime }}</strong></p>
+          <p>Nous nous excusons pour la gêne occasionnée et vous remercions de votre patience.</p>
+          
+          <div class="contact-info">
+            <p>Pour toute urgence, veuillez nous contacter :</p>
+            <p><mat-icon>email</mat-icon> {{'support@medikus-impulse.com'}}</p>
+          </div>
+        </div>
+      }
+   
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button (click)="tryAgain()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </mat-card-actions>
+</mat-card>

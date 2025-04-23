@@ -1,0 +1,33 @@
+<main>
+    <mat-card>
+        @if(message){
+            {{message}}
+        }
+        <mat-card-header>
+            <h1>Paramètres du site web</h1>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="d-flex justify-content-between app-mode">
+                <p>Activer le mode Maintenance</p>
+                <mat-slide-toggle #maintenance name="is_maintenance_mode" ></mat-slide-toggle>
+            </div>
+            
+        </mat-card-content>
+
+
+        <mat-card-footer>
+            <mat-card-actions>
+                <button type="button" mat-stroked-button (click)="updateParam()">
+                    @if(loading){
+                        <mat-spinner diameter="20" />
+                    }
+                    @else {
+                        Enregister
+                    }
+                    
+                </button>
+            </mat-card-actions>
+        </mat-card-footer>
+    </mat-card>
+</main>

@@ -21,12 +21,12 @@ export class AuthService {
 
   // API URLs
 
-  private readonly apiUrl = 'http://localhost:5000/api/v1/auth/inscription'
-  private readonly apiUrlLogin = 'http://localhost:5000/api/v1/auth/login'
-  private readonly adminUserUrl = 'http://localhost:5000/api/v1/auth/admin/create_user'
-  readonly refreshUrl = 'http://localhost:5000/api/v1/auth/refresh'
+  private readonly apiUrl = baseUrl + 'auth/inscription'
+  private readonly apiUrlLogin = baseUrl + 'auth/login'
+  private readonly adminUserUrl = baseUrl + 'auth/admin/create_user'
+  readonly refreshUrl = baseUrl + 'auth/refresh'
   private redirectUrl: string | null = null;
-  private readonly userProgressUrl = "http://localhost:5000/api/v1/users/progress/"
+  private readonly userProgressUrl = baseUrl + "users/progress/"
 
 
   //properties to determine the current user and its jwt tokens

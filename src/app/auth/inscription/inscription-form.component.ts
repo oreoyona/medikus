@@ -88,7 +88,7 @@ export class InscriptionFormComponent implements OnInit {
       next: (res: HttpResponse<any>) => {
         this.isLoadingUsernameCheck = false;
    
-        if (res.status == 200) {
+        if (res.status == 200 || res.status == 307) {
           this.userNameAvailable = true;
           this.inscriptionForm.controls.username.setErrors(null);
         }else {
@@ -126,7 +126,7 @@ export class InscriptionFormComponent implements OnInit {
 
   inscriptionForm = new FormGroup({
     name: new FormControl(""),
-    username: new FormControl("", [Validators.required, this.userService.usernameValidator()]),
+    username: new FormControl("", [this.userService.usernameValidator()]),
     email: new FormControl("", Validators.required),
     password: new FormControl("", [Validators.required, this.authService.passwordStrengthValidator()]),
     confirmPassword: new FormControl("", Validators.required)
@@ -140,7 +140,7 @@ export class InscriptionFormComponent implements OnInit {
     if (this.inscriptionForm.valid) {
       const user = this.fb.group({
         'name': this.inscriptionForm.get("name")?.value,
-        'username': this.inscriptionForm.get("username")?.value,
+        'username': this.inscriptionForm.get("username")?.value || "Not set yet",
         'email': this.inscriptionForm.get("email")?.value,
         'password': this.inscriptionForm.get("password")?.value
       })
