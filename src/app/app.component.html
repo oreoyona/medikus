@@ -1,4 +1,10 @@
 <div class="app-container">
+  @if(loading){
+    <div class="spinner-overlay">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+    </div>
+  }
+  
   <div [@routeAnimations]="prepareRoute(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
   </div>

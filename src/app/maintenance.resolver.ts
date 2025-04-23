@@ -2,7 +2,7 @@
 import { ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { ConfigService } from './config.service';
-import { Observable, of } from 'rxjs';
+import { defer, Observable, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
 export const maintenanceResolver: ResolveFn<boolean> = (): Observable<boolean> => {
@@ -11,7 +11,7 @@ export const maintenanceResolver: ResolveFn<boolean> = (): Observable<boolean> =
   // Check if the config has already been loaded synchronously
   const config = configService.getConfig();
   if (config !== null) {
-    return of(config.isMaintenance);
+    return defer(() => of(config.isMaintenance)); // Use defer to create a delayed Observable
   }
 
   // If not loaded, use the asynchronous loading mechanism
