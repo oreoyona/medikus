@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { ProfileComponent } from '../profile.component';
 import { Subscription } from 'rxjs';
 import { HeaderComponent } from "../../common/header/header.component";
+import { ImageUploadComponent } from "../../common/image-uploader.component";
 
 @Component({
   selector: 'app-edit-profile',
@@ -21,7 +22,8 @@ import { HeaderComponent } from "../../common/header/header.component";
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    HeaderComponent
+    HeaderComponent,
+    ImageUploadComponent
 ],
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.scss'

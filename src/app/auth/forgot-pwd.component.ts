@@ -22,7 +22,7 @@ import { HeaderComponent } from "../common/header/header.component";
 
       
       <h2>Vous avez oublié votre mot de passe ?</h2>
-      <p>Entrez votre adresse email pour initier la rénitialisation de votre mot de passe.</p>
+      <p>Entrez votre adresse email pour initier la réinitialisation de votre mot de passe.</p>
       @if(!errorMessage()){
         <form [formGroup]="forgotPasswordForm" (ngSubmit)="resetPassword()">
         <mat-form-field appearance="outline">
@@ -63,6 +63,10 @@ import { HeaderComponent } from "../common/header/header.component";
     </div>
   `,
     styles: [`
+
+    mat-card{
+      background-color: var(--mat-sys-background)
+    }
     .forgot-password-container {
       display: flex;
       flex-direction: column;

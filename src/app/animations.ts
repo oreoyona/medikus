@@ -19,7 +19,7 @@ export const animationsArray = [
             opacity: 0,
             transform: 'translateY(20px)'
           })
-        ]),
+        ], { optional: true }),
         query(':leave', [
           style({ opacity: 1 })
         ], { optional: true }),

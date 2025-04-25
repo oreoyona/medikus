@@ -5,43 +5,47 @@ import { AuthService } from '../auth/auth.service';
 import { MatCardModule } from '@angular/material/card';
 import { HeaderComponent } from "../common/header/header.component";
 import { LoadingButtonDirective } from "../common/directives/loading-button.directive"
-import { catchError, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LoadingSpinnerComponent } from '../common/loading-spinner/loading-spinner.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormatDatePipe } from '../common/pipes/format-date.pipe';
-import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DefaultImgDirective } from '../common/default-img.directive';
 
-/**
- * @Component SingleCoursComponent
- * @description Displays detailed information about a single course and handles user subscriptions.
- *
- * This component fetches course data, manages user subscription status, and provides
- * functionality to subscribe and unsubscribe from courses. It also handles loading states
- * and error messages.
- */
+import { CoursesHelpersService } from '../common/services/courses-helpers.service';
+import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MdkCalendarComponent } from "../common/mdk-calendar/mdk-calendar.component";
+
+
 @Component({
   selector: 'app-single-cours',
   imports: [
-    MatButtonModule,    
+    MatButtonModule,
     MatCardModule,
     HeaderComponent,
     LoadingButtonDirective,
     RouterLink,
     LoadingSpinnerComponent,
-    FormatDatePipe ,
+    FormatDatePipe,
     MatIconModule,
-    DefaultImgDirective
-  ],
+    DefaultImgDirective,
+    MatDatepickerModule,
+    MdkCalendarComponent
+],
   templateUrl: './single-cours.component.html',
-  styleUrl: './single-cours.component.scss'
+  styleUrl: './single-cours.component.scss',
+  providers: [provideNativeDateAdapter()]
+
 })
 export class SingleCoursComponent implements OnInit, OnDestroy {
   /** The course data to display. Initialized as null. */
   course: CourseData | null = null;
+
+  attendanceDates: Date[] = []
+  dateClass: MatCalendarCellClassFunction<Date> | undefined;
+
 
   /** Injects the CourseService for fetching course data. */
   courseService = inject(CourseService);
@@ -51,6 +55,9 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
 
   /** Injects the ActivatedRoute for accessing route parameters. */
   route = inject(ActivatedRoute);
+
+  /** Injects the Helpers serverice */
+  courseHs = inject(CoursesHelpersService)
 
   /** Injects the Router for navigation. */
   router = inject(Router);
@@ -73,13 +80,29 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
   /** Signal indicating whether the course data is being loaded. */
   loadingCourse = signal(true);
 
+
+  /** defines the addCalendar function */
+  addToAgenda = (course: CourseData) => {
+    this.courseHs.addToCalendar(course)
+
+  }
+
+
+  /** retreives the dates of a course as an array */
+  getCourseDates(course: CourseData) {
+    return this.courseHs.extractDatesFromString(course.dates as string)
+  }
+
+
   /** Used to automatically unsubscribe from observables when the component is destroyed. */
   private destroyRef = inject(DestroyRef);
 
 
 
   ngOnInit(): void {
+
     this.fetchCourseData();
+
     if (this.currentUser) {
       this.fetchUserSubscriptions();
     }
@@ -95,6 +118,10 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
     this.courseService.getCourseById(this.courseId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res: any) => {
         this.course = res.data;
+        if (this.course?.courseType === 'Présentiel' && this.course.dates) {
+          this.attendanceDates = this.getCourseDates(this.course);
+          this.setupDateClass(); // Call setupDateClass after fetching dates
+        }
         this.checkSubscriptionStatus();
         this.loadingCourse.set(false);
       },
@@ -154,7 +181,7 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
         this.authService.updateUserCourses(this.authService.currentUser!.courses);
         this.fetchUserSubscriptions();
         this.courseService.initializeCourseProgress(this.course?.modules!, this.courseId)
-        
+
       },
       error: (err) => {
         this.errorMessage.set('Failed to subscribe to course.');
@@ -176,7 +203,7 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
         //deletes the user records for that specific course from the database
         this.courseService.deleteUserRecordsFromIndexDb(this.currentUser?.id as number, this.courseId).subscribe()
         this.fetchUserSubscriptions();
-      
+
       },
       error: (err) => {
         this.errorMessage.set('Failed to unsubscribe from course.');
@@ -185,6 +212,21 @@ export class SingleCoursComponent implements OnInit, OnDestroy {
     });
   }
 
- 
+
+  /**
+    * @method setupDateClass
+    * @description Sets up the dateClass function to highlight attendance dates on the calendar.
+    */
+  setupDateClass(): void {
+    this.dateClass = (date: Date, view: 'month' | 'year' | 'multi-year') => {
+      if (view === 'month') {
+        const dateToCompare = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        if (this.attendanceDates.some(d => d.getTime() === dateToCompare.getTime())) {
+          return 'course-date';
+        }
+      }
+      return '';
+    };
+  }
   ngOnDestroy(): void { }
 }

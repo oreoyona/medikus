@@ -1,55 +1,39 @@
-<nav class="bigger-screen header-nav">
-    <div class="logo" routerLink="">
-        <img src="logo.png" alt="Logo de Medicus" width="100%">
+<header class="header">
+    <div class="logo-container" routerLink="/">
+        <img src="logo.svg" alt="Medicus Logo" class="logo">
     </div>
 
-    <div class="nav-btn">
-        @for (item of navigation; track $index) {
-            @if(item.link == "logout"){
-                <a routerLinkActive="active-route" mat-stroked-button class="ms-5"   (click)="logout()">
-                    @if(handlingLogginOut){
-                        <mat-spinner diameter="20" ></mat-spinner>
-                    }
-                    @else {
-                        {{item.titre | uppercase}}
+    <nav class="nav-links" *ngIf="!isMobile()">
+        <ul class="nav-list">
+            @for (item of navigation(); track $index) {
+            <li class="nav-item">
 
-                    }
-                </a>
+                @if(item.link == 'logout'){
+                <a routerLink="/{{ item.link }}" class="nav-link" mat-stroked-button>{{item.titre}}</a>
+                }
+                @else {
+                    <a routerLink="/{{ item.link }}" routerLinkActive="active-route" class="nav-link" mat-button>{{ item.titre }}</a>
+
+                }
+            </li>
             }
-            
-            @else{
-                <a routerLinkActive="active-route" mat-button routerLink="/{{item.link}}" >{{item.titre| uppercase}}</a>
+        </ul>
+    </nav>
 
-            }
-       
-        }
-    </div>
-
-</nav>
-
-<nav class="mobile header-nav">
-    <div class="logo" routerLink="">
-        <img src="logo.png" alt="Logo de Medicus" width="100%">
-    </div>
-    @if(mobile){
-
-    <section class="extreme-left-section d-flex justify-content-center align-items-center">
-
-        <button type="button" mat-button (click)="openDialog()" hasBackdrop = false>
-            @if(showMenu()){
-            <mat-icon>menu</mat-icon>
-
-            }
-        </button>
-
-            @if(isLogged()){
-            <div class="user-img">
+    @if(isMobile()){
+        <div class="d-flex justify-space-between">
+            <div class="mobile-menu-button">
+                <button mat-icon-button (click)="openMobileMenu()">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </div>
+            <div class="profile-picture" *ngIf="isLoggedIn()">
                 <app-profile-picture [imageUrl]="user?.imgUrl!" [name]="user?.name!"></app-profile-picture>
-                
-            </div> 
-            }
-       
-    </section>
-
+            </div>
+        </div>
+        
     }
-</nav>
+
+   
+    
+</header>

@@ -1,43 +1,45 @@
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ConfigService } from './config.service';
 
 export const maintenanceModeGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ): Observable<boolean | UrlTree> => {
+  const configService = inject(ConfigService);
   const router = inject(Router);
-  const isMaintenance = route.data['maintenanceStatus']; // Read resolved data
 
-  const whitelistedRoutes = [
-    '/maintenance', // Add maintenance route to whitelist to prevent infinite loops
-    '/auth/login',
-    '/auth/inscription',
-    '/auth/user/reset',
-    '/auth/verify',
-    '/auth/registration-success',
-    '/auth/activation',
-    '/auth/reset-password',
-    '/privacy',
-    '/terms'
-  ];
+  return configService.appConfig.pipe(
+    map((config) => {
+      const isMaintenance = config?.isMaintenance || false;
 
-  // Extract base path without query params for comparison
-  const currentRoute = state.url.split('?')[0];
+      const whitelistedRoutes = [
+        '/maintenance',
+        '/auth/login',
+        '/auth/inscription',
+        '/auth/user/reset',
+        '/auth/verify',
+        '/auth/registration-success',
+        '/auth/activation',
+        '/auth/reset-password',
+        '/privacy',
+        '/terms'
+      ];
 
-  // If we're already on the maintenance page and not in maintenance mode, redirect home
-  if (currentRoute === '/maintenance' && !isMaintenance) {
-    return of(router.createUrlTree(['/'])); // Wrap UrlTree with of()
-  }
+      const currentRoute = state.url.split('?')[0];
 
-  // If in maintenance mode and current route isn't whitelisted
-  if (isMaintenance && !whitelistedRoutes.some(r => currentRoute.startsWith(r))) {
-    // Use UrlTree for smoother redirects that work with router animations
-    return of(router.createUrlTree(['/maintenance'], { // Wrap UrlTree with of()
-      queryParams: { returnUrl: state.url }
-    }));
-  }
+      if (currentRoute === '/maintenance' && !isMaintenance) {
+        return router.createUrlTree(['/']);
+      }
 
-  // Allow navigation in all other cases
-  return of(true);
+      if (isMaintenance && !whitelistedRoutes.some(r => currentRoute.startsWith(r))) {
+        return router.createUrlTree(['/maintenance'], {
+          queryParams: { returnUrl: state.url }
+        });
+      }
+
+      return true;
+    })
+  );
 };

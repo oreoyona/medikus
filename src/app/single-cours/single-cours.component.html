@@ -11,7 +11,7 @@
 <section class="mdk-container">
 
 
-    <main class="container d-flex justify-content-center">
+    <main class="container d-flex justify-content-center my-4">
         <div class="course-container">
             @if(course){
             <mat-card>
@@ -24,8 +24,8 @@
 
                 <mat-card-content>
                     <div class="course-banner">
-                        <img class="img-fluid rounded" mat-card-image-sm appDefaultImg [src]="course.imgUrl" alt="course image banner"
-                            style="width: 50%;">
+                        <img class="img-fluid rounded" mat-card-image-sm appDefaultImg [src]="course.imgUrl"
+                            alt="course image banner">
 
                     </div>
                     <mat-card-actions>
@@ -41,16 +41,26 @@
                         }
                         @else {
                         @if(course.courseType == "Présentiel"){
+                        <!-- pour les cours en presentiel, afficher un calendrier -->
+                         @let dates = getCourseDates(course);
+                        <app-mdk-calendar [dates]="dates" [course]="course" />
 
                         }
 
                         @else if (course.courseType == "Hybride") {
-                        <button mat-flat-button [appLoadingButton]="loadingBtn()"
-                            (click)="subscribe()">S'incrire</button>
+                        <button mat-flat-button [appLoadingButton]="loadingBtn()" (click)="subscribe()">
+                            S'incrire
+                        </button>
+                        <button mat-flat-button id="add-to-calendar" (click)="addToAgenda(course)">Ajouter à Google
+                            Agenda</button>
 
                         }
+
+
                         @else {
-                        <button mat-flat-button id="add-to-calendar">Ajouter au calendrier</button>
+                        <!-- Pour les cours en ligne, afficher un bouton pour rappeler le debut des cours -->
+                        <button mat-flat-button id="add-to-calendar" (click)="addToAgenda(course)">Ajouter à Google
+                            Agenda</button>
                         }
                         }
 
@@ -83,8 +93,8 @@
                         </mat-card-content>
                     </mat-card>
 
-                 
-                  
+
+
                     <section class="registration-section">
                         <h3 mat-card-title class="registration-title">Comment s'enregistrer ?</h3>
                         <div class="registration-content">
@@ -121,7 +131,8 @@
                     </section>
 
                     <section class="activity-questions-section">
-                        <h3 mat-card-title class="activity-questions-title">Pour toutes les questions liées à cette activité, veuillez contacter:</h3>
+                        <h3 mat-card-title class="activity-questions-title">Pour toutes les questions liées à cette
+                            activité, veuillez contacter:</h3>
                         <ul class="activity-questions-list">
                             @for (item of course.contact?.split(";"); track $index) {
                             <li class="activity-questions-item">
@@ -134,17 +145,18 @@
 
 
 
-                       <section class="instructors-section">
+                    <section class="instructors-section">
                         <h3 mat-card-title class="instructors-title">Rencontrez vos instructeurs</h3>
                         <div class="instructors-list">
                             @for (instructor of course.instructor?.split(';'); track $index) {
-                                <div class="instructor-item">
-                                    <div class="instructor-picture">
-                                        <img mat-card-sm-image appDefaultImg [src]="course.instructorImgUrl?.split!(';')[$index] || 'https://fakeimg.pl/600x400'"
-                                            alt="Course instructor profile picture">
-                                    </div>
-                                    <div class="instructor-name">{{ instructor }}</div>
+                            <div class="instructor-item">
+                                <div class="instructor-picture">
+                                    <img mat-card-sm-image appDefaultImg
+                                        [src]="course.instructorImgUrl?.split!(';')[$index] || 'https://fakeimg.pl/600x400'"
+                                        alt="Course instructor profile picture">
                                 </div>
+                                <div class="instructor-name">{{ instructor }}</div>
+                            </div>
                             }
                         </div>
                     </section>

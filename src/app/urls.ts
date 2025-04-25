@@ -1,7 +1,7 @@
 /** base url for the api. Used by all the urls in the app */
-export const baseUrl = "https://api.medikus-impulse.com/api/v1/";
+// export const baseUrl = "https://api.medikus-impulse.com/api/v1/";
 
-// export const baseUrl = 'http://localhost:5000/api/v1/'
+export const baseUrl = 'http://localhost:5000/api/v1/'
 //course Service urls
 export const addUrl = baseUrl + 'courses/add';
 export const apiUrl =  baseUrl + 'courses/';

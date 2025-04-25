@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { FormArray, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CourseService } from '../course.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { JsonPipe, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -17,7 +17,6 @@ import { CkeditorComponent } from "../../ckeditor/ckeditor.component";
 import { ServerResponse } from '../../common/infercaces';
 import { Router } from '@angular/router';
 import { ImageUploadComponent } from "../../common/image-uploader.component";
-import { single } from 'rxjs';
 
 
 @Component({
@@ -34,7 +33,7 @@ import { single } from 'rxjs';
     MatIconModule, MatDialogModule, MatDatepickerModule,
     NgFor, NgSwitch, NgSwitchCase, FormsModule,
     CkeditorComponent,
-    ImageUploadComponent, JsonPipe
+    ImageUploadComponent
 ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './create-course.component.html',

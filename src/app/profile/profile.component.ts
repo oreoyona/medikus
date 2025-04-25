@@ -155,9 +155,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
       )
       .subscribe(({ completed, subscriptions }) => {
 
+        //If there is no courses
+
 
         if(!subscriptions || !(subscriptions as any).data.length || (subscriptions as any).data.length === 0){
           this.defaultMessage.set("Vos cours seront affichés ici")
+          this.nonCompletedCourses = [];
+          this.completedCourses = []
+          this.loading = false
+          return;
         }
 
         else {

@@ -1,10 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, QueryList, ViewChildren } from '@angular/core';
-
-
-import { AboutService } from './about.service';
-import { UpperCasePipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion'
-import { RouterLink } from '@angular/router';
 import { HeaderComponent } from "../common/header/header.component";
 @Component({
   selector: 'app-about',
@@ -22,9 +17,6 @@ export class AboutComponent implements AfterViewInit{
 
 
   pageTitle = `à-propos`;
-  aboutService = inject(AboutService);
-  aboutTextArray = this.aboutService.about;
-
   ngAfterViewInit(): void {
     this.observeSections();
   }

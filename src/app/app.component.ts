@@ -37,7 +37,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setupRouterEvents();
     this.setupRouteMonitoring();
     this.loadYouTubeAPI();
     this.checkMaintenanceStatus();
@@ -48,22 +47,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private setupRouterEvents(): void {
-    this.router.events.pipe(
-      takeUntil(this.destroy$),
-      filter(event => event instanceof NavigationStart || event instanceof ResolveEnd)
-    ).subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        // Skip loading indicator for maintenance page to prevent flickering
-        if (!event.url.includes('/maintenance')) {
-          this.loading = true;
-        }
-      }
-      if (event instanceof ResolveEnd) {
-        this.loading = false;
-      }
-    });
-  }
 
   private setupRouteMonitoring(): void {
     this.route.url.pipe(takeUntil(this.destroy$)).subscribe(url => {
@@ -85,14 +68,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private checkMaintenanceStatus(): void {
-    this.configService.getSettings().pipe(takeUntil(this.destroy$)).subscribe({
+    this.configService.appConfig.pipe(takeUntil(this.destroy$)).subscribe({
       next: (config) => {
-        this.isMaintenanceMode = config.isMaintenance;
+        this.isMaintenanceMode = config?.isMaintenance || false;
+        this.loading = false; //  set loading to false here
       },
       error: (err) => {
         console.error('Error checking maintenance status:', err);
         this.isMaintenanceMode = false;
+        this.loading = false;
       }
     });
   }
+
 }

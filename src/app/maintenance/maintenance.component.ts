@@ -5,7 +5,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { interval, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -105,10 +105,15 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
 
   public tryAgain(): void {
     this.isLoading = true;
-    this.configService.getSettings().subscribe({
+    this.configService.getSettings()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (config) => {
+       //if the maintenance has been checked to false, redirect to home
         if (!config.isMaintenance) {
-          this.router.navigateByUrl(this.returnUrl);
+          console.log("Maintenance mode off")
+          this.route.data.subscribe((data) => console.log(data))
+          this.router.navigate(['/']);
         }
         this.isLoading = false;
       },

@@ -33,55 +33,39 @@ import { ShowAllWebinairesComponent } from './admin/show-all-webinaires/show-all
 import { SettingsComponent } from './settings/settings.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { authGuard, adminGuard } from './admin/admin.guard'; // Assuming you've updated these to function guards
-import { maintenanceResolver } from './maintenance.resolver';
 import { maintenanceModeGuard } from './maintenance-mode.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
   //COMMON ROUTES
   { path: 'maintenance', component: MaintenanceComponent, data: { animation: 'MaintenancePage' }  }, // Define your maintenance page route
-  { path: '', component: HomeComponent, canActivate: [maintenanceModeGuard] ,data: { animation: 'HomePage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
+  { path: '', component: HomeComponent ,data: { animation: 'HomePage' }, canActivate: [maintenanceModeGuard] },
   { path: 'acceuil', redirectTo: '', pathMatch: 'full', data: { animation: 'HomePage' } },
   { path: 'home', redirectTo: '', pathMatch: 'full', data: { animation: 'HomePage' } },
   { path: 'join', redirectTo: '', data: { animation: 'HomePage' } },
-  { path: 'learn/:id', component: SingleCoursComponent, canActivate: [maintenanceModeGuard], data: { animation: 'SingleCoursPage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'dashboard', component: ProfileComponent, canActivate: [maintenanceModeGuard, authGuard], data: { animation: 'ProfilePage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'events', component: AllEventsComponent, canActivate: [maintenanceModeGuard], resolve: { maintenanceStatus: maintenanceResolver } },
+  { path: 'learn/:id', component: SingleCoursComponent, canActivate: [maintenanceModeGuard], data: { animation: 'SingleCoursPage' } },
+  { path: 'dashboard', component: ProfileComponent, canActivate: [maintenanceModeGuard, authGuard], data: { animation: 'ProfilePage' } },
+  { path: 'events', component: AllEventsComponent, canActivate: [maintenanceModeGuard] },
   { path: 'subscribe', redirectTo: '', data: { animation: 'HomePage' } },
   { path: 'blog', redirectTo: '',  data: { animation: 'HomePage' } },
-  { path: 'progress', component: ProgressComponent, canActivate: [authGuard, maintenanceModeGuard], data: { animation: 'ProgressPage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'about', component: AboutComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AboutPage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'contact', component: ContactComponent,canActivate: [maintenanceModeGuard], data: { animation: 'ContactPage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'catalogue', component: CatalogueComponent,canActivate: [maintenanceModeGuard], data: { animation: 'CataloguePage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
+  { path: 'progress', component: ProgressComponent, canActivate: [authGuard, maintenanceModeGuard], data: { animation: 'ProgressPage' } },
+  { path: 'about', component: AboutComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AboutPage' } },
+  { path: 'contact', component: ContactComponent,canActivate: [maintenanceModeGuard], data: { animation: 'ContactPage' } },
+  { path: 'catalogue', component: CatalogueComponent,canActivate: [maintenanceModeGuard], data: { animation: 'CataloguePage' } },
   { path: 'auth/login', component: AuthComponent, data: { animation: 'AuthLoginPage' } }, // No need for resolver here, it's the login page
-  { path: 'auth/inscription', component: AuthComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AuthInscriptionPage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'edit-profile/:id', component: EditProfileComponent, canActivate: [maintenanceModeGuard], data: { animation: 'EditProfilePage' },
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'privacy', component: PrivacyPolicyComponent, canActivate: [maintenanceModeGuard], data: {animation: 'PrivacyPolicyPage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'terms', component: TermsOfServiceComponent, canActivate: [maintenanceModeGuard], data: {animation: 'TermsOfServicePage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'webinaire/:id', component: ShowWebinaireComponent,canActivate: [maintenanceModeGuard], data: {animation: 'ShowWebinairePage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'auth/user/reset', component: ForgotPasswordComponent, canActivate: [maintenanceModeGuard],  data: {animation: 'ForgotPasswordPage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'auth/verify/:token', component: EmailVerificationComponent, canActivate: [maintenanceModeGuard],  data: {animation: 'EmailVerificationPage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'auth/registration-success', component: RegistrationSuccessComponent,canActivate: [maintenanceModeGuard], data: {animation: 'RegistrationSuccessPage'},
-    resolve: { maintenanceStatus: maintenanceResolver } },
+  { path: 'auth/inscription', component: AuthComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AuthInscriptionPage' } },
+  { path: 'edit-profile/:id', component: EditProfileComponent, canActivate: [maintenanceModeGuard], data: { animation: 'EditProfilePage' } },
+  { path: 'privacy', component: PrivacyPolicyComponent, canActivate: [maintenanceModeGuard], data: {animation: 'PrivacyPolicyPage'}},
+  { path: 'terms', component: TermsOfServiceComponent, canActivate: [maintenanceModeGuard], data: {animation: 'TermsOfServicePage'}},
+  { path: 'webinaire/:id', component: ShowWebinaireComponent,canActivate: [maintenanceModeGuard], data: {animation: 'ShowWebinairePage'} },
+  { path: 'auth/user/reset', component: ForgotPasswordComponent, canActivate: [maintenanceModeGuard],  data: {animation: 'ForgotPasswordPage'} },
+  { path: 'auth/verify/:token', component: EmailVerificationComponent, canActivate: [maintenanceModeGuard],  data: {animation: 'EmailVerificationPage'} },
+  { path: 'auth/registration-success', component: RegistrationSuccessComponent,canActivate: [maintenanceModeGuard], data: {animation: 'RegistrationSuccessPage'} },
   { path: 'auth/activation', component: ResendEmailComponent }, // No need for resolver here
   { path: 'learn', redirectTo: 'catalogue', pathMatch: "full"},
-  { path: 'auth/reset-password/:token', component: ResetPasswordComponent, canActivate: [maintenanceModeGuard],
-    resolve: { maintenanceStatus: maintenanceResolver } },
-  { path: 'learn/webinaires/:id', component: ShowWebinaireComponent, canActivate: [maintenanceModeGuard],
-    resolve: { maintenanceStatus: maintenanceResolver } },
+  { path: 'auth/reset-password/:token', component: ResetPasswordComponent, canActivate: [maintenanceModeGuard] },
+  { path: 'learn/webinaires/:id', component: ShowWebinaireComponent, canActivate: [maintenanceModeGuard] },
+
 
   //LEARN ROUTES
   {
@@ -90,7 +74,6 @@ export const routes: Routes = [
     canActivate: [maintenanceModeGuard,authGuard],
     canActivateChild: [authGuard, maintenanceModeGuard],
     data: { animation: 'CoursPage' },
-    resolve: { maintenanceStatus: maintenanceResolver },
     children: [
       { path: ':module', component: ModuleContentComponent, outlet: 'module', data: { animation: 'ModuleContentPage' } },
     ],
@@ -116,4 +99,7 @@ export const routes: Routes = [
       { path: 'settings', component: SettingsComponent, outlet: 'admin'}
     ],
   },
+
+
+  { path: '**', component: NotFoundComponent , canActivate: [maintenanceModeGuard], data: {animation: 'ShowWebinairePage'} }, // The wildcard route
 ];

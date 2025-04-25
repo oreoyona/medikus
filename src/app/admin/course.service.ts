@@ -30,7 +30,10 @@ export interface CourseData {
   contact?: string,
   instructor?: string,
   instructorImgUrl?: string,
-  progression_info?: string | number
+  progression_info?: string | number,
+  endDate?: Date,
+  /**a string containing the dates of an practical course  */
+  dates?: string 
 
 
 }

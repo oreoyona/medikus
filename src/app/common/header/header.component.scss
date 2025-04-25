@@ -1,48 +1,189 @@
-@media (max-width: 760px) {
-    .bigger-screen {
-        display: none !important;
-    }
-
-    .mobile {
-        overflow: hidden;
-        display: flex !important;
-        justify-content: space-between;
-        align-items: center;
-        
-    }
-
-    .header-nav{
-        margin-bottom: 10px !important;
-    }
-}
-
-.bigger-screen{
-    overflow: hidden;
+.header {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-}
-
-button {
-    font-weight: 900 !important;
-}
-
-.mobile {
-    display: none;
-    position: relative;
-
-}
-
-nav{
-    padding: 20px;
-    
-}
-
-.header-nav{
+    padding: 1rem 2rem;
+    background-color: var(--mat-sys-background);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky; /* Make the header sticky */
+    top: 0;
+    z-index: 100;
     width: 100%;
-    margin-bottom: 50px;
-}
-
-
-
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 1rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .logo {
+    -webkit-user-select: none; /* Pour Safari */
+    -moz-user-select: none;    /* Pour Firefox */
+    -ms-user-select: none;     /* Pour Internet Explorer/Edge */
+    user-select: none;         /* Propriété standard */
+    user-select: none;
+    height: 100px; 
+    width: auto;
+    max-width: 200px;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .nav-item {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .nav-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;      /* Hide overflowing text */
+    text-overflow: ellipsis;    /* Indicate overflow with ellipsis */
+    &:hover,
+    &.active-route {
+      color: #007bff;
+      background-color: #e9ecef;
+    }
+  }
+  
+  .logout-button {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;      /* Hide overflowing text */
+    text-overflow: ellipsis;    /* Indicate overflow with ellipsis */
+    &:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+  }
+  
+  .mobile-menu-button {
+    display: none;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .profile-picture {
+    margin-left: 1rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  /* Mobile Styles */
+  @media (max-width: 760px) {
+    .header {
+      padding: 1rem;
+      overflow: hidden; /* Prevent overflow */
+    }
+  
+    .nav-links {
+      display: none;
+      overflow: hidden; /* Prevent overflow */
+    }
+  
+    .mobile-menu-button {
+      display: block;
+      overflow: hidden; /* Prevent overflow */
+    }
+  
+    .logo {
+      height: 90px;
+      overflow: hidden; /* Prevent overflow */
+    }
+  }
+  
+  /* Tablet Styles */
+  @media (min-width: 761px) and (max-width: 1024px) {
+    .nav-list {
+      gap: 0.5rem;
+      overflow: hidden; /* Prevent overflow */
+    }
+  
+    .nav-link {
+      padding: 0.5rem;
+      white-space: nowrap; /* Prevent text wrapping */
+      overflow: hidden;      /* Hide overflowing text */
+      text-overflow: ellipsis;    /* Indicate overflow with ellipsis */
+    }
+  }
+  
+  /* Mobile Menu Dialog Styles (used in HeaderMobileComponent) */
+  .mobile-menu-dialog {
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--mat-sys-background);
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .mobile-menu nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .mobile-menu a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;      /* Hide overflowing text */
+    text-overflow: ellipsis;    /* Indicate overflow with ellipsis */
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+  
+  .mobile-menu button {
+    font-size: 1.2rem;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;      /* Hide overflowing text */
+    text-overflow: ellipsis;    /* Indicate overflow with ellipsis */
+  }
+  

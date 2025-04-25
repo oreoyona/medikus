@@ -1,20 +1,18 @@
-
-
 <div class="container">
     <h2 class="text-center">Modifier le cours</h2>
 </div>
 
 <main class="container d-flex flex-column">
     @if(edited()){
-        <div class="alert alert-success" id="success">
-            Le cours a été modifié avec succès
-        </div>
+    <div class="alert alert-success" id="success">
+        Le cours a été modifié avec succès
+    </div>
     }
 
     @if(errorInEditing()){
-        <div class="alert alert-danger" id="error">
-            Le sauvergarde du cours n'a pas été effectuée
-        </div>
+    <div class="alert alert-danger" id="error">
+        Le sauvergarde du cours n'a pas été effectuée
+    </div>
     }
 
     <mat-card class="my-5">
@@ -34,19 +32,35 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="my-2">
-                        <mat-label>Choisissez une date:</mat-label>
+                        <mat-label>Choisissez une date de début:</mat-label>
                         <input matInput [matDatepicker]="picker" formControlName="date" required>
                         <mat-hint>MM/JJ/AAAA</mat-hint>
                         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
 
-                    <mat-form-field>
+                    <mat-form-field appearance="outline" class="my-2">
+                        <mat-label>Choisissez une date de fin:</mat-label>
+                        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" required>
+                        <mat-hint>MM/JJ/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endDatePicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
                         <mat-label>Quel est le type du cours ?</mat-label>
                         <mat-select formControlName="courseType" required>
-                        <mat-option *ngFor="let option of typeOptions"
-                            [value]="option">{{ option }}</mat-option>
-                    </mat-select>
+                            <mat-option *ngFor="let option of typeOptions" [value]="option">{{ option }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+
+                    <mat-form-field class="mb-5" appearance="outline">
+                        <mat-label>Quels sont les dates de cours ?</mat-label>
+                        <input matInput id="dates" formControlName="dates">
+                        <mat-hint>Format(JJ/MM/AAAA; JJ/MM/AAAA; etc), pour les cours en présentiel</mat-hint>
+
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -119,7 +133,8 @@
                                             <input matInput formControlName="link" required>
                                         </mat-form-field>
 
-                                        <h4 class="my-2">Parties du module: {{ toFormArray(module.get('parts')).length }}</h4>
+                                        <h4 class="my-2">Parties du module: {{ toFormArray(module.get('parts')).length
+                                            }}</h4>
 
                                         <div formArrayName="parts">
                                             <div *ngFor="let part of (toFormArray(module.get('parts')))?.controls; let j = index"
@@ -153,7 +168,8 @@
                                                             </mat-form-field>
 
                                                             <div class="m-1" class="app-editor">
-                                                                <app-editor innerValue="part.get('content')?.value" formControlName="content" />
+                                                                <app-editor innerValue="part.get('content')?.value"
+                                                                    formControlName="content" />
                                                             </div>
                                                         </ng-container>
 
@@ -173,12 +189,14 @@
                                                         </ng-container>
                                                     </ng-container>
 
-                                                    <button type="button" class="btn btn-danger my-3" (click)="removePart(i, j)">Supprimer cette partie</button>
+                                                    <button type="button" class="btn btn-danger my-3"
+                                                        (click)="removePart(i, j)">Supprimer cette partie</button>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <button type="button" mat-stroked-button (click)="addPart(i)">Ajouter une nouvelle partie</button>
+                                        <button type="button" mat-stroked-button (click)="addPart(i)">Ajouter une
+                                            nouvelle partie</button>
                                     </mat-expansion-panel>
                                 </mat-accordion>
                             </div>
@@ -189,7 +207,8 @@
             <mat-card-footer>
                 <button type="button" mat-raised-button (click)="addModule()" class="m-2">Ajouter un module</button>
                 <button mat-flat-button type="submit" class="m-2">Enregistrer</button>
-                <button mat-flat-button type="button" class="m-2 remove-btn" (click)="deleteCourse()">Supprimer le cours</button>
+                <button mat-flat-button type="button" class="m-2 remove-btn" (click)="deleteCourse()">Supprimer le
+                    cours</button>
 
             </mat-card-footer>
         </form>

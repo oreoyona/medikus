@@ -1,7 +1,10 @@
 <main>
     <mat-card>
         @if(message){
-            {{message}}
+            <div class="alert alert-success m-2 p-2">
+                {{message}}
+            </div>
+            
         }
         <mat-card-header>
             <h1>Paramètres du site web</h1>

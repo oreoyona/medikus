@@ -21,22 +21,21 @@
             </div>
             }
 
-
-
-
             @else {
             <h5 class="py-2 my-2">Mon apprentissage</h5>
-            @if(nonCompletedCourses.length === 0){
+            <!-- @if(nonCompletedCourses.length === 0){
             <div class="alert alert-success">
                 Inscrivez-vous à un cours pour suivre votre progression ici
             </div>
-            }
+            } -->
 
             @if(defaultMessage()){
                 <div class="alert alert-success">
                     {{defaultMessage()}}
                 </div>
             }
+
+            
             @for(course of nonCompletedCoursesArray; track $index){
 
 

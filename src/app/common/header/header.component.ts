@@ -1,250 +1,151 @@
-import { ChangeDetectorRef, Component, computed, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { bPoint760px, HeaderService } from '../services/header.service';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { ProfilePictureComponent } from "../profile-picture/profile-picture.component";
 import { User } from '../infercaces';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HeaderService } from '../services/header.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   imports: [
-    CommonModule, 
-    MatIconModule, 
-    MatButtonModule, 
-    RouterLink, 
-    ProfilePictureComponent, 
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterLink,
+    ProfilePictureComponent,
     RouterLinkActive,
-    MatProgressSpinner
+    MatProgressSpinnerModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush, // Added for performance
 })
-export class HeaderComponent implements OnInit {
-  //inject the HomeService inside the homeService member
+export class HeaderComponent implements OnInit, OnDestroy {
+  // Inject services
   private headerService = inject(HeaderService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  //inject the BreakPointObserver to detect programmatically screen resizing
-  private bo = inject(BreakpointObserver);
+  // Signals for state management
+  isMobile = signal(false);
+  showMobileMenu = signal(false);
+  isLoggedIn = computed(() => this.authService.isAuthenticated());
+  user: User | null = null;
+  navigation = signal<any[]>([]);
+  isLoggingOut = signal(false);
 
-  //define the dialog menu
-  readonly dialog = inject(MatDialog);
-
-  //inject the auth service
-  private authService = inject(AuthService)
-
-
-  //inject change Detection
-  private cdr = inject(ChangeDetectorRef)
-
-  mobile = false
-  showMenu = signal(true)
-  isLogged = computed(() => this.authService.isAuthenticated()); // Use computed signal
-  user: User | null = null
-  navigation!: any
-  handlingLogginOut = false
-
-
-
-
-
-
-
-  //component methods
-
-
-  logout() {
-    this.handlingLogginOut = true
-    this.authService.logout()
-  }
-
-  openDialog(): void {
-    this.showMenu.set(false);
-    const dialogRef = this.dialog.open(HeaderMobileComponent, {
-      height: '100vh',
-      width: '100vw',
-    })
-
-    //subscribe to the event emitted by the dialog once a link is clicked
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.showMenu.set(true);
-    });
-
-    dialogRef.componentInstance.closeDialog.subscribe(() => {
-      this.showMenu.set(true);
-      dialogRef.close();
-
-    })
-  }
-
-
+  private destroy$ = new Subject<void>();
 
   ngOnInit() {
-    this.authService.currentUserSubject.subscribe(user => this.user = user);
-    this.authService.authStatus$.subscribe(() => {
-        this.headerService.checkTheNav(this.authService);
-        this.navigation = [...this.headerService.navigation];
-        this.cdr.markForCheck(); // Trigger change detection
+    this.authService.currentUserSubject.pipe(takeUntil(this.destroy$)).subscribe(user => {
+      this.user = user;
     });
+
+    this.authService.authStatus$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.updateNavigation();
+    });
+
+    this.updateNavigation(); // Initial navigation setup
+
+    this.breakpointObserver.observe('(max-width: 760px)')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        this.isMobile.set(result.matches);
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private updateNavigation() {
     this.headerService.checkTheNav(this.authService);
-    this.navigation = [...this.headerService.navigation];
+    this.navigation.set([...this.headerService.navigation]);
+  }
 
-    this.bo.observe(bPoint760px).subscribe(() => {
-      this.mobile = true;
+  logout() {
+    this.isLoggingOut.set(true);
+    this.authService.logout();
+    this.router.navigate(['/']); // Navigate to home after logout
+  }
 
-
-    })
-
-
-    
-
-
-
-
-
+  openMobileMenu(): void {
+    this.showMobileMenu.set(true);
+    this.dialog.open(HeaderMobileComponent, {
+      height: '100vh',
+      width: '100vw',
+      panelClass: 'mobile-menu-dialog' //Custom class for no padding
+    });
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///Another component for the Header on Mobile and smaller screens
 
 @Component({
   template: `
-        <div class="menu">
-            <button mat-icon-button class="close-btn" (click)="closeOnLinkClick()">
-                <mat-icon>close</mat-icon>
-            </button>
-
-           @for(el of navigation; track el){
-            @if(el.link == "logout"){
-              <button mat-raised-button type="buttom" (click)=logout()>{{el.titre}}</button>
-
-            }@else{
-              <p (click)="closeOnLinkClick()">
-                <a routerLink={{el.link}}>{{el.titre}}</a>
-            </p>
-            }
-            
-            
-           }
-
-        </div>
-    
-    `,
-  styles: `.menu{
+    <div class="mobile-menu">
+      <button mat-icon-button class="close-button" (click)="closeMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <nav>
+        @for (item of navigation(); track $index) {
+          @if (item.link === 'logout') {
+            <button mat-raised-button type="button" (click)="logoutAndClose()">{{ item.titre }}</button>
+          } @else {
+            <a mat-button routerLink="/{{ item.link }}" (click)="closeMenu()">{{ item.titre }}</a>
+          }
+        }
+      </nav>
+    </div>
+  `,
+  styles: `
+    .mobile-menu {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff; // Or any appropriate background
+    }
+    .close-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    nav {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100%;
-     
-      flex-wrap: wrap;
-  
-      .close-btn{
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          
-      }
-  
-      p{
-          a{
-              all: unset;
-          }
-          cursor: pointer;
-  
-          :hover{
-              text-decoration: underline;
-          }
-          
-      }
-  }`,
-
-  imports: [RouterLink, MatIconModule, MatButtonModule]
-
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    a{
+      color: black;
+    }
+  `,
+  imports: [RouterLink, MatIconModule, MatButtonModule],
 })
-export class HeaderMobileComponent implements OnInit {
-  ngOnInit(): void {
-    //checks if the nav has the corrected number of items[login or logout links ]
-    this.headerService.checkTheNav(this.authService)
+export class HeaderMobileComponent {
+  // inject the HomeService navigation
+  navigation = computed(()=> this.headerService.navigation);
+  authService = inject(AuthService);
+  headerService = inject(HeaderService);
+  dialogRef = inject(MatDialogRef<HeaderMobileComponent>);
 
-    //updates the navigation array
-    this.navigation = this.headerService.navigation;
-
-
+  logoutAndClose() {
+    this.authService.logout();
+    this.closeMenu();
   }
 
-  //inject the HomeService navigation
-  navigation!: any
-  authService = inject(AuthService)
-  headerService = inject(HeaderService)
-  private cd = inject(ChangeDetectorRef)
-  private dialogRef = inject(MatDialogRef);
-
-  //outputs an event when triggered
-  closeDialog = output<boolean>();
-
-  closeOnLinkClick() {
-    this.closeDialog.emit(true);
-    this.dialogRef.close()
-
-    console.log()
-  }
-
-  logout() {
-    this.authService.logout()
+  closeMenu() {
+    this.dialogRef.close();
   }
 }
-
