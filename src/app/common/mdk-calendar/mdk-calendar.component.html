@@ -1,19 +1,32 @@
 <mat-card class="my-3 course-info-box">
-    <mat-card-header>
-        <p mat-card-title>Les dates de ce cours donné en présentiel</p>
-    </mat-card-header>
+    
     <mat-card-content>
-        <section class="mdk-calendar">
-            <ul>
-                @for(date of dates; track $index){
-                <div class="d-flex justify-content-start align-items-center" style="gap: 10px;">
-                    <li>Le {{date | formatDate: false}}</li>
-                    <button type="button" mat-stroked-button  (click)="addToAgenda(date)"> Ajouter à Google Agenda</button>
-                </div>
-        
-                }
-            </ul>
-        
-        </section>
+      <section class="mdk-calendar">
+        <h3>Prochaines sessions</h3>
+        @if (upcomingDates.length > 0) {
+        <ul>
+          @for(date of upcomingDates; track $index){
+          <div class="d-flex justify-content-start align-items-center" style="gap: 10px;">
+            <li>Le {{date | formatDate: false}}</li>
+            <button type="button" mat-stroked-button (click)="addToAgenda(date)"> Ajouter à Google Agenda</button>
+          </div>
+          }
+        </ul>
+        } @else {
+        <p>Aucune session à venir n'est planifiée.</p>
+        }
+      </section>
+  
+      @if (passedSessions.length > 0) {
+      <section class="passed-sessions mt-3">
+        <h3>Sessions passées</h3>
+        <ul>
+          @for(date of passedSessions; track $index){
+          <li>Le {{date | formatDate: false}}</li>
+          }
+        </ul>
+        <p>Nombre total de sessions passées: {{ passedSessions.length }}</p>
+      </section>
+      }
     </mat-card-content>
-</mat-card>
+  </mat-card>

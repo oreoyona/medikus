@@ -1,0 +1,69 @@
+@if(isPartCompleted){
+<div class="alert alert-success m-5 p-5">
+    Vous avez déjà répondu à ce questionnaire
+</div>
+}@else {
+
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Questionnaire</mat-card-title>
+        </mat-card-header>
+    
+        
+        <mat-card-content>
+            @if(submissionError){
+                {{submissionError}}
+            }
+            <form #questionForm="ngForm" (ngSubmit)="onSubmit(questionForm)">
+    
+                @for(q of questionsWithChoices; let i = $index; track i){
+                <div class="mb-4">
+                    <p class="h5">{{ q.question }}</p>
+                    <mat-radio-group aria-label="Select an answer" name="question-{{i}}" [(ngModel)]="q.userAnswer"
+                        required>
+    
+                        @for (choice of q.choices; track choice) {
+                        <mat-radio-button [value]="choice" class="mb-2">
+                            {{ choice }}
+                        </mat-radio-button>
+                        }
+    
+                    </mat-radio-group>
+    
+    
+    
+                    <!-- @if(questionForm.controls['question-' + i].invalid && (questionForm.controls['question-' + i].dirty ||
+                    questionForm.controls['question-' + i]!.touched)){
+                    <div class="text-danger">
+                        Please select an answer.
+                    </div>
+                    } -->
+    
+    
+                   
+    
+                </div>
+                }
+    
+    
+    
+                <button mat-raised-button type="submit" [disabled]="!questionForm.valid  || success">
+                    @if(!success){
+                        Soumettre
+                    }
+                    @else {
+                        Validé
+                    }
+                    
+                </button>
+    
+                @if(submissionError){
+                <div class="text-danger mt-2">
+                    {{ submissionError }}
+                </div>
+                }
+    
+            </form>
+        </mat-card-content>
+    </mat-card>
+}

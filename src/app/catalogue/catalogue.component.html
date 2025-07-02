@@ -22,9 +22,8 @@
                     <mat-label>Catégorie</mat-label>
                     <mat-select [formControl]="categoryFilter" (selectionChange)="applyFilters()">
                         <mat-option value="">Tous</mat-option>
-                        @for(category of categories; track $index){
-                        <mat-option [value]="category">{{category}}</mat-option>
-                        }
+                        <mat-option *ngFor="let category of  categories" [value]="category">{{category}}</mat-option>
+                        
                     </mat-select>
                 </mat-form-field>
 
@@ -71,7 +70,6 @@
 
             </section>
         </mat-card-content>
-
         <mat-paginator [length]="filteredCourses.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
             (page)="handlePageEvent($event)" showFirstLastButtons class="catalogue-pagination"></mat-paginator>
     </mat-card>

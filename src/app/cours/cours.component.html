@@ -9,7 +9,8 @@
     </button>
   }
 
-  <aside
+  @if(!breakpointService.mobile()){
+    <aside
     class="left-section-container"
     [class.mobile]="breakpointService.mobile()"
     [style.display]="breakpointService.mobile() && !leftMenuVisible ? 'none' : 'block'"
@@ -40,6 +41,8 @@
     </mat-card>
   </aside>
 
+  }
+
   <section class="right-section" [class.mobile]="breakpointService.mobile()">
     <div class="module-content">
       <mat-card class="selected-module">
@@ -69,9 +72,14 @@
                   [routerLink]="['.', { outlets: { module: module.link } }]"
                   routerLinkActive="current-module"
                 >
+                @if (isModuleCompletedByLink(module.link, asModuleArray(course.modules))) {
+                  <mat-icon class="module-icon completed-icon">check_circle</mat-icon>
+                } @else {
                   <mat-icon class="module-icon">view_module</mat-icon>
+                }
                   <span class="module-title">{{ module.title }}</span>
                 </a>
+                
                 <mat-divider></mat-divider>
               }
             }

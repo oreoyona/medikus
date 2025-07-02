@@ -391,18 +391,65 @@ export class AuthService {
     };
   }
 
+  // passwordStrengthValidator(): ValidatorFn {
+  //   return (control: AbstractControl): ValidationErrors | null => {
+  //     const password = control.value;
+
+  //     // Vérification des critères
+  //     const hasMinimumLength = password && password.length >= 8;
+  //     const hasLowerCase = /[a-z]/.test(password);
+  //     const hasDigit = /\d/.test(password);
+
+  //     const valid = hasMinimumLength && hasLowerCase && hasDigit;
+
+  //     return !valid ? { weakPassword: true } : null;
+  //   };
+  // }
+
   passwordStrengthValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value;
+      const errors: ValidationErrors = {}; // Objet pour accumuler les erreurs
 
-      // Vérification des critères
-      const hasMinimumLength = password && password.length >= 8;
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasDigit = /\d/.test(password);
+      // Si le champ est vide ou n'est pas une chaîne, on ne valide pas encore.
+      // Laissez le validateur 'Validators.required' gérer ce cas.
+      if (!password || typeof password !== 'string') {
+        return null;
+      }
 
-      const valid = hasMinimumLength && hasLowerCase && hasDigit;
+      // --- Définition des règles de validation ---
+      const validationRules = [
+        {
+          check: (pwd: string) => pwd.length >= 8,
+          error: { minlength: { requiredLength: 8, actualLength: password.length } }
+        },
+        {
+          check: (pwd: string) => /[a-z]/.test(pwd),
+          error: { noLowerCase: true }
+        },
+        {
+          check: (pwd: string) => /[A-Z]/.test(pwd),
+          error: { noUpperCase: true }
+        },
+        {
+          check: (pwd: string) => /\d/.test(pwd),
+          error: { noDigit: true }
+        },
+        {
+          check: (pwd: string) => /[@$!%*?&]/.test(pwd), // Ajoute les caractères spéciaux
+          error: { noSpecialChar: true }
+        }
+      ];
 
-      return !valid ? { weakPassword: true } : null;
+      // --- Application des règles et accumulation des erreurs ---
+      validationRules.forEach(rule => {
+        if (!rule.check(password)) {
+          Object.assign(errors, rule.error); // Fusionne l'erreur spécifique
+        }
+      });
+
+      // Retourne l'objet d'erreurs si des erreurs sont présentes, sinon null
+      return Object.keys(errors).length ? errors : null;
     };
   }
 

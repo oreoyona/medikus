@@ -9,7 +9,15 @@
             <li class="nav-item">
 
                 @if(item.link == 'logout'){
-                <a routerLink="/{{ item.link }}" class="nav-link" mat-stroked-button>{{item.titre}}</a>
+                <a (click)="logout()" class="nav-link" mat-stroked-button>
+                    @if(isLoggingOut()){
+                        <mat-spinner diameter="20"></mat-spinner>
+                    }
+                    @else {
+                        {{item.titre}}
+
+                    }
+                </a>
                 }
                 @else {
                     <a routerLink="/{{ item.link }}" routerLinkActive="active-route" class="nav-link" mat-button>{{ item.titre }}</a>

@@ -2,7 +2,6 @@ import { Component, inject, OnInit, Signal, signal, WritableSignal, OnDestroy, D
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { ProfileService } from './profile.service';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
@@ -18,6 +17,8 @@ import { HelpersService } from '../common/services/helpers.service';
 import { FormatDatePipe } from '../common/pipes/format-date.pipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MdkCalendarComponent } from "../common/mdk-calendar/mdk-calendar.component";
+import { CoursesHelpersService } from '../common/services/courses-helpers.service';
 
 interface ApiResponse<T> {
   message: string;
@@ -45,8 +46,9 @@ interface completedCourseData {
     MatButtonModule,
     HeaderComponent,
     MatProgressSpinnerModule,
-    FormatDatePipe
-  ],
+    FormatDatePipe,
+    MdkCalendarComponent
+],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -81,8 +83,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   userService = inject(UserService);
   route = inject(ActivatedRoute);
-  profileService = inject(ProfileService); // Inject ProfileService
   courseService = inject(CourseService);
+  courseHService = inject(CoursesHelpersService)
   hs = inject(HelpersService)
   router = inject(Router);
 
@@ -116,6 +118,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
 
+  getDatesFromString(str: string | undefined){
+    if (str) return this.courseHService.extractDatesFromString(str)
+    return []
+  }
+
+
   getWidth(progress: any): string {
     if (!progress) {
       progress = 0
@@ -124,7 +132,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getImgUrl(url: any) {
-    return this.hs.validateAndReturnUrl(url)
+      return this.hs.validateAndReturnUrl(url)
   }
   private loadCourses(): void {
     this.loading = true;
@@ -143,7 +151,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       subscriptions: this.courseService.getUserSubscriptions(userId)
     })
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse | any) => {
 
           if ((error as HttpErrorResponse).status == 0) {
@@ -154,7 +162,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(({ completed, subscriptions }) => {
-
+        //subscriptions is an array of Ids and subscriptions has the datastructure: {'data': courseIds, message: number, courses: CourseData[] }
         //If there is no courses
 
 
@@ -205,7 +213,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (userId) {
       this.userService.getUserById(userId)
         .pipe(
-          takeUntil(this.destroy$),
+          takeUntilDestroyed(this.destroyRef),
           catchError((error) => {
             console.error('Error fetching user:', error);
             return of(null); // Return null in case of error

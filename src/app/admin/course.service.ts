@@ -15,6 +15,12 @@ export interface ServerDataResponse {
 
 export type courseType = "Présentiel" | "En Ligne" | "Hybride"
 
+export interface CourseSubscriptionData{
+  message: number | string,
+  data: number[],
+  courses: CourseData[]
+}
+
 export interface CourseData {
 
   id?: string | number,
@@ -55,8 +61,17 @@ export interface Content {
   title?: string,
   titre?: string
   question?: string,
-  responses?: string
+  responses?: string,
+  response?: string
 }
+
+export interface QuestionWithChoices {
+  question: string;
+  choices: string[];
+  correctAnswer: string;
+  userAnswer: string | null;
+}
+
 export interface ModuleData {
   title: string,
   contentType: string,
@@ -508,7 +523,7 @@ export class CourseService {
    * @returns An observable of the servver response
    */
   getUserSubscriptions(userId: number) {
-    return this.http.get(`${apiUrl}subscriptions/${userId}`)
+    return this.http.get<CourseSubscriptionData>(`${apiUrl}subscriptions/${userId}`)
   }
 
 

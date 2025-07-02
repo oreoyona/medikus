@@ -62,7 +62,7 @@ export const routes: Routes = [
   { path: 'auth/verify/:token', component: EmailVerificationComponent, canActivate: [maintenanceModeGuard],  data: {animation: 'EmailVerificationPage'} },
   { path: 'auth/registration-success', component: RegistrationSuccessComponent,canActivate: [maintenanceModeGuard], data: {animation: 'RegistrationSuccessPage'} },
   { path: 'auth/activation', component: ResendEmailComponent }, // No need for resolver here
-  { path: 'learn', redirectTo: 'catalogue', pathMatch: "full"},
+  { path: 'learn', redirectTo: 'dashboard', pathMatch: "full"},
   { path: 'auth/reset-password/:token', component: ResetPasswordComponent, canActivate: [maintenanceModeGuard] },
   { path: 'learn/webinaires/:id', component: ShowWebinaireComponent, canActivate: [maintenanceModeGuard] },
 

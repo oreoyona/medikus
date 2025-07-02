@@ -185,6 +185,22 @@
 
                     </mat-card>
 
+                    
+                  @if(nonCompletedCoursesArray && nonCompletedCoursesArray.length > 0){
+                    @for(course of nonCompletedCoursesArray; let id = $index; track id ){
+
+                        @if(course.courseType == "Hybride" || course.courseType == "Présentiel"){
+                            <h5>Cours: {{course.name}}</h5>
+                            <app-mdk-calendar [course]="course"  [dates]="getDatesFromString(course.dates)"  />
+
+                        }
+                        
+                        
+                    }
+
+                   
+                  } 
+
                 </section>
 
             </section>

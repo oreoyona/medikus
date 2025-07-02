@@ -14,6 +14,36 @@ import { MatCardModule } from '@angular/material/card';
 export class MdkCalendarComponent {
   @Input() dates!: Date[]
   @Input() course!: CourseData
+  today: Date = new Date();
+  /**
+   * Getter for upcoming dates. Filters and sorts the dates array.
+   */
+  get upcomingDates(): Date[] {
+    const todayWithoutTime = this.convertToDateWithoutTime(this.today);
+    return this.dates
+      .map(this.convertToDateWithoutTime)
+      .filter(date => date >= todayWithoutTime)
+      .sort((a, b) => a.getTime() - b.getTime());
+  }
+   /**
+   * Getter for passed sessions. Filters and sorts the dates array.
+   */
+   get passedSessions(): Date[] {
+    const todayWithoutTime = this.convertToDateWithoutTime(this.today);
+    return this.dates
+      .map(this.convertToDateWithoutTime)
+      .filter(date => date < todayWithoutTime)
+      .sort((a, b) => a.getTime() - b.getTime());
+  }
+  /**
+   * Helper function to convert a Date or string to a Date object without the time component.
+   */
+  convertToDateWithoutTime(dateInput: Date | string): Date {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : new Date(dateInput);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
 
   location = `numéro 29bis, sur l'avenue Yav Tshibal, au quartier Golf Kabulamenshi`
 

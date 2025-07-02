@@ -101,14 +101,29 @@
             </mat-icon>
         </mat-form-field>
 
-        @if(inscriptionForm.get('password')?.touched && inscriptionForm.get('password')?.errors?.['weakPassword']){
-        <mat-hint>
-            <mat-error>
-                Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule ET un chiffre.
-            </mat-error>
-        </mat-hint>
-
-        }
+        @let passwordControl = inscriptionForm.get('password');
+    @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
+        <mat-error class="my-3">
+            @if(passwordControl?.errors?.['required']){
+                Le mot de passe est requis.
+            }
+            @if(passwordControl?.errors?.['minlength']){
+                Le mot de passe doit contenir au moins {{ passwordControl?.errors?.['minlength'].requiredLength }} caractères (actuellement : {{ passwordControl?.errors?.['minlength'].actualLength }}).
+            }
+            @if(passwordControl?.errors?.['noLowerCase']){
+                Le mot de passe doit inclure au moins une lettre minuscule.
+            }
+            @if(passwordControl?.errors?.['noUpperCase']){
+                Le mot de passe doit inclure au moins une lettre majuscule.
+            }
+            @if(passwordControl?.errors?.['noDigit']){
+                Le mot de passe doit inclure au moins un chiffre.
+            }
+            @if(passwordControl?.errors?.['noSpecialChar']){
+                {{'Le mot de passe doit inclure au moins un caractère spécial (@, $, !, %, *, ?, &).'}}
+            }
+        </mat-error>
+    }
 
 
         <mat-form-field class="field" appearance="outline">

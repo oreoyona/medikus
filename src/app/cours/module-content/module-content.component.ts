@@ -9,6 +9,8 @@ import { NgFor, NgIf } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { HelpersService } from '../../common/services/helpers.service';
+import { QuestionsComponent } from "../questions/questions.component";
+import { CoursesHelpersService } from '../../common/services/courses-helpers.service';
 
 @Component({
   selector: 'app-module-content',
@@ -17,8 +19,9 @@ import { HelpersService } from '../../common/services/helpers.service';
   standalone: true,
   imports: [
     MatTabsModule,
-    YouTubePlayerModule
-  ],
+    YouTubePlayerModule,
+    QuestionsComponent
+],
 })
 export class ModuleContentComponent implements OnInit, OnDestroy, AfterViewInit {
   module: ModuleData | undefined;
@@ -26,11 +29,16 @@ export class ModuleContentComponent implements OnInit, OnDestroy, AfterViewInit 
   courseComponent = inject(CoursComponent);
 
   private hs = inject(HelpersService);
+  courseHService = inject(CoursesHelpersService)
   private destroy$ = new Subject<void>();
   private sanitizer = inject(DomSanitizer);
   @ViewChild('divForContent') divForContent: ElementRef | undefined;
 
   partCompletionStatus: boolean[] = [];
+
+  handleQuizSuccess(partIndex: number): void {
+    this.markPartCompleted(partIndex); 
+  }
 
   ngOnInit() {
     this.courseComponent.courseData$

@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
     NgClass,
     MatProgressSpinnerModule
-    
+
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
@@ -31,10 +31,7 @@ export class AdminDashboardComponent implements OnInit {
   mobile = this.bs.mobile
   destroyRef: DestroyRef = inject(DestroyRef)
   ngOnInit(): void {
-   
     this.loadStatistics();
-    
-
   }
   loadStatistics() {
     forkJoin({
@@ -61,13 +58,13 @@ export class AdminDashboardComponent implements OnInit {
           if (error?.status === 401) {
             console.info(`Ignoring 401 Error for ${apiName}`);
             return of(undefined); // Or of(null) depending on your preference
-          } 
+          }
 
-          else if(error.status === 0){
+          else if (error.status === 0) {
             console.warn("NO INTERNET")
             return of(undefined)
           }
-          
+
           else {
             console.warn(`API Call Failed - ${apiName}:`, error);
             return of(undefined); // Return undefined to signal failure but allow forkJoin to complete

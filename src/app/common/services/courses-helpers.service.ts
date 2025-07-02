@@ -2,12 +2,62 @@ import { Injectable } from '@angular/core';
 import { CourseData, CourseService, UserProgress } from '../../admin/course.service';
 import { User } from '../infercaces';
 
+export interface QuestionsObject{
+  question: string,
+  answer: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesHelpersService {
 
   constructor(private courseService: CourseService) { }
+
+
+  /**
+ * Transforms question and answer strings into a structured array of objects.
+ *
+ * @param questionsString - A string containing questions separated by a delimiter (e.g., ';').
+ * @param answersString - A string containing answers separated by the same delimiter.
+ * @param delimiter - The delimiter used to separate questions and answers in the strings.  Defaults to ';'.
+ * @returns An array of objects, where each object represents a question-answer pair.
+ * Returns an empty array if either input string is empty or if the number of questions
+ * and answers don't match.
+ */
+  transformQuestionAnswerStrings(
+    questionsString: string,
+    answersString: string,
+    delimiter: string = ';'
+  ): QuestionsObject[] {
+    
+    if (!questionsString.trim() || !answersString.trim()) {
+      return []; // Return empty array for empty input
+    }
+
+    if(!questionsString || !answersString) return []
+
+    const questions: string[] = questionsString.split(delimiter).map(q => q.trim());
+    const answers: string[] = answersString.split(delimiter).map(a => a.trim());
+
+    
+    if (questions.length !== answers.length) {
+      console.warn(
+        "Warning: Number of questions and answers do not match.  Returning an empty array."
+      );
+      return []; // Return empty array for mismatched lengths.  
+    }
+
+   
+    const result: { question: string; answer: string }[] = [];
+    for (let i = 0; i < questions.length; i++) {
+      result.push({
+        question: questions[i],
+        answer: answers[i],
+      });
+    }
+    return result;
+  }
 
 
   /**

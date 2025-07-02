@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,8 @@ import { ProfilePictureComponent } from "../profile-picture/profile-picture.comp
 import { User } from '../infercaces';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HeaderService } from '../services/header.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, timer } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
@@ -44,6 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggingOut = signal(false);
 
   private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef)
 
   ngOnInit() {
     this.authService.currentUserSubject.pipe(takeUntil(this.destroy$)).subscribe(user => {
@@ -75,8 +77,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.isLoggingOut.set(true);
-    this.authService.logout();
-    this.router.navigate(['/']); // Navigate to home after logout
+    timer(2000).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() =>{
+      this.authService.logout();
+    })
+    
   }
 
   openMobileMenu(): void {
@@ -89,6 +93,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 }
 
+//MOBILE HEADER COMPONENT
+
+
 @Component({
   template: `
     <div class="mobile-menu">
@@ -98,7 +105,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       <nav>
         @for (item of navigation(); track $index) {
           @if (item.link === 'logout') {
-            <button mat-raised-button type="button" (click)="logoutAndClose()">{{ item.titre }}</button>
+            <button mat-raised-button type="button" (click)="logoutAndClose()">
+
+                    @if(isLoggingOut()){
+                        <mat-spinner diameter="20"></mat-spinner>
+                    }
+                    @else {
+                        {{item.titre}}
+
+                    }
+            </button>
           } @else {
             <a mat-button routerLink="/{{ item.link }}" (click)="closeMenu()">{{ item.titre }}</a>
           }
@@ -131,18 +147,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
       color: black;
     }
   `,
-  imports: [RouterLink, MatIconModule, MatButtonModule],
+  imports: [RouterLink, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
 })
 export class HeaderMobileComponent {
   // inject the HomeService navigation
-  navigation = computed(()=> this.headerService.navigation);
+  navigation = computed(() => this.headerService.navigation);
   authService = inject(AuthService);
   headerService = inject(HeaderService);
   dialogRef = inject(MatDialogRef<HeaderMobileComponent>);
+  isLoggingOut = signal(false);
 
   logoutAndClose() {
-    this.authService.logout();
-    this.closeMenu();
+    this.isLoggingOut.set(true);
+    timer(2000).subscribe(() => {
+      this.authService.logout();
+      this.closeMenu();
+    })
+   
   }
 
   closeMenu() {

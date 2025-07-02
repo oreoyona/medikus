@@ -57,7 +57,7 @@ export class CatalogueComponent implements OnInit {
 
   categoryFilter = new FormControl('');
   instructorFilter = new FormControl('');
-  categories = ["Hybride", "En Ligne"];
+  categories = ["Hybride", "En Ligne", "Présentiel"];
   instructors: string[] = [];
 
   ngOnInit(): void {
@@ -138,4 +138,6 @@ export class CatalogueComponent implements OnInit {
     this.pageSize = e.pageSize;
     this.updatePagedCourses();
   }
+
+
 }

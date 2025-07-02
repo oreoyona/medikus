@@ -39,12 +39,24 @@
                         </div>
 
                         }
+
+                     
                         @else {
                         @if(course.courseType == "Présentiel"){
-                        <!-- pour les cours en presentiel, afficher un calendrier -->
-                         @let dates = getCourseDates(course);
-                        <app-mdk-calendar [dates]="dates" [course]="course" />
 
+                        <!-- pour les cours en presentiel, afficher un calendrier -->
+
+                        <div class="d-flex flex-column align-items-start my-4">
+                            <button mat-flat-button [appLoadingButton]="loadingBtn()" (click)="subscribe()">
+                                S'incrire
+                            </button>
+                             @let dates = getCourseDates(course);
+    
+                            <app-mdk-calendar [dates]="dates" [course]="course" />
+    
+                        </div>
+
+                        
                         }
 
                         @else if (course.courseType == "Hybride") {

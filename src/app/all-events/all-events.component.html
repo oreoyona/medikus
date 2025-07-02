@@ -2,7 +2,7 @@
   <app-header />
 </header>
 
-<main>
+<main class="my-5">
   <div class="events-container">
     <h2 class="section-title">Les prochaines activités</h2>
 
@@ -60,11 +60,11 @@
         <mat-form-field>
           <mat-label>Filtrer les webinaires par leur date de début:</mat-label>
           <mat-select (selectionChange)="filterWebinaires($event)">
-            <mat-option value="all">All</mat-option>
-            <mat-option value="1">Next Week</mat-option>
-            <mat-option value="2">Next 2 Weeks</mat-option>
-            <mat-option value="3">Next 3 Weeks</mat-option>
-            <mat-option value="4">Next 4 Weeks</mat-option>
+            <mat-option value="all">Tous</mat-option>
+            <mat-option value="1">Semaine prochaine</mat-option>
+            <mat-option value="2">Prochaines 2 semaines</mat-option>
+            <mat-option value="3">Prochaines 3 semaines</mat-option>
+            <mat-option value="4">Prochaines 4 semaines</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
