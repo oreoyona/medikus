@@ -31,12 +31,12 @@ main{
     .action-btn:hover{
         background-color: var(--mat-sys-primary-container);
         border: 1px solid inherit;
-        box-shadow: var(--mdc-fab-container-elevation-shadow, var(--mat-sys-level3));
+        box-shadow: var(--mat-fab-container-elevation-shadow, var(--mat-sys-level3));
     }
     .activeLink{
         background-color: var(--mat-sys-primary-container);
         border: 1px solid inherit;
-        box-shadow: var(--mdc-fab-container-elevation-shadow, var(--mat-sys-level3));
+        box-shadow: var(--mat-fab-container-elevation-shadow, var(--mat-sys-level3));
         color: var(--mat-sys-error);
     }
    
