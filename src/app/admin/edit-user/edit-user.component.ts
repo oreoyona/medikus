@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { NgFor } from '@angular/common';
+
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from '../edit-course/delete-dialog.component';
 import { catchError, from, of, Subscription, timer } from 'rxjs';
@@ -26,11 +26,9 @@ import { HelpersService } from '../../common/services/helpers.service';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    NgFor,
     LoadingSpinnerComponent,
     LoadingButtonDirective
-
-  ],
+],
   templateUrl: './edit-user.component.html',
   styleUrl: './edit-user.component.scss'
 })

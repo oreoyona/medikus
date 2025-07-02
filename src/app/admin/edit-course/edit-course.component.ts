@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseData, CourseService, ModuleData, ServerDataResponse } from '../course.service';
-import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -33,9 +33,12 @@ import { catchError, of, take, timer } from 'rxjs';
     MatSelectModule,
     MatExpansionModule,
     MatDividerModule,
-    MatIconModule, MatDialogModule, MatDatepickerModule,
-    NgFor, NgSwitch, NgSwitchCase, FormsModule,
-    CkeditorComponent],
+    MatIconModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    FormsModule,
+    CkeditorComponent
+],
   templateUrl: './edit-course.component.html',
   styleUrl: './edit-course.component.scss',
   standalone: true,

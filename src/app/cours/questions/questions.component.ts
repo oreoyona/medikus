@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, inject } from "@angular
 import { QuestionsObject } from "../../common/services/courses-helpers.service";
 import { QuestionWithChoices } from "../../admin/course.service";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf } from "@angular/common";
+
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { FormsModule, NgForm } from "@angular/forms";

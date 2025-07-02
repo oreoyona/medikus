@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonModule } from '@angular/common';
+
 import { UserService } from '../../admin/users/user.service';
 import { timer } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './resend-email.component.html',
   styleUrls: ['./resend-email.component.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatProgressSpinnerModule, CommonModule,  MatIconModule],
+  imports: [MatButtonModule, MatProgressSpinnerModule, MatIconModule],
 })
 export class ResendEmailComponent {
   userService = inject(UserService);

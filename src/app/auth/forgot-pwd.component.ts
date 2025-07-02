@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,50 +18,52 @@ import { HeaderComponent } from "../common/header/header.component";
       <app-header />
     </header>
     <div class="d-flex justify-content-center text-center forgot-password-container">
-       <mat-card class="p-3">
-
-      
-      <h2>Vous avez oublié votre mot de passe ?</h2>
-      <p>Entrez votre adresse email pour initier la réinitialisation de votre mot de passe.</p>
-      @if(!errorMessage()){
-        <form [formGroup]="forgotPasswordForm" (ngSubmit)="resetPassword()">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required>
-          <mat-error *ngIf="forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched">
-            Veuillez entrer votre adresse email.
-          </mat-error>
-        </mat-form-field>
-
-        <button mat-raised-button type="submit" [disabled]="forgotPasswordForm.invalid || delay">
-          @if(isLoading){
-            <mat-spinner diameter="30"></mat-spinner>
-          }
-          @else {
-            Réinitialiser le mot de passe
-
-          } 
-        </button>
-      </form>  
-        }
-  
-      
-     
-
+      <mat-card class="p-3">
+    
+    
+        <h2>Vous avez oublié votre mot de passe ?</h2>
+        <p>Entrez votre adresse email pour initier la réinitialisation de votre mot de passe.</p>
+        @if(!errorMessage()){
+          <form [formGroup]="forgotPasswordForm" (ngSubmit)="resetPassword()">
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" required>
+              @if (forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched) {
+                <mat-error>
+                  Veuillez entrer votre adresse email.
+                </mat-error>
+              }
+            </mat-form-field>
+    
+            <button mat-raised-button type="submit" [disabled]="forgotPasswordForm.invalid || delay">
+              @if(isLoading){
+                <mat-spinner diameter="30"></mat-spinner>
+              }
+              @else {
+              Réinitialiser le mot de passe
+    
+            }
+          </button>
+        </form>
+      }
+    
+    
+    
+    
       @if(!errorMessage() && resetMessage){
         <div class="reset-message">
-        {{ resetMessage }}
-      </div>
-      }
-
-      @if(errorMessage()){
-        <div class="alert alert-danger">
-            {{errorMessage()}}
+          {{ resetMessage }}
         </div>
       }
-      </mat-card>
+    
+      @if(errorMessage()){
+        <div class="alert alert-danger">
+          {{errorMessage()}}
+        </div>
+      }
+    </mat-card>
     </div>
-  `,
+    `,
     styles: [`
 
     mat-card{
@@ -119,7 +121,6 @@ import { HeaderComponent } from "../common/header/header.component";
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCardModule,

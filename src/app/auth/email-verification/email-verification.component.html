@@ -1,7 +1,7 @@
 <header class="pad-0">
   <app-header />
 </header>
- 
+
 <main class="verification-main">
   <div class="verification-card d-flex justify-content-center">
     @switch (verificationStatus) {
@@ -23,8 +23,12 @@
         <div class="d-flex flex-column align-items-center verification-state">
           <mat-icon class="verification-icon error-icon">error_outline</mat-icon>
           <h2 class="verification-title">Échec de la vérification</h2>
-          <p class="verification-message" *ngIf="errorMessage">{{ errorMessage }}</p>
-          <p class="verification-message" *ngIf="!errorMessage">Une erreur est survenue lors de la vérification.</p>
+          @if (errorMessage) {
+            <p class="verification-message">{{ errorMessage }}</p>
+          }
+          @if (!errorMessage) {
+            <p class="verification-message">Une erreur est survenue lors de la vérification.</p>
+          }
           <button mat-raised-button color="primary" class="verification-button" (click)="navigateToLogin()">Se connecter</button>
         </div>
       }

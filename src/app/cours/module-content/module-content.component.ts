@@ -5,7 +5,7 @@ import { of, Subject } from 'rxjs';
 import { CoursComponent } from '../cours.component';
 import { ModuleData } from '../../admin/course.service';
 import { MatTabsModule } from '@angular/material/tabs';
-import { NgFor, NgIf } from '@angular/common';
+
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { HelpersService } from '../../common/services/helpers.service';

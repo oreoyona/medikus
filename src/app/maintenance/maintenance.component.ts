@@ -7,19 +7,18 @@ import { switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-maintenance',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatButtonModule
-  ],
+],
   templateUrl: './maintenance.component.html',
   styleUrls: ['./maintenance.component.scss']
 })

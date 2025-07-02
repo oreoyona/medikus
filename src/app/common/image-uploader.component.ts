@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+
 import { HelpersService } from './services/helpers.service';
 
 @Component({
@@ -12,13 +12,17 @@ import { HelpersService } from './services/helpers.service';
       <label class="form-label">Image par défaut</label>
       <div class="input-group">
         <input type="file" class="form-control" (change)="onImageChange($event)" accept="image/*" />
-        <div *ngIf="uploading" class="input-group-append">
-          <mat-spinner diameter="30"></mat-spinner>
-        </div>
+        @if (uploading) {
+          <div class="input-group-append">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+        }
       </div>
-      <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+      @if (errorMessage) {
+        <div class="text-danger mt-2">{{ errorMessage }}</div>
+      }
     </div>
-  `,
+    `,
   styles: [`
     .input-group-append {
       display: flex;
@@ -30,7 +34,7 @@ import { HelpersService } from './services/helpers.service';
     }
   `],
   standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 export class ImageUploadComponent {
   @Input() imgUrlControl!: AbstractControl<string |

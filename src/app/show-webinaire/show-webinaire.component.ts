@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { HelpersService } from '../common/services/helpers.service';
 import { HeaderComponent } from "../common/header/header.component";
 import { MatButtonModule } from '@angular/material/button';

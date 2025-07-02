@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { take, catchError, of, throwError } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+
 import { HeaderComponent } from "../../common/header/header.component";
 import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../admin/users/user.service';
@@ -18,10 +18,9 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
   imports: [
     MatIconModule,
     MatProgressSpinnerModule,
-    CommonModule,
     HeaderComponent,
     MatButtonModule
-  ]
+]
 })
 export class EmailVerificationComponent implements OnInit {
   private route = inject(ActivatedRoute);

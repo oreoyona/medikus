@@ -1,47 +1,48 @@
 <header class="header">
-    <div class="logo-container" routerLink="/">
-        <img src="logo.svg" alt="Medicus Logo" class="logo">
-    </div>
+  <div class="logo-container" routerLink="/">
+    <img src="logo.svg" alt="Medicus Logo" class="logo">
+  </div>
 
-    <nav class="nav-links" *ngIf="!isMobile()">
-        <ul class="nav-list">
-            @for (item of navigation(); track $index) {
-            <li class="nav-item">
-
-                @if(item.link == 'logout'){
-                <a (click)="logout()" class="nav-link" mat-stroked-button>
-                    @if(isLoggingOut()){
-                        <mat-spinner diameter="20"></mat-spinner>
-                    }
-                    @else {
-                        {{item.titre}}
-
-                    }
-                </a>
+  @if (!isMobile()) {
+    <nav class="nav-links">
+      <ul class="nav-list">
+        @for (item of navigation(); track $index) {
+          <li class="nav-item">
+            @if(item.link == 'logout'){
+              <a (click)="logout()" class="nav-link" mat-stroked-button>
+                @if(isLoggingOut()){
+                  <mat-spinner diameter="20"></mat-spinner>
                 }
                 @else {
-                    <a routerLink="/{{ item.link }}" routerLinkActive="active-route" class="nav-link" mat-button>{{ item.titre }}</a>
-
-                }
-            </li>
-            }
-        </ul>
-    </nav>
-
-    @if(isMobile()){
-        <div class="d-flex justify-space-between">
-            <div class="mobile-menu-button">
-                <button mat-icon-button (click)="openMobileMenu()">
-                    <mat-icon>menu</mat-icon>
-                </button>
-            </div>
-            <div class="profile-picture" *ngIf="isLoggedIn()">
-                <app-profile-picture [imageUrl]="user?.imgUrl!" [name]="user?.name!"></app-profile-picture>
-            </div>
-        </div>
-        
+                {{item.titre}}
+              }
+            </a>
+          }
+          @else {
+          <a routerLink="/{{ item.link }}" routerLinkActive="active-route" class="nav-link" mat-button>{{ item.titre }}</a>
+        }
+      </li>
     }
+  </ul>
+</nav>
+}
 
-   
-    
+@if(isMobile()){
+  <div class="d-flex justify-space-between">
+    <div class="mobile-menu-button">
+      <button mat-icon-button (click)="openMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    @if (isLoggedIn()) {
+      <div class="profile-picture">
+        <app-profile-picture [imageUrl]="user?.imgUrl!" [name]="user?.name!"></app-profile-picture>
+      </div>
+    }
+  </div>
+
+}
+
+
+
 </header>

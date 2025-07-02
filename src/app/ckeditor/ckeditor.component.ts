@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component,ViewEncapsulation, type AfterViewInit, ElementRef, ViewChild, output, Output, EventEmitter, forwardRef, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ChangeEvent, CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {
 	type EditorConfig,
@@ -43,7 +43,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 const LICENSE_KEY = 'GPL'
 @Component({
   selector: 'app-editor',
-  imports: [CommonModule, CKEditorModule],
+  imports: [CKEditorModule],
   templateUrl: './ckeditor.component.html',
   styleUrl: './ckeditor.component.scss',
   encapsulation: ViewEncapsulation.None,

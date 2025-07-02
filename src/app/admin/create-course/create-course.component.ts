@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -30,8 +30,10 @@ import { ImageUploadComponent } from "../../common/image-uploader.component";
     MatSelectModule,
     MatExpansionModule,
     MatDividerModule,
-    MatIconModule, MatDialogModule, MatDatepickerModule,
-    NgFor, NgSwitch, NgSwitchCase, FormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    FormsModule,
     CkeditorComponent,
     ImageUploadComponent
 ],

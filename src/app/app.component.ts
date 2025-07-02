@@ -6,13 +6,13 @@ import { ConfigService } from './config.service';
 import { filter, takeUntil } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FooterComponent, MatProgressSpinnerModule],
+  imports: [RouterOutlet, FooterComponent, MatProgressSpinnerModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: animationsArray

@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CourseData, CourseService } from '../admin/course.service';
 import { HeaderComponent } from "../common/header/header.component";
 import { RouterLink } from '@angular/router';
-import { DatePipe, JsonPipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
 import { HelpersService } from '../common/services/helpers.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -34,10 +34,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; /
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,NgIf,
     MatGridListModule,
-    MatProgressSpinnerModule // Add MatProgressSpinnerModule
-  ],
+    MatProgressSpinnerModule
+],
   templateUrl: './catalogue.component.html',
   styleUrl: './catalogue.component.scss'
 })
