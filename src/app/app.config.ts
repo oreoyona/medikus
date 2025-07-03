@@ -3,7 +3,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth/auth.interceptor';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled',anchorScrolling: 'enabled',})), 
     provideAnimationsAsync(), 
-    provideHttpClient( withInterceptors([authInterceptor])),
+    provideHttpClient( withInterceptors([authInterceptor]), withFetch()),
     ...(NgxIndexedDBModule.forRoot(dbConfig).providers || []) // Vérification et valeur par défaut
 
     
