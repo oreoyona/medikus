@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { rubanObject } from '../../common/infercaces'; // Ensure correct import path
-import { RouterLink } from '@angular/router';
+
 import { CourseService } from '../course.service';
 import { UserService } from '../users/user.service';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
@@ -18,7 +18,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink,
     NgClass,
     MatProgressSpinnerModule
 

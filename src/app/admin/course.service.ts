@@ -39,7 +39,8 @@ export interface CourseData {
   progression_info?: string | number,
   endDate?: Date,
   /**a string containing the dates of an practical course  */
-  dates?: string 
+  dates?: string,
+  subscriberCount?: number
 
 
 }
@@ -357,6 +358,14 @@ export class CourseService {
    */
   getCourseById(courseId: number): Observable<any> {
     return this.http.get<any>(`${apiUrl}${courseId}`);
+  }
+
+  /**
+   * Get all the user subscribers to a course
+   * @param courseId  
+   */
+  getAllSubscribers(courseId: number){
+    return this.http.get(`${apiUrl}${courseId}/subscriptions`)
   }
 
 

@@ -3,7 +3,7 @@
 </header>
 
 <section class="mdk-container">
-  <nav class="ruban">
+  <nav class="ruban my-2">
     @for (item of ruban; track item) {
     <button mat-stroked-button class="ruban-btn" [routerLink]="item.link"
       [fragment]="item.fragment">{{item.titre}}</button>
@@ -22,7 +22,7 @@
     <h2 id="activity">{{ "Activités Vedettes" | uppercase }}</h2>
   </div>
 
-  <section class="course-cards">
+  <section class="course-cards my-4">
     @if (!courses) {
     <mat-progress-spinner mode="indeterminate" style="margin: 20px auto;"></mat-progress-spinner>
     } @else {

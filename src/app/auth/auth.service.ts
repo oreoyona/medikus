@@ -3,7 +3,7 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { role, User } from '../common/infercaces';
-import { BehaviorSubject, catchError, concatMap, from, map, Observable, of, switchMap, tap, throwError, timer } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, filter, finalize, from, map, Observable, of, shareReplay, switchMap, take, tap, throwError, timer } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { baseUrl } from '../urls';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,7 +20,6 @@ export class AuthService {
   roles: role[] = ["admin", "editor", "subscriber", "instructor"]
 
   // API URLs
-
   private readonly apiUrl = baseUrl + 'auth/inscription'
   private readonly apiUrlLogin = baseUrl + 'auth/login'
   private readonly adminUserUrl = baseUrl + 'auth/admin/create_user'
@@ -32,46 +31,57 @@ export class AuthService {
   //properties to determine the current user and its jwt tokens
 
   currentUserSubject: BehaviorSubject<User | null>;
- 
-
   public currentUser: User | null;
 
   tokenRefreshSubject = new BehaviorSubject<boolean>(false); // Track token refresh status
-  currentAcessTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(this.getAccessTokenFromLocalStorage());
-  refreshAccessTokenSubject = new BehaviorSubject<string>(this.getRefreshTokenFromLocalStorage())
+  refreshAccessTokenSubject = new BehaviorSubject<string | null>(this.getRefreshTokenFromLocalStorage())
+  private isRefreshing = false;
+
+  //DEFINITE VARIABLE DEFINITION FOR THE REFRESH TOKEN FUNCTION
+  currentAcessTokenSubject: BehaviorSubject<string | null>;
+  currentAccessToken$: Observable<string | null>; // Public observable for others to subscribe to
+
 
   isAuthenticated = signal(!!this.getAccessTokenFromLocalStorage())
-  
-  
+  // State to manage refresh process
+
   private authStatusSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   authStatus$ = this.authStatusSubject.asObservable();
 
-  constructor(private http: HttpClient,  private dbService: NgxIndexedDBService) {
+  constructor(private http: HttpClient, private dbService: NgxIndexedDBService) {
+
+    // Initialize subjects based on localStorage content
+    const initialAccessToken = this.getAccessTokenFromLocalStorage();
+    this.currentAcessTokenSubject = new BehaviorSubject<string | null>(initialAccessToken);
+    this.currentAccessToken$ = this.currentAcessTokenSubject.asObservable(); // Expose as observable
+
 
     this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromLocalStorage());
     this.currentUser = this.currentUserSubject.value;
 
-    this.currentAcessTokenSubject.subscribe(() => {
-      this.isAuthenticated.set(!!this.getAccessTokenFromLocalStorage());
+    this.currentAcessTokenSubject.subscribe((token) => {
+      const authenticated = !!token
+      this.isAuthenticated.set(authenticated);
+      this.authStatusSubject.next(authenticated);
+
     })
-    this.refreshAccessTokenSubject = new BehaviorSubject<string>(this.getRefreshTokenFromLocalStorage())
 
 
   }
 
 
- /**
-  * @param courses An array of courses to which the user is subscribed
-  * 
-  */
+  /**
+   * @param courses An array of courses to which the user is subscribed
+   * 
+   */
 
- updateUserCourses(courses: number[]) {
-  if (this.currentUser) {
+  updateUserCourses(courses: number[]) {
+    if (this.currentUser) {
       this.currentUser.courses = courses;
       this.currentUserSubject.next(this.currentUser);
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    }
   }
-}
 
 
 
@@ -171,18 +181,33 @@ export class AuthService {
    * This method works with the authInterceptor function to ensure persistent login in
    * @returns An observable 
    */
-  refreshAccessToken(): Observable<any> {
+  refreshAccessToken(): Observable<string | null> {
+    console.log(`[AuthService.refreshAccessToken] Called. isRefreshing: ${this.isRefreshing}`);
 
-    const refreshToken = this.refreshAccessTokenSubject.value;
+
+    if (this.isRefreshing) {
+      // If a refresh is already in progress, return the existing subject
+      // and filter out null values until the new token is emitted.
+      return this.currentAcessTokenSubject.pipe(
+        filter(token => token !== null),
+        take(1) // Take the first non-null token emitted
+      );
+    }
+    this.isRefreshing = true
+    this.currentAcessTokenSubject.next(null) //clear the refresh token
+
+    const refreshToken = this.getRefreshTokenFromLocalStorage()
     //make sure that the refresh token is indeed valid or not
-    setTimeout(() => {
-      if (!refreshToken) {
-        return throwError(() => new Error("No refresh token available"));
-      }
-      return
-    }, 10)
+
+    if (!refreshToken) {
+      this.logout(); // Force logout if no refresh token
+      this.isRefreshing = false;
+      return throwError(() => new Error("No refresh token available"));
+    }
+
+
     //else make the call and wait for the response
-    return this.http.post<{ access_token: string }>(
+    return this.http.post<{ access_token: string, refresh_token: string }>(
       this.refreshUrl, //the url for to post request
       {}, //an empty body
       {
@@ -191,36 +216,35 @@ export class AuthService {
         } //the required header for refreshing
       })
       .pipe(
-        tap((response) => {
-          localStorage.setItem('access_token', response.access_token);
-          this.currentAcessTokenSubject.next(response.access_token);
-          this.tokenRefreshSubject.next(true); // Notify that the token has been refreshed
+        shareReplay({bufferSize: 1, refCount: true, windowTime: 5000}),
+        switchMap((response: any) => {
+          const newToken = response.access_token
+          const newRefresh = response.refresh_token
+
+
+          localStorage.setItem('access_token', newToken);
+          localStorage.setItem('refresh_token', newRefresh)
+
+          this.isRefreshing = false
+
+          this.currentAcessTokenSubject.next(newToken);
+          return of(newToken)
+
         }),
         catchError((error: HttpErrorResponse) => {
+          this.isRefreshing = false;
+          this.currentAcessTokenSubject.error(error)
           console.error('Failed to refresh access token:', error);
-          this.logout(); // Log out on refresh failure
+          // this.logout(); // Log out on refresh failure
           return throwError(() => error);
+        }),
+        finalize(() => {
+          this.isRefreshing = false
         })
       );
   }
 
 
-  startTokenRefreshTimer(): void {
-    // Start a timer to check the token expiration every 4 minutes
-    timer(0, 240000).subscribe(() => {
-      const token = this.currentAcessTokenSubject.value;
-      const expirationTime = this.getJwtExpirationTime(token);
-      if (expirationTime && expirationTime.getTime() - Date.now() < 60000) {
-
-        // Refresh the token if it's going to expire in less than 1 minute
-        this.refreshAccessToken().subscribe(e => {
-          
-        });
-
-
-      }
-    });
-  }
 
 
 
@@ -233,11 +257,11 @@ export class AuthService {
    */
   logInUser(form: any) {
     return this.http.post<{ access_token: string; refresh_token: string; user: User }>(this.apiUrlLogin, form)
-    .pipe(
-      tap(()=>{
-        this.authStatusSubject.next(true); // Notify subscribers
-      })
-    )
+      .pipe(
+        tap(() => {
+          this.authStatusSubject.next(true); // Notify subscribers
+        })
+      )
   }
   private readonly destroyRef = inject(DestroyRef);
 
@@ -307,6 +331,8 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('currentUser');
+    this.currentAcessTokenSubject.next(null);
+
     this.currentUserSubject.next({ id: "" } as User);
     this.currentUser = { id: "" };
     this.isAuthenticated.set(false);

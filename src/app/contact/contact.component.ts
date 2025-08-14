@@ -32,6 +32,7 @@ export class ContactComponent {
   private snackBar: MatSnackBar = new MatSnackBar();
   loading = false
   sent = false
+  error = false
 
   form = new FormGroup({
     name: new FormControl("", Validators.required),
@@ -55,16 +56,18 @@ export class ContactComponent {
           next: (response) => {
             this.sent = true
             this.loading = false
-        
+
             this.form.reset(); // Réinitialiser le formulaire après l'envoi
           },
           error: (error) => {
+            this.sent = true
+            this.error = true
             this.loading = false
 
             console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
             this.snackBar.open('Une erreur s\'est produite lors de l\'envoi du message. Veuillez réessayer plus tard.', 'Fermer', {
               duration: 5000,
-              panelClass: ['error-snackbar'] // Vous pouvez définir des classes CSS pour styliser la notification d'erreur
+              panelClass: ['error-snackbar'] 
             });
           }
         });

@@ -35,6 +35,11 @@ import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { authGuard, adminGuard } from './admin/admin.guard'; // Assuming you've updated these to function guards
 import { maintenanceModeGuard } from './maintenance-mode.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AllPostsComponent } from './blog/all-posts/all-posts.component';
+import { EditPostComponent } from './blog/edit-post/edit-post.component';
+import { PostDetailComponent } from './blog/post-detail/post-detail.component';
+import { CreatePostComponent } from './blog/create-post/create-post.component';
+import { ShowPostByAuthorComponent } from './blog/show-post-by-author/show-post-by-author.component';
 
 export const routes: Routes = [
   //COMMON ROUTES
@@ -47,8 +52,11 @@ export const routes: Routes = [
   { path: 'dashboard', component: ProfileComponent, canActivate: [maintenanceModeGuard, authGuard], data: { animation: 'ProfilePage' } },
   { path: 'events', component: AllEventsComponent, canActivate: [maintenanceModeGuard] },
   { path: 'subscribe', redirectTo: '', data: { animation: 'HomePage' } },
-  { path: 'blog', redirectTo: '',  data: { animation: 'HomePage' } },
+  { path: 'blog', component: AllPostsComponent,  data: { animation: 'BlogPage' } },
+  { path: 'blog/posts/edit/:id', component: EditPostComponent, data: { animation: 'PostEditPage'}},
   { path: 'progress', component: ProgressComponent, canActivate: [authGuard, maintenanceModeGuard], data: { animation: 'ProgressPage' } },
+  { path: 'blog/posts/:slug', component: PostDetailComponent, data: {animation: 'PostDetailPage'}},
+  { path: 'blog/author/:name', component: ShowPostByAuthorComponent, data: {animation: 'ShowAuthorPostPage'}},
   { path: 'about', component: AboutComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AboutPage' } },
   { path: 'contact', component: ContactComponent,canActivate: [maintenanceModeGuard], data: { animation: 'ContactPage' } },
   { path: 'catalogue', component: CatalogueComponent,canActivate: [maintenanceModeGuard], data: { animation: 'CataloguePage' } },
@@ -65,7 +73,7 @@ export const routes: Routes = [
   { path: 'learn', redirectTo: 'dashboard', pathMatch: "full"},
   { path: 'auth/reset-password/:token', component: ResetPasswordComponent, canActivate: [maintenanceModeGuard] },
   { path: 'learn/webinaires/:id', component: ShowWebinaireComponent, canActivate: [maintenanceModeGuard] },
-
+   
 
   //LEARN ROUTES
   {
@@ -78,6 +86,9 @@ export const routes: Routes = [
       { path: ':module', component: ModuleContentComponent, outlet: 'module', data: { animation: 'ModuleContentPage' } },
     ],
   },
+
+
+  
 
   //ADMIN ROUTES
   {
@@ -96,10 +107,13 @@ export const routes: Routes = [
       { path: 'webinaire/add',  component: CreateWebinaireComponent, outlet: 'admin', data: {animation: 'AddWebinairePage'}},
       { path: 'webinaires', component: ShowAllWebinairesComponent, outlet: 'admin'},
       { path: 'webinaires/:id', component: EditWebinaireComponent, outlet: 'admin'},
-      { path: 'settings', component: SettingsComponent, outlet: 'admin'}
+      { path: 'settings', component: SettingsComponent, outlet: 'admin'},
+      { path: 'blog/post/add', component: CreatePostComponent, outlet: 'admin'},
+
+      
     ],
   },
 
 
-  { path: '**', component: NotFoundComponent , canActivate: [maintenanceModeGuard], data: {animation: 'ShowWebinairePage'} }, // The wildcard route
+  { path: '**', component: NotFoundComponent , canActivate: [maintenanceModeGuard], data: {animation: 'NoPageFound'} }, // The wildcard route
 ];

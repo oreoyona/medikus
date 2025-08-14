@@ -14,11 +14,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-header{
+header {
   height: 100px !important;
 }
 
-.alert-success{
+.alert-success {
   background-color: var(--mat-sys-primary-container) !important;
   border-color: var(--mat-sys-primary-container);
   color: var(--mat-sys-inverse-surface)
@@ -94,4 +94,35 @@ header{
 mat-card {
   background-color: var(--mat-sys-background) !important;
 
+}
+
+.blog-author {
+  color: var(--mat-primary);
+  cursor: pointer;
+
+  &:hover {
+    border-bottom: solid 3px var(--mat-sys-error) !important;
+    font-style: italic;
+    transition: all .1s ease-in-out;
+  }
+}
+
+
+.content-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 2rem auto; // Center the image and add vertical space
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-video {
+  display: block;
+  width: 100%;
+  height: 450px; // Default height for videos
+  margin: 2rem 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #000;
 }

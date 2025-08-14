@@ -1,0 +1,92 @@
+<app-header />
+
+<div class="container mt-4">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title class="my-3">Modifier l'article</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="editPostForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Titre</mat-label>
+                    <input matInput formControlName="title" required>
+                    <mat-error *ngIf="editPostForm.get('title')?.invalid && editPostForm.get('title')?.touched">
+                        Le titre est requis.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Slug (URL conviviale)</mat-label>
+                    <input matInput formControlName="slug" required readonly>
+                    <!-- Slug should be readonly in edit mode -->
+                    <mat-error *ngIf="editPostForm.get('slug')?.invalid && editPostForm.get('slug')?.touched">
+                        Le slug est requis.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Description (résumé)</mat-label>
+                    <textarea matInput formControlName="description" rows="3" required></textarea>
+                    @if(editPostForm.get('description')?.invalid && editPostForm.get('description')?.touched){
+                    <mat-error>
+                        La description est requise.
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Image actuelle(URL)</mat-label>
+                    <input matInput type="text" formControlName="postImg">
+                </mat-form-field>
+
+                <div class="w-100 mb-3">
+                    <app-image-upload [imgUrlControl]="editPostForm.get('postImg')" />
+                </div>
+
+
+
+
+                <app-editor innerValue="editPostForm.get('content')" formControlName="content"
+                    label="Contenu de l'article" />
+
+                @if(editPostForm.get('content')?.invalid && editPostForm.get('content')?.touched){
+                <div class="alert alert-danger">
+                    Le contenu est requis.
+                </div>
+                }
+
+
+
+                <mat-form-field appearance="outline" class="w-100 my-4">
+                    <mat-label>Tags</mat-label>
+                    <mat-chip-grid #chipGrid aria-label="Tags de l'article">
+                        @for(tag of selectedTags; track $index){
+                        <mat-chip-row (removed)="removeTag(tag)">
+                            {{ tag }}
+                            <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+
+                    </mat-chip-grid>
+                    <input placeholder="Ajouter un tag..." #tagInput [formControl]="tagCtrl"
+                        [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+                        (matChipInputTokenEnd)="addTagFromInput($event)">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                            {{ tag }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+
+                <button mat-raised-button color="primary" type="submit" [disabled]="editPostForm.invalid" class="me-2">
+                    Mettre à jour
+                </button>
+                <button mat-raised-button color="warn" type="button" (click)="onCancel()">Annuler</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

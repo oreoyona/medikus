@@ -33,6 +33,8 @@ export class UserService {
   authHeader = {
     Authorization: `Bearer ${this.as.currentAcessTokenSubject.value}`
   }
+
+  
   constructor() { }
 
 

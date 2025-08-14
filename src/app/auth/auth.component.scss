@@ -1,66 +1,117 @@
-@media (max-width: 780px){
+// Define a color palette
+$primary-blue: #007bff;
+$primary-blue-dark: #0056b3;
+$text-color: #333;
+$subtle-text: #6c757d;
+$background-light: #f8f9fa;
+$surface-white: #ffffff;
+$shadow-light: rgba(0, 0, 0, 0.1);
+$card-hover-shadow: rgba(0, 0, 0, 0.2);
 
-    .container{
-        max-width: 400px !important;
-       }
-    .mdk-container{
-        display: flex !important;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        
-
-        .not-mobile{
-            display: none !important;
-        }
-
-        .social-connection{
-            position: relative !important;
-            bottom: 0 !important;
-        }
-    }
+:host {
+  display: block;
+  background-color: $background-light;
 }
 
-.mdk-container{
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 40% 60%;
-    gap: 1em;
-   
- 
-    .left{
-        grid-column: 1;
-        min-height: 90vh;
-        display: flex;
-        background-size: cover;
-        justify-content: center;
-        align-items: center;
-     
-    }
-    .right{
-        grid-column: 2;
-        height: 100%;
-
-    }
-
-    .right:first-child{
-        height: 80%;
-    }
-
-    .social-connection{
-        width: 100%;
-        position: absolute;
-        bottom: 20vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 0;
-    }
-  
-  
-
-
+// Main container for the entire page
+.container {
+  max-width: 1000px; // Increased max-width for a more elegant look
+  width: 90%;
+  margin: auto;
+  padding: 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); // Enhanced shadow for depth
+  border-radius: 16px; // More rounded corners
+  overflow: hidden;
 }
 
+// Container for the two-column flexbox layout
+.mdk-container {
+  display: flex;
+  min-height: 80vh; // Use min-height to allow content to dictate height
+  
+  .left {
+    flex: 1 1 40%; // Responsive sizing
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 2rem;
+    
+    // Add a subtle overlay for better text contrast
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba($primary-blue-dark, 0.3); // Semi-transparent blue overlay
+    }
+    
+    // Mat-card inside the left column for the title
+    mat-card {
+      position: relative;
+      z-index: 1;
+      background-color: rgba($surface-white, 0.95);
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px $shadow-light;
+      
+      mat-card-content {
+        color: $primary-blue;
+        font-weight: 700;
+        font-size: 1.8rem; // Larger, more elegant font size
+        text-align: center;
+      }
+    }
+  }
 
+  .right {
+    flex: 1 1 60%; // Responsive sizing
+    background-color: $surface-white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem; // Increased padding for more space
+    position: relative;
+    
+    mat-card {
+      width: 100%;
+      max-width: 450px;
+      box-shadow: none;
+      
+      mat-card-content {
+        padding: 0;
+      }
+    }
+  }
+}
+
+// Media query for small screens (mobile)
+@media (max-width: 992px) {
+  .container {
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .mdk-container {
+    flex-direction: column; // Stack columns on mobile
+    min-height: auto;
+    
+    .left {
+      display: none; // Hide the image column on mobile
+    }
+    
+    .right {
+      padding: 2rem 1rem;
+      mat-card {
+        max-width: 100%;
+      }
+    }
+  }
+}

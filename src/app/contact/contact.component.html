@@ -11,8 +11,8 @@
     <div class="container">
       <div class="card">
         <div class="card-header">
-          <mat-icon>location_on</mat-icon>
-          <h4 class="h4">Adresse physique</h4>
+          <mat-icon class="acc-icon">location_on</mat-icon>
+          <h4 class="h4 mx-2">Adresse physique</h4>
         </div>
         <div class="card-body">
           <p>Le siège de Medikus Impulse se trouve au numéro 29bis, sur l'avenue Yav Tshibal, au quartier Golf Kabulamenshi.</p>
@@ -21,8 +21,8 @@
   
       <div class="card" id="whatsapp">
         <div class="card-header">
-          <mat-icon>message</mat-icon>
-          <h4 class="h4">Contact Whatsapp</h4>
+          <mat-icon class="acc-icon">message</mat-icon>
+          <h4 class="h4 mx-2">Contact Whatsapp</h4>
         </div>
         <div class="card-body">
           <p class="link-opacity-100">+243 991 506 411</p>
@@ -31,16 +31,21 @@
   
       <div class="card" id="join">
         <div class="card-header">
-          <mat-icon>group_add</mat-icon>
-          <h4 class="h4">Rejoindre Medikus Impulse</h4>
+          <mat-icon class="acc-icon">group_add</mat-icon>
+          <h4 class="h4 mx-2">Rejoindre Medikus Impulse</h4>
         </div>
         <div class="card-body">
-          @if(sent){
-
+          @if(sent && !error){
             <div class="alert alert-success">
-              Votre demande pour rejoindre Medikus a été envoyée. Nous vous contacterons prochainement.
+              Votre demande de rejoindre Medikus a été envoyée. Nous vous contacterons prochainement.
             </div>
 
+          }
+
+          @else if (sent && error) {
+            <div class="alert alert-danger">
+              Une erreur est survenue, veuillez réessayer plus tard
+            </div>
           }
           @else {
             <form [formGroup]="form" (ngSubmit)="onSubmit()" style="max-width: 400px;">
@@ -48,26 +53,26 @@
                 <div>
                   <mat-form-field appearance="outline">
                     <mat-label>Nom</mat-label>
-                    <input matInput type="text" id="name" formControlName="name">
+                    <input matInput type="text" id="name" formControlName="name" required>
                     <mat-icon matPrefix>contacts_product</mat-icon>
                   </mat-form-field>
                 </div>
                 <div>
                   <mat-form-field appearance="outline">
                     <mat-label>Email</mat-label>
-                    <input matInput type="email" id="email" formControlName="email">
+                    <input matInput type="email" id="email" formControlName="email" required>
                     <mat-icon matPrefix>message</mat-icon>
                   </mat-form-field>
                 </div>
                 <div>
                   <mat-form-field appearance="outline">
                     <mat-label>Numéro de téléphone</mat-label>
-                    <input matInput type="tel" id="tel" formControlName="tel">
+                    <input matInput type="tel" id="tel" formControlName="tel" required>
                     <mat-icon matPrefix>phone</mat-icon>
                     <mat-hint>Commencez par le code pays(ex. +243)</mat-hint>
                   </mat-form-field>
                 </div>
-                <button class="my-3" mat-stroked-button type="submit">
+                <button class="my-3" mat-stroked-button type="submit" [disabled]="form.invalid">
                   @if(loading){
                     <mat-spinner diameter="20" />
                   }

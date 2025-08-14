@@ -31,7 +31,9 @@ const googleSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" w
     MatProgressSpinnerModule
   ],
   templateUrl: './login.component-form.html',
-  styles: ` .mdk-container{
+  styles: ` 
+  
+  .mdk-container{
       min-height: 100%;
     }
 
@@ -43,6 +45,9 @@ const googleSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" w
     .field{
       max-width: 400px;
     }
+
+
+    
   
   
   `

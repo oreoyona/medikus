@@ -1,7 +1,9 @@
-/** base url for the api. Used by all the urls in the app */
-// export const baseUrl = "https://api.medikus-impulse.com/api/v1/";
+import { environment } from "../environments/environment";
 
-export const baseUrl = 'http://localhost:5000/api/v1/'
+/** base url used by the all app. Used by all the urls in the app */
+export const baseUrl = environment.baseUrl; 
+
+
 //course Service urls
 export const addUrl = baseUrl + 'courses/add';
 export const apiUrl =  baseUrl + 'courses/';

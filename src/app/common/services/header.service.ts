@@ -32,6 +32,11 @@ export class HeaderService{
          link: 'contact'
       },
 
+      {
+        titre: 'Blog',
+        link: 'blog'
+      }
+
 
 
    ]

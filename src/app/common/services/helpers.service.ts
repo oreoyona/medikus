@@ -354,5 +354,15 @@ export class HelpersService {
     }
   }
 
+
+   getImgUrl(url: string | null): string {
+    const validatedUrl = this.validateAndReturnUrl(url);
+    if (validatedUrl) {
+      return validatedUrl;
+    } else {
+      return 'info-banner.webp';
+    }
+  }
+
   constructor() { }
 }
