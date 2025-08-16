@@ -1,52 +1,105 @@
-@use '@angular/material' as mat;
+// Variables
+$mobile-breakpoint: 576px;
 
-main{
-    overflow: hidden;
-    
-}
-.left{
+main {
+  overflow: hidden;
+  height: calc(100vh - 64px); // Assurez-vous que la section principale prend toute la hauteur restante de l'écran
 
+  // Styles pour la version desktop (par défaut)
+  .left {
     background-color: var(--mat-sys-primary-container);
-    .action-btn{
-        height: 100px;
-        cursor: pointer;
-        text-align: right;
-        gap: 10px;
-        user-select: none;
-        min-width: 100%;
-        font-size: 0.9rem;
+    width: auto;
+    min-width: 64px; // Largeur minimale pour l'icône
+    min-height: 10vh; // Hauteur minimale par défaut
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+}
 
-        .icon-text{
-            overflow:hidden;
-           
-            text-overflow: ellipsis;
-            white-space: nowrap;
+// Styles pour la version mobile (horizontale)
+.ruban-horizontal {
+    flex-direction: column;
+
+    .left {
+        width: 100%;
+        min-width: unset;
+        height: auto; /* Hauteur automatique pour la version horizontale */
+        flex-direction: row;
+        flex-wrap: nowrap !important; /* Empêche les éléments de passer à la ligne avec une priorité élevée */
+        overflow-x: auto; /* Active le défilement horizontal */
+        justify-content: space-around;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        .action-btn {
+            height: auto;
+            min-width: unset;
+            padding: 10px;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .action-btn[routerlink="/admin/dashboard/hide"] {
+            display: none;
         }
     }
 
-    .action-btn:focus{
-        transform: scale(0.9);
+    .right {
+        flex-grow: 1;
+        overflow-y: auto;
     }
+}
 
-    .action-btn:hover{
-        background-color: var(--mat-sys-primary-container);
-        border: 1px solid inherit;
-        box-shadow: var(--mat-fab-container-elevation-shadow, var(--mat-sys-level3));
-    }
-    .activeLink{
-        background-color: var(--mat-sys-primary-container);
-        border: 1px solid inherit;
-        box-shadow: var(--mat-fab-container-elevation-shadow, var(--mat-sys-level3));
-        color: var(--mat-sys-error);
-    }
-   
+
+.left {
+  .action-btn {
+    cursor: pointer;
+    text-align: right;
+    gap: 10px;
+    user-select: none;
+    min-width: 100%;
+    font-size: 0.9rem;
+    color: var(--mat-sys-primary); // Utilisation d'une couleur plus subtile
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
     
+    // Assurez-vous que l'icône ne se réduit pas
+    mat-icon {
+        flex-shrink: 0; 
+        color: var(--mat-sys-primary-darker);
+    }
+    
+    // Gère le texte long
+    .icon-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
   }
 
-.right {
-   
-    flex-grow: 1; /* Allow this section to grow and take the remaining space */
-    padding: 20px; /* Add some padding for better spacing */
-    overflow-y: auto; /* Enable scrolling if content overflows */
+  .action-btn:hover {
+    background-color: var(--mat-sys-on-primary); // Changement de couleur au survol
+    border: none;
+    box-shadow: var(--mat-sys-level3);
+  }
 
+  .activeLink {
+    background-color: var(--mat-sys-primary-light);
+    border: none;
+    box-shadow: var(--mat-sys-level3);
+    color: var(--mat-sys-primary-contrast);
+    
+    mat-icon {
+        color: var(--mat-sys-primary-contrast);
+    }
+  }
+}
+
+.right {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+.prev-btn{
+    display: none !important;
 }

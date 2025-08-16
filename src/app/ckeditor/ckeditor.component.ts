@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewEncapsulation, type AfterViewInit, ElementRef, ViewChild, forwardRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewEncapsulation, type AfterViewInit, ElementRef, ViewChild, forwardRef, inject, OnDestroy } from '@angular/core';
 
 import { ChangeEvent, CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {
@@ -39,6 +39,7 @@ import {
 
 import translations from 'ckeditor5/translations/fr.js';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ConfigService } from '../config.service';
 
 const LICENSE_KEY = 'GPL'
 @Component({
@@ -54,11 +55,12 @@ const LICENSE_KEY = 'GPL'
         multi: true
     }]
 })
-export class CkeditorComponent implements AfterViewInit {
+export class CkeditorComponent implements AfterViewInit, OnDestroy{
     // We can remove @Input() innerValue and rely on the value passed through ControlValueAccessor
     
     private editorInstance: DecoupledEditor | null = null;
     private _value: string = "";
+    configService = inject(ConfigService);
 
     // ControlValueAccessor methods
     writeValue(value: any): void {
@@ -92,6 +94,9 @@ export class CkeditorComponent implements AfterViewInit {
     @ViewChild('editorMenuBarElement') private editorMenuBar!: ElementRef<HTMLDivElement>;
 
     constructor(private changeDetector: ChangeDetectorRef) {}
+    ngOnDestroy(): void {
+        this.configService.editorLoaded.set(false);
+    }
 
     public isLayoutReady = false;
     public Editor = DecoupledEditor;
@@ -159,6 +164,10 @@ export class CkeditorComponent implements AfterViewInit {
     }
 
     public onReady(editor: DecoupledEditor): void {
+        //notify the config service that the ckeditor is ready
+
+        this.configService.editorLoaded.set(true);
+
         this.editorInstance = editor;
         
         // This is crucial: set the initial value after the editor is ready

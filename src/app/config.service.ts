@@ -1,11 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { baseUrl } from './urls';
 import { BehaviorSubject, Observable, takeUntil, tap, of, map } from 'rxjs';
 import { Subject } from 'rxjs';
 
 export interface AppConfig {
-  isMaintenance: boolean;
+  /** Whether or not the maintenance mode is on or off */
+  isMaintenance: boolean,
+  /** Whether or not the ruban should be shown when the CKEditor is activated */
+  rubanOnEditor?: boolean,
+  /**Whether or not the ruban should be horizontal on the admin panel */
+  horizontalRubanOnMobile?: boolean,
+  /** Whether or not every one can log in the website */
+  authForAll?: boolean,
+  /** Whether or not a comment sectiion should be added to blog posts */
+  commentsOn?: boolean
   // Add other settings here if your backend provides them
 }
 
@@ -15,6 +24,7 @@ export interface AppConfig {
 export class ConfigService implements OnDestroy {
   private destroy$ = new Subject<void>();
   private appConfig$ = new BehaviorSubject<AppConfig | null>(null); // Initial value is null
+  public editorLoaded = signal(false)
 
   // Expose the config as an Observable
   appConfig: Observable<AppConfig | null> = this.appConfig$.asObservable();
@@ -40,21 +50,34 @@ export class ConfigService implements OnDestroy {
     return this.appConfig$.value;
   }
 
-  get isMaintenance(): boolean {
-    // Default to false only if the BehaviorSubject has a non-null value
-    return this.appConfig$.value?.isMaintenance || false;
-  }
-
+  /**
+   * Retourne l'état de la configuration de l'application.
+   * Si la configuration n'est pas encore chargée, elle retourne des valeurs par défaut.
+   */
   getSettings(): Observable<AppConfig> {
     return this.appConfig.pipe(
-      takeUntil(this.destroy$), // Ensure subscription is cleaned up
-      tap(config => {
+      takeUntil(this.destroy$),
+      map(config => {
         if (!config) {
-          this.loadConfig().subscribe(); // Load config if it hasn't been loaded yet.
+          // Si la configuration est nulle, chargez-la et fournissez un objet par défaut.
+          // Note: La souscription à loadConfig() est gérée par le constructeur.
+          return {
+            isMaintenance: false,
+            rubanOnEditor: false,
+            horizontalRubanOnMobile: false,
+            authForAll: false,
+            commentsOn: false
+          };
         }
-      }),
-      // Use map to transform the BehaviorSubject's value, or of if it is null
-      map(config => config || { isMaintenance: false }) //important: provide default
+        // Assurez-vous que toutes les propriétés de AppConfig sont définies.
+        return {
+          isMaintenance: config.isMaintenance,
+          rubanOnEditor: config.rubanOnEditor || false,
+          horizontalRubanOnMobile: config.horizontalRubanOnMobile || false,
+          authForAll: config.authForAll || false,
+          commentsOn: config.commentsOn || false,
+        };
+      })
     );
   }
 
@@ -64,5 +87,11 @@ export class ConfigService implements OnDestroy {
 
   updateSettings(key: string, value: string) {
     return this.http.put(`${baseUrl}settings`, { 'key': key, 'value': value });
+  }
+
+
+   get isMaintenance(): boolean {
+    // Default to false only if the BehaviorSubject has a non-null value
+    return this.appConfig$.value?.isMaintenance || false;
   }
 }

@@ -29,8 +29,8 @@ export interface User{
 }
 
 export interface rubanObject {
-  icon: String;
-  title: String;
+  icon: string;
+  title: string;
   link?: any;
   value?: number;
   chartData?: any;

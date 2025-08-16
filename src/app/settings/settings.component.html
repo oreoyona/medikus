@@ -1,34 +1,48 @@
-<main>
-    <mat-card>
+<main class="settings-page">
+    <mat-card class="settings-card">
         @if(message){
-            <div class="alert alert-success m-2 p-2">
-                {{message}}
+            <div class="alert alert-success message-box">
+                {{ message }}
             </div>
-            
         }
         <mat-card-header>
-            <h1>Paramètres du site web</h1>
+            <mat-card-title class="my-3">
+                <h1>Paramètres du site web</h1>
+            </mat-card-title>
         </mat-card-header>
 
-        <mat-card-content>
-            <div class="d-flex justify-content-between app-mode">
-                <p>Activer le mode Maintenance</p>
-                <mat-slide-toggle #maintenance name="is_maintenance_mode" ></mat-slide-toggle>
+        <mat-card-content class="setting-list">
+            <div class="setting-row">
+                <span class="setting-label">Activer le mode Maintenance</span>
+                <mat-slide-toggle name="isMaintenance" [(ngModel)]="config.isMaintenance"></mat-slide-toggle>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Ne pas montrer le ruban dans le tableau de bord quand l'éditeur est activé</span>
+                <mat-slide-toggle name="rubanOnEditor" [(ngModel)]="config.rubanOnEditor"></mat-slide-toggle>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Ruban horizontal sur mobile</span>
+                <mat-slide-toggle name="horizontalRubanOnMobile" [(ngModel)]="config.horizontalRubanOnMobile"></mat-slide-toggle>
+            </div>
+            
+            <div class="setting-row">
+                <span class="setting-label">Autoriser la connexion de tous les utilisateurs</span>
+                <mat-slide-toggle name="authForAll" [(ngModel)]="config.authForAll"></mat-slide-toggle>
             </div>
             
         </mat-card-content>
 
-
-        <mat-card-footer>
+        <mat-card-footer class="my-3">
             <mat-card-actions>
-                <button type="button" mat-stroked-button (click)="updateParam()">
+                <button mat-flat-button color="primary" class="save-button" (click)="updateParam()">
                     @if(loading){
-                        <mat-spinner diameter="20" />
+                        <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
                     }
                     @else {
-                        Enregister
+                        Enregistrer
                     }
-                    
                 </button>
             </mat-card-actions>
         </mat-card-footer>

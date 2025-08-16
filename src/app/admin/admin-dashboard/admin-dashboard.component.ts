@@ -7,7 +7,7 @@ import { rubanObject } from '../../common/infercaces'; // Ensure correct import 
 import { CourseService } from '../course.service';
 import { UserService } from '../users/user.service';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass, UpperCasePipe } from '@angular/common';
 import { BreakpointService } from '../../common/services/breakpoint-service.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,7 +19,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatButtonModule,
     MatIconModule,
     NgClass,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    UpperCasePipe
 
   ],
   templateUrl: './admin-dashboard.component.html',

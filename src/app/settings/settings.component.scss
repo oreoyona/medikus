@@ -1,0 +1,108 @@
+// Définition des variables de couleur et d'espacement pour la cohérence
+$primary-color: var(--mdk-primary); // Google Blue
+$border-radius: 8px;
+$card-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+
+// Style général de la page
+.settings-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+    background-color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+}
+
+// Style de la carte principale
+.settings-card {
+    width: 100%;
+    max-width: 600px;
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+    transition: box-shadow 0.3s ease-in-out;
+
+    &:hover {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    // Style de l'en-tête
+    mat-card-header {
+        padding-bottom: 0;
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #202124;
+            margin: 0;
+        }
+    }
+}
+
+// Style de la liste des paramètres
+.setting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; // Espacement entre les lignes
+}
+
+// Style d'une ligne de paramètre
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+        background-color: #fafafa;
+    }
+    
+    // Rendre la ligne de paramètre responsive pour les petits écrans
+    @media (max-width: 500px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+.setting-label {
+    font-size: 16px;
+    color: var(--mdk-on-surface);
+    line-height: 1.4;
+    // Pour que le texte soit bien aligné avec le toggle
+    @media (min-width: 501px) {
+        margin-right: 16px;
+    }
+}
+
+// Style du bouton
+.save-button {
+    width: auto;
+    min-width: 150px;
+    padding: 8px 16px;
+    border-radius: 999px; // Pour un bouton de forme "pilule"
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    .button-spinner {
+        margin: 0 8px;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+}
+
+// Style du message de succès
+.message-box {
+    border-left: 4px solid $primary-color;
+    padding: 12px 16px;
+    background-color: #e8f0fe;
+    color: #174ea6;
+    border-radius: $border-radius;
+    margin-bottom: 16px;
+}

@@ -1,7 +1,7 @@
 // Define a color palette for a clean, professional look
 $primary-color: #00796b;   // A deep teal
-$accent-color: #ff9800;   // A vibrant orange
-$warn-color: #d32f2f;     // A clear red for warnings/deletions
+$accent-color: #ff9800;    // A vibrant orange
+$warn-color: #d32f2f;      // A clear red for warnings/deletions
 $text-color: #212121;
 $subtle-text: #757575;
 $background-light: #f5f5f5;
@@ -48,16 +48,26 @@ h2 {
 }
 
 // Styles for the main post grid and individual cards
-.row {
+.post-grid {
+  // On smaller screens (default), items will stack. We use flexbox for the gap.
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
+
+  // Media query to switch to a grid layout on larger screens
+  @media (min-width: 560px) {
+    display: grid;
+    // This creates a responsive grid. It automatically fills with columns that are at least 300px wide.
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
 }
 
 mat-card {
   height: 100%;
-  width: 100%;
+  // On smaller screens, the card will fill the width of its flex parent
+  width: 100%; 
   display: flex;
   flex-direction: column;
   border-radius: 12px; // Soft rounded corners
@@ -173,13 +183,13 @@ button[mat-stroked-button] {
   }
 }
 button[mat-flat-button] {
-    background-color: $primary-color;
-    color: $surface-white;
-    transition: all 0.3s ease;
+  background-color: $primary-color;
+  color: $surface-white;
+  transition: all 0.3s ease;
 
-    &:hover {
-        background-color: darken($primary-color, 10%);
-    }
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
 }
 .alert {
   padding: 1rem;
@@ -191,7 +201,7 @@ button[mat-flat-button] {
 }
 
 // Responsive design for smaller screens
-@media (max-width: 768px) {
+@media (max-width: 560px) {
   .col-md-6 {
     width: 100%; // Make cards take up full width on mobile
     flex: 0 0 100%;
