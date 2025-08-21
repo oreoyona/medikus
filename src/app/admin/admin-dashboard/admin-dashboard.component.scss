@@ -1,59 +1,140 @@
-main {
-    gap: 20px;
-
+/* Use :host to encapsulate styles for this component */
+:host {
+    // Defines a common gap for both grid and flex layouts
+    --grid-gap: 24px;
 }
 
+/* Base styles for the main container */
+main {
+    padding: 32px;
+    background-color: var(--mat-card-container-background-color, transparent);
+    gap: var(--grid-gap);
+    color: var(--mat-card-container-text-color);
+}
 
+/* Desktop Grid Layout */
 .main-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 300px);
-    overflow: auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--grid-gap);
+    align-items: stretch;
     width: 100%;
-   
-   
-   
-
 }
 
+/* Styles for all dashboard cards (desktop and mobile) */
 .card-content {
-    display: grid;
-    grid-template-rows: 30% 50% 20%;
-    grid-template-columns: 100%;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    justify-items: center;
-    box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12);
+    padding: 24px;
+    border-radius: 12px;
+    
+    // Use Material Design elevation for a clean shadow
+    box-shadow: var(--mat-elevation-z4);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        // Higher elevation and a subtle lift on hover
+        box-shadow: var(--mat-elevation-z10);
+        transform: translateY(-5px);
+    }
+
+    p:first-of-type {
+        // Style the title for better contrast
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--mat-card-container-text-color);
+        opacity: 0.7;
+    }
 
     h1 {
-        font-size: 3rem;
+        // Use a more impactful font size and color
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin: 10px 0;
+        color: var(--mat-card-container-text-color);
     }
-  
+    
+    // Enhance the button container
+    .button-container {
+      width: 100%;
+      text-align: center;
+      margin-top: 16px;
+    }
 
+    button {
+      width: 100%;
+      border-radius: 8px;
+    }
 }
 
+/* Add a pop of color based on position or type */
+.card-content:nth-child(2n) {
+  background-color: var(--mat-card-container-background-color);
+}
+.card-content:nth-child(2n+1) {
+    background-color: rgba(var(--mat-primary-rgb), 0.05); /* Soft primary color background */
+    color: var(--mat-primary-text-color);
+}
+
+/* Mobile-Specific Styles */
 .mobile-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-items: center;
-    padding: 10px;
+    justify-content: center;
+    padding: 16px;
     width: 100%;
-    max-width: 400px;
-    height: 200px;
-    box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12);
-
-
+    
     h1 {
-        font-size: 4rem;
+        font-size: 2.5rem;
     }
 }
 
-.mobile-card:first-child {
-    flex-grow: 1;
+/* Add to your admin-dashboard.component.scss */
+
+.responsive-toggle-group {
+    width: 100%;
+    // Ensure all buttons within the group have space
+    display: flex;
+    justify-content: space-between;
+    
+    // Add a subtle shadow and border that align with Material Design
+    box-shadow: var(--mat-elevation-z1);
+    border-radius: 8px;
+    
+    // Default styles for buttons within the group
+    .mat-button-toggle-button {
+        flex: 1; // Each button takes up equal space horizontally
+        border-radius: 8px !important;
+        margin-right: 4px; // Add a small gap between buttons
+        &:last-child {
+            margin-right: 0;
+        }
+    }
 }
 
+// Mobile-specific styles applied via a class from the component
+.mobile-toggle-group {
+    flex-direction: column;
 
-.mobile-card:last-child {
-    flex-grow: 1;
+    .mat-button-toggle-button {
+        width: 100%;
+        margin-bottom: 8px; // Gap between vertical buttons
+        border-radius: 8px !important;
+        
+        // Remove left/right borders and corners for a cleaner stack
+        &:first-child {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+        &:last-child {
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+            margin-bottom: 0;
+        }
+    }
 }

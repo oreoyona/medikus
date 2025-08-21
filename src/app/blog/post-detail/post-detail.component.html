@@ -1,12 +1,12 @@
 <app-header />
-<div class="container mt-4">
+<div [ngClass]="{'container mt-4': !mobile(), 'container-mobile': mobile()}">
   @if (loading) {
     <div class="d-flex flex-column justify-content-center align-items-center">
       <mat-spinner></mat-spinner>
     </div>
   } @else if (post) {
-    <div>
-      <mat-card>
+    <div [ngClass]="{'d-flex': mobile()}">
+      <mat-card [ngStyle]="{'padding: 0.3rem': mobile()}">
         <mat-card-header class="my-2">
           <mat-card-title>{{ post.title }}</mat-card-title>
           <mat-card-subtitle>
@@ -15,7 +15,7 @@
         </mat-card-header>
         <mat-card-content>
           <img mat-card-image [src]="hs.getImgUrl(post.postImg!)" alt="article banner" width="100%" class="my-2">
-          <p class="lead">{{ post.description }}</p>
+          <p class="description">{{ post.description }}</p>
           <hr>
           <div [innerHTML]="sanitizedContent" class="editor-sanitized-content"></div>
           @if (post.tags && post.tags.length > 0) {

@@ -5,6 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { baseUrl } from '../urls';
 import { ApiResponse, Post, Tag } from './models';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,19 +13,33 @@ import { ApiResponse, Post, Tag } from './models';
 export class BlogService {
 
     http = inject(HttpClient)
-
+    authService = inject(AuthService)
     private apiUrl = baseUrl;
 
 
     getPosts(): Observable<ApiResponse<Post[]>> {
-        return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}posts/`);
+        const token = localStorage.getItem('access_token');
+
+        // Start with a base set of headers
+        let headers = new HttpHeaders();
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+
+        // NEW: Check if the current user is an admin on the frontend
+        if (this.authService.isAdmin()) {
+            // Add a custom header to signal the backend to ignore the page view
+            headers = headers.set('X-Skip-View-Count', 'true');
+        }
+
+        return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}posts/`, { headers: headers });
     }
 
     getPostBySlug(slug: string): Observable<ApiResponse<Post>> {
         return this.http.get<ApiResponse<Post>>(`${this.apiUrl}posts/${slug}`);
     }
 
-     getPostById(id: number): Observable<ApiResponse<Post>> {
+    getPostById(id: number): Observable<ApiResponse<Post>> {
         return this.http.get<ApiResponse<Post>>(`${this.apiUrl}posts/${id}`);
     }
 
@@ -57,29 +72,29 @@ export class BlogService {
    * @param pageSize The number of posts per page.
    * @returns An Observable of the API response containing the posts and pagination info.
    */
-  getUserPosts(username: string, page: number, pageSize: number): Observable<ApiResponse<Post[]>> {
-    // Construct the query parameters using HttpParams for clean URL building
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+    getUserPosts(username: string, page: number, pageSize: number): Observable<ApiResponse<Post[]>> {
+        // Construct the query parameters using HttpParams for clean URL building
+        const params = new HttpParams()
+            .set('page', page.toString())
+            .set('pageSize', pageSize.toString());
 
-    return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}users/${username}/posts`, { params });
-  }
+        return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}users/${username}/posts`, { params });
+    }
 
 
 
-  processContent(content: string): string {
-    let processedContent = content;
+    processContent(content: string): string {
+        let processedContent = content;
 
-    // Regex to find (image:url) and replace with <img class="content-image" src="url">
-    const imageRegex = /\(image:(\s*http[^)]+)\)/g;
-    processedContent = processedContent.replace(imageRegex, `<img class="content-image" src="$1" alt="Article image">`);
+        // Regex to find (image:url) and replace with <img class="content-image" src="url">
+        const imageRegex = /\(image:(\s*http[^)]+)\)/g;
+        processedContent = processedContent.replace(imageRegex, `<img class="content-image" src="$1" alt="Article image">`);
 
-    // Regex to find (video:url) and replace with <iframe class="content-video" src="url"></iframe>
-    const videoRegex = /\(video:(\s*http[^)]+)\)/g;
-    processedContent = processedContent.replace(videoRegex, `<iframe class="content-video" src="$1" frameborder="0" allowfullscreen></iframe>`);
+        // Regex to find (video:url) and replace with <iframe class="content-video" src="url"></iframe>
+        const videoRegex = /\(video:(\s*http[^)]+)\)/g;
+        processedContent = processedContent.replace(videoRegex, `<iframe class="content-video" src="$1" frameborder="0" allowfullscreen></iframe>`);
 
-    return processedContent;
-  }
+        return processedContent;
+    }
 
 }

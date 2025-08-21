@@ -1,334 +1,157 @@
-@use "sass:color";
-
-// Define a color palette for a clean, professional look
-$primary-color: #00796b; // A deep teal
-$accent-color: #ff9800; // A vibrant orange
-$warn-color: #d32f2f; // A clear red for warnings/deletions
-$text-color: #212121;
-$subtle-text: #757575;
-$background-light: #f5f5f5;
-$surface-white: #ffffff;
-$shadow-light: rgba(0, 0, 0, 0.1);
-
+/* Use :host to encapsulate styles for this component */
 :host {
-  // Use a light gray background for the entire page to make content stand out
-  background-color: $background-light;
+  // Use Material's system background color for a coherent theme
+  background-color: var(--mat-sys-background);
   display: block;
 }
 
+// Mobile-first container
+.container-mobile {
+  // Pad the main content on mobile for a clean edge
+  padding: 16px;
+  background-color: var(--mat-sys-background);
+}
+
+// Desktop container for a more focused reading experience
 .container {
-  max-width: 900px; // A more focused container for a single article
-  padding: 1.5rem;
+  max-width: 960px; // A standard, readable width for articles
   margin: 0 auto;
+  padding: 32px 16px; // Vertical and horizontal padding
+  background-color: var(--mat-sys-background);
 }
 
 // Styling for the main article card
 mat-card {
+  // Use a more pronounced elevation for the article card
+  box-shadow: var(--mat-elevation-z4); 
   border-radius: 12px;
-  box-shadow: 0 4px 10px $shadow-light;
-  padding: 2rem;
-  margin-top: 2rem;
+  padding: 24px;
+  background-color: var(--mat-sys-surface); 
+  color: var(--mat-sys-on-surface);
+
+  // Tablet and mobile adjustments
+  @media (max-width: 991px) {
+    padding: 16px;
+  }
 }
 
+// Article header
 mat-card-header {
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 1.5rem;
-  padding: 0 0 1rem 0;
+  border-bottom: 1px solid var(--mat-sys-outline);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
 }
 
+// Article title typography
 mat-card-title {
-  font-family: 'Roboto', sans-serif;
   font-size: 2.25rem;
-  font-weight: 700;
-  color: $text-color;
-  line-height: 1.2;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  line-height: 1.25;
+  margin-bottom: 8px; // Add some space below the title
 }
 
+// Article subtitle typography
 mat-card-subtitle {
-  font-size: 0.9rem;
-  color: $subtle-text;
-  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 0;
 }
 
+// Main content and image styling
 mat-card-content {
   padding: 0;
 
   img[mat-card-image] {
     width: 100%;
     height: auto;
-    max-height: 400px;
+    max-height: 450px; // A good height for a hero image
     object-fit: cover;
     border-radius: 8px;
-    margin: 1rem 0 2rem;
-    box-shadow: 0 2px 6px $shadow-light;
+    margin: 24px 0;
+    box-shadow: var(--mat-elevation-z2);
   }
 
-  .lead {
-
-    color: #424242;
+  .description {
+    margin-bottom: 24px;
     font-style: italic;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--mat-sys-on-surface);
   }
 
   hr {
-    border-top: 1px solid #e0e0e0;
-    margin: 2rem 0;
+    border-top: 1px solid var(--mat-sys-outline);
+    margin: 24px 0;
   }
 
-  // Styles for content rendered from innerHTML
-  div[innerHTML] {
-
+  // Styles for content from the editor
+  .editor-sanitized-content {
     font-size: 1rem;
     line-height: 1.7;
-    color: $text-color;
+        text-align: justify; 
+    color: var(--mat-sys-on-surface);
 
-    @media (max-width: 768px) {
-      .content-video {
-        height: 300px;
-      }
+    // Make embedded videos responsive
+    iframe, video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: var(--mat-elevation-z1);
     }
 
-    @media (max-width: 576px) {
-      .content-video {
-        height: 250px;
-      }
-    }
-
+    // Adjust typography within the content
+    p { margin-bottom: 16px; }
+    h1, h2, h3, h4, h5, h6 { margin: 24px 0 16px; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
   }
 
   .badge {
-    background-color: #b2ebf2; // A light cyan
-    color: $primary-color;
-    font-weight: 600;
+    background-color: var(--mat-sys-primary-container); 
+    color: var(--mat-sys-on-primary-container);
+    font-weight: 500;
     border-radius: 50px;
-    padding: 0.3em 0.8em;
+    padding: 0.3em 0.9em;
     text-transform: capitalize;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        opacity: 0.8;
+    }
   }
 }
 
+// Actions at the bottom of the card
 mat-card-actions {
-  padding: 1rem 0 0;
-  border-top: 1px solid #e0e0e0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--mat-sys-outline);
   display: flex;
-  gap: 0.5rem;
-}
+  flex-wrap: wrap; // Allow buttons to wrap on smaller screens
+  gap: 8px;
 
-// Button styles for the action section
-button[mat-button],
-a[mat-button] {
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-}
-
-button[color="warn"] {
-  color: $warn-color;
-
-  &:hover {
-    background-color: rgba($warn-color, 0.1);
+  button[mat-button], a[mat-button] {
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0 8px;
   }
 }
 
-a[color="accent"] {
-  color: $accent-color;
-
-  &:hover {
-    background-color: rgba($accent-color, 0.1);
-  }
+// Loading spinner container
+.d-flex.flex-column {
+  min-height: 80vh; 
 }
 
-// Styling for loading spinner container
-.d-flex {
-  min-height: 80vh; // Ensure the spinner is centered on the page
-  justify-content: center;
-  align-items: center;
-}
-
-// Styling for the alert messages
+// Alert messages
 .alert {
-  padding: 1.5rem;
+  padding: 16px;
   border-radius: 8px;
   text-align: center;
   font-weight: 500;
 }
 
 .alert-danger {
-  background-color: #ffebee;
-  color: #c62828;
-  border: 1px solid #ef9a9a;
-}
-
-
-
-
-.editor-sanitized-content {
-  font-family: 'Georgia', serif;
-  font-size: 1rem;
-  line-height: 1.7;
-  color: $text-color;
-
-  // General element spacing
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  ul,
-  ol,
-  pre,
-  blockquote,
-  figure,
-  table {
-    margin-bottom: 1.5em;
-  }
-
-  // Headings
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  h1 {
-    font-size: 2.25em;
-  }
-
-  h2 {
-    font-size: 1.75em;
-    border-bottom: 2px solid $primary-color;
-    padding-bottom: 0.25rem;
-  }
-
-  h3 {
-    font-size: 1.5em;
-    color: $primary-color;
-  }
-
-  h4 {
-    font-size: 1.25em;
-  }
-
-  h5 {
-    font-size: 1.1em;
-  }
-
-  h6 {
-    font-size: 1em;
-  }
-
-  // Links
-  a {
-    color: $primary-color;
-    text-decoration: none;
-    border-bottom: 1px solid rgba($primary-color, 0.5);
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      border-bottom-color: $primary-color;
-      color: color.scale($primary-color, $lightness: -10%);
-    }
-  }
-
-  // Lists
-  ul,
-  ol {
-    padding-left: 1.5em;
-  }
-
-  ul {
-    list-style-type: disc;
-  }
-
-  ol {
-    list-style-type: decimal;
-  }
-
-  li {
-    margin-bottom: 0.5em;
-  }
-
-  // Images
-  figure {
-    margin: 2rem 0;
-    text-align: center;
-
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px $shadow-light;
-    }
-
-    figcaption {
-      font-style: italic;
-      font-size: 0.9em;
-      color: $subtle-text;
-      margin-top: 0.5rem;
-    }
-  }
-
-  // Blockquotes
-  blockquote {
-    border-left: 4px solid $accent-color;
-    padding-left: 1.5rem;
-    margin-left: 0;
-    margin-right: 0;
-    font-style: italic;
-    color: $subtle-text;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  // Code blocks
-  pre {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    border-left: 3px solid $primary-color;
-    padding: 1rem;
-    overflow-x: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    border-radius: 4px;
-    white-space: pre-wrap; // Ensures code wraps on smaller screens
-    word-wrap: break-word;
-  }
-
-  code {
-    font-family: 'Courier New', monospace;
-    color: $warn-color;
-    background-color: #f0f0f0;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-  }
-
-  // Tables
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 2rem;
-
-    th,
-    td {
-      border: 1px solid #e0e0e0;
-      padding: 0.75rem;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f9f9f9;
-      font-weight: 700;
-      color: $text-color;
-    }
-  }
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  border: 1px solid var(--mat-sys-error);
 }

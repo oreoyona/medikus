@@ -40,6 +40,7 @@ import { EditPostComponent } from './blog/edit-post/edit-post.component';
 import { PostDetailComponent } from './blog/post-detail/post-detail.component';
 import { CreatePostComponent } from './blog/create-post/create-post.component';
 import { ShowPostByAuthorComponent } from './blog/show-post-by-author/show-post-by-author.component';
+import { BlogStatisticsComponent } from './blog-statistics/blog-statistics.component';
 
 export const routes: Routes = [
   //COMMON ROUTES
@@ -105,10 +106,11 @@ export const routes: Routes = [
       { path: 'courses/:id', component: EditCourseComponent, outlet: 'admin', data: { animation: 'EditCoursePage' } },
       { path: 'courses', component: AllCoursesComponent, outlet: 'admin', data: { animation: 'AllCoursesPage' } },
       { path: 'webinaire/add',  component: CreateWebinaireComponent, outlet: 'admin', data: {animation: 'AddWebinairePage'}},
-      { path: 'webinaires', component: ShowAllWebinairesComponent, outlet: 'admin'},
-      { path: 'webinaires/:id', component: EditWebinaireComponent, outlet: 'admin'},
-      { path: 'settings', component: SettingsComponent, outlet: 'admin'},
-      { path: 'blog/post/add', component: CreatePostComponent, outlet: 'admin'},
+      { path: 'webinaires', component: ShowAllWebinairesComponent, outlet: 'admin',data: {animation: 'WebinairesPage'}},
+      { path: 'webinaires/:id', component: EditWebinaireComponent, outlet: 'admin',data: {animation: 'IdWebinairePage'}},
+      { path: 'settings', component: SettingsComponent, outlet: 'admin', data: {animation: 'SettingsPage'}},
+      { path: 'blog/post/add', component: CreatePostComponent, outlet: 'admin', data: {animation: 'AddPostPage'}},
+      { path: 'blog-statistics', component: BlogStatisticsComponent, outlet: 'admin', data: {animation: 'BlogStatsPage'}}
 
       
     ],

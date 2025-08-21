@@ -31,8 +31,8 @@ export interface User{
 export interface rubanObject {
   icon: string;
   title: string;
-  link?: any;
-  value?: number;
+  link?: { outlets: { admin: string[] } }[] | string;
+  value?: number | string;
   chartData?: any;
 }
 

@@ -16,6 +16,7 @@ import { HelpersService } from '../../common/services/helpers.service';
 // Import the DomSanitizer to mark the HTML as safe
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormatDatePipe } from "../../common/pipes/format-date.pipe";
+import { BreakpointService } from '../../common/services/breakpoint-service.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -50,6 +51,8 @@ export class PostDetailComponent implements OnInit{
   authService = inject(AuthService)
   hs = inject(HelpersService)
   fb = inject(FormBuilder)
+  breakpoint = inject(BreakpointService)
+  mobile = this.breakpoint.mobile
   private sanitizer = inject(DomSanitizer); // Inject DomSanitizer
 
   ngOnInit(): void {
