@@ -1,0 +1,20 @@
+<div class="image-uploader-panel">
+    <!-- Champ de saisie ou aperçu de l'image -->
+    <div class="image-input-container" (click)="openImageDialog()">
+        @if (imgUrlControl.value) {
+            <img [src]="imgUrlControl.value" alt="Aperçu de l'image" class="selected-image">
+            <div class="overlay">
+                <mat-icon class="icon">edit</mat-icon>
+            </div>
+        } @else {
+            <div class="placeholder-content">
+                <mat-icon class="placeholder-icon">add_photo_alternate</mat-icon>
+                <p>Sélectionner ou déposer une image</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Le dialogue modal sera implémenté via un autre composant ou un MatDialog -->
+<!-- Ce template se concentre sur le déclencheur -->
+

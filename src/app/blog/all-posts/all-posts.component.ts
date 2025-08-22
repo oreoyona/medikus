@@ -36,7 +36,6 @@ export class AllPostsComponent implements OnInit{
   
 
 
-
   isAuthenticated() {
     return this.authService.authStatus$
   }
@@ -46,7 +45,8 @@ export class AllPostsComponent implements OnInit{
     this.blogService.getPosts().subscribe({
       next: (res) => {
         if (res.message === 200 && res.data) {
-          this.posts = res.data;
+          // Filtrer uniquement les articles publiés
+          this.posts = res.data.filter(post => post.published);
         } else {
           console.error('Erreur lors de la récupération des articles:', res.message);
           this.posts = [];
@@ -62,6 +62,8 @@ export class AllPostsComponent implements OnInit{
   }
 
   deletePost(slug: string): void {
+    // Remplacer `confirm` par une modale personnalisée pour une meilleure expérience utilisateur
+    // et éviter les alertes de navigateur.
     if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
       this.blogService.deletePost(slug).subscribe({
         next: (res) => {

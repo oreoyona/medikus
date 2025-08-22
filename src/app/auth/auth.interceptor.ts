@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, catchError, filter, finalize, switchMap, take, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, Observable, switchMap, take, throwError } from 'rxjs';
 
 
 
@@ -75,5 +75,38 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
     })
   );
 };
+
+
+
+
+/**
+ * An HTTP interceptor that conditionally adds a 'X-Skip-View-Count' header
+ * if the current user is an admin.
+ * @param req The outgoing HttpRequest.
+ * @param next The next handler in the chain.
+ * @returns An Observable of the HttpEvent.
+ */
+export const addViewsInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
+
+
+  let authService = inject(AuthService);
+  let isAdmin = authService.isAdmin() || authService.isEditor()
+
+  // Check if the user is an admin
+  if (isAdmin) {
+    // HttpHeaders are immutable, so we must clone the headers and set the new one.
+    const headers = req.headers.set('X-Skip-View-Count', 'true');
+
+    // Clone the request with the new headers.
+    const newReq = req.clone({ headers });
+
+    // Pass the new request to the next handler.
+    return next(newReq);
+  }
+
+  // If not an admin, just pass the original request without modification.
+  return next(req);
+};
+
 
 

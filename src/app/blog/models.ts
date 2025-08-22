@@ -24,7 +24,9 @@ export interface Post {
   comment_count?: number; // Pour la liste des articles
   description?: string,
   postImg?: string,
-  author?: string
+  author?: string,
+  published?: boolean,
+  draft?: boolean
 }
 
 export interface ApiResponse<T> {

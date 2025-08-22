@@ -1,69 +1,52 @@
-import { Component, Input } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
-import { catchError, of } from 'rxjs';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-import { HelpersService } from './services/helpers.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageDialogComponent } from './image-dialog.component';
 
 @Component({
   selector: 'app-image-upload',
-  template: `
-    <div class="mb-3">
-      <label class="form-label">Image par défaut</label>
-      <div class="input-group">
-        <input type="file" class="form-control" (change)="onImageChange($event)" accept="image/*" />
-        @if (uploading) {
-          <div class="input-group-append">
-            <mat-spinner diameter="30"></mat-spinner>
-          </div>
-        }
-      </div>
-      @if (errorMessage) {
-        <div class="text-danger mt-2">{{ errorMessage }}</div>
-      }
-    </div>
-    `,
-  styles: [`
-    .input-group-append {
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-    }
-    .form-control {
-      border-radius: 4px;
-    }
-  `],
   standalone: true,
-  imports: [MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+  ],
+  templateUrl: './image-uploader.component.html',
+  styleUrl: './image-uploader.component.scss'
 })
-export class ImageUploadComponent {
-  @Input() imgUrlControl!: AbstractControl<string |
-    null, string | null> | null;
-  uploading = false;
-  errorMessage: string | null = null;
+export class ImageUploadComponent implements OnInit {
 
-  constructor(private hs: HelpersService) { }
+  @Input() imgUrlControl!: FormControl;
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
-    this.errorMessage = null;
-    if (file) {
-      this.uploading = true;
-      this.hs.uploadImgeToBackend(file)
-        .pipe(
-          catchError((error) => {
-            console.error('Image upload error:', error);
-            this.errorMessage = "Une erreur est survenue lors du téléchargement de l'image.";
-            this.uploading = false;
-            return of(null);
-          })
-        )
-        .subscribe((res) => {
-          this.uploading = false;
-          if (res && res.url) {
-            if(this.imgUrlControl){this.imgUrlControl.setValue(res.url);}
-          }
-        });
-    }
+  private dialog = inject(MatDialog);
+
+  constructor() { }
+
+  ngOnInit(): void {
+    // Aucune logique spécifique nécessaire ici pour le moment
+  }
+
+  /**
+   * Ouvre le dialogue de sélection d'image.
+   */
+  openImageDialog(): void {
+    const dialogRef = this.dialog.open(ImageDialogComponent, {
+      width: '800px',
+      height: '600px',
+      data: { selectedImageUrl: this.imgUrlControl.value }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Met à jour le FormControl avec l'URL de l'image sélectionnée
+        this.imgUrlControl.setValue(result);
+      }
+    });
   }
 }

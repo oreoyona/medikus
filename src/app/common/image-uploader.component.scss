@@ -1,0 +1,77 @@
+// Conteneur principal qui sert de panneau pour le sélecteur d'images
+.image-uploader-panel {
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+}
+
+// Conteneur cliquable qui gère l'aperçu ou le placeholder
+.image-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+        background-color: rgba(240, 240, 240, 0.5);
+    }
+
+    .selected-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Effet de surimpression au survol pour l'édition
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover .overlay {
+        opacity: 1;
+    }
+
+    .icon {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    // Contenu du placeholder (pas d'image sélectionnée)
+    .placeholder-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #5f6368;
+
+        .placeholder-icon {
+            font-size: 48px;
+            color: #bdc1c6;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 0;
+        }
+    }
+}

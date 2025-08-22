@@ -1,59 +1,63 @@
+ * {
+   transition: all .2s ease-in-out;
+ }
+
  mat-card {
-     max-width: 800px;
-     margin: 2rem auto;
-     padding: 20px;
+   max-width: 800px;
+   margin: 2rem auto;
+   padding: 20px;
  }
 
  .mat-mdc-card-header {
-     justify-content: center;
+   justify-content: center;
  }
 
  .mat-mdc-card-title {
-     font-size: 1.5rem;
-     font-weight: bold;
+   font-size: 1.5rem;
+   font-weight: bold;
  }
 
  .alert-danger {
-     color: #dc3545;
-     font-size: 0.75em;
-     margin-top: -15px;
-     margin-bottom: 15px;
+   color: #dc3545;
+   font-size: 0.75em;
+   margin-top: -15px;
+   margin-bottom: 15px;
  }
 
 
  // Responsive styles for the CKEditor component
  app-editor {
-     display: block; // Ensure the custom component is a block-level element
-     width: 100%;
+   display: block; // Ensure the custom component is a block-level element
+   width: 100%;
  }
 
  // Media query for small screens (typical mobile devices)
-@media (max-width: 768px) {
-  :host ::ng-deep {
-    .editor-container_document-editor {
-      // Ensure the main container takes the full width and has no side margins
-      max-width: 100% !important;
-      padding: 0 !important;
-      border: none !important; // Remove the border for a cleaner look
-    }
+ @media (max-width: 768px) {
+   :host ::ng-deep {
+     .editor-container_document-editor {
+       // Ensure the main container takes the full width and has no side margins
+       max-width: 100% !important;
+       padding: 0 !important;
+       border: none !important; // Remove the border for a cleaner look
+     }
 
-    .editor-container__editor-wrapper {
-      // Remove any fixed min/max height to allow the content to dictate height
-      min-height: auto !important; 
-      max-height: none !important;
-    }
+     .editor-container__editor-wrapper {
+       // Remove any fixed min/max height to allow the content to dictate height
+       min-height: auto !important;
+       max-height: none !important;
+     }
 
-    .editor-container__editor {
-      // The most important change: use 100% width and remove fixed margins
-      width: 100% !important;
-      margin: 0 !important;
-    }
+     .editor-container__editor {
+       // The most important change: use 100% width and remove fixed margins
+       width: 100% !important;
+       margin: 0 !important;
+     }
 
-    .ck.ck-editor__editable {
-      // Make the editable area take the full width and reduce padding
-      padding: 1rem !important; // Use a relative unit like rem
-      margin: 0 !important;
-      min-height: 250px; // Ensure a comfortable minimum height for typing
-    }
-  }
-}
+     .ck.ck-editor__editable {
+       // Make the editable area take the full width and reduce padding
+       padding: 1rem !important; // Use a relative unit like rem
+       margin: 0 !important;
+       min-height: 250px; // Ensure a comfortable minimum height for typing
+     }
+   }
+ }

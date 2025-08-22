@@ -9,123 +9,103 @@ export const xSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height
 </svg>`;
 export const bPoint760px = "(max-width: 760px)";
 @Injectable({
-   providedIn: 'root'
+  providedIn: 'root'
 })
-export class HeaderService{
-   authService = inject(AuthService)
-   router = inject(Router)
-   route = inject(ActivatedRoute)
-   bs = inject(BreakpointService)
-   navigation = [
-      {
-         titre: 'Acceuil',
-         link: "home"
-      },
+export class HeaderService {
+  authService = inject(AuthService)
+  router = inject(Router)
+  route = inject(ActivatedRoute)
+  bs = inject(BreakpointService)
+  navigation = [
+    {
+      titre: 'Acceuil',
+      link: "home"
+    },
 
-      {
-         titre: 'A Propos',
-         link: 'about'
-      },
+    {
+      titre: 'A Propos',
+      link: 'about'
+    },
 
-      {
-         titre: 'Contact',
-         link: 'contact'
-      },
+    {
+      titre: 'Contact',
+      link: 'contact'
+    },
 
-      {
-        titre: 'Blog',
-        link: 'blog'
-      }
-
-
-
-   ]
-   currentTheme = signal("light");
-   private mediaQueryList: MediaQueryList | null = null;
+    {
+      titre: 'Blog',
+      link: 'blog'
+    }
 
 
-   /** returns true if the current route is set to home */
-   private isHomeActivated(){
+
+  ]
+  currentTheme = signal("light");
+  private mediaQueryList: MediaQueryList | null = null;
+
+
+  /** returns true if the current route is set to home */
+  private isHomeActivated() {
     return this.router.routerState.snapshot.url == "/" || this.router.routerState.snapshot.url == "/home"
-   }
+  }
 
-   /** Signal bool that returns true if the current screen size is considered mobile */
-   isMobile = this.bs.mobile()
+  /** Signal bool that returns true if the current screen size is considered mobile */
+  isMobile = this.bs.mobile()
 
-   checkTheNav(authService: AuthService) {
+  checkTheNav(authService: AuthService) {
     this.isHomeActivated()
     const isAuthenticated = authService.isAuthenticated();
     const isAdmin = authService.isAdmin();
-    const navArrayLength = this.navigation.length;
+    const isEditor = authService.isEditor();
 
-    
+    // Start with a new, empty navigation array
+    this.navigation = [];
 
-    // Remove the last item in the navigation array if its length is not 3
-    if (navArrayLength !== 3) {
-        this.navigation.pop();
+    // Add static navigation items
+    this.navigation.push({ titre: 'Accueil', link: 'home' });
+    this.navigation.push({ titre: 'A Propos', link: 'about' })
+    this.navigation.push({ titre: 'Blog', link: 'blog' });
+    this.navigation.push({ titre: 'Contact', link: 'contact' })
+
+    // Add dynamic navigation items based on user roles and state
+    if (isAdmin) {
+      this.navigation.push({ titre: 'Tableau de bord', link: 'admin' });
+    } else if (isEditor) {
+      this.navigation.push({ titre: 'Édition', link: 'edition' });
+    } else if (isAuthenticated && !this.isHomeActivated() && !this.isMobile) {
+      this.navigation.push({ titre: 'Apprendre', link: 'dashboard' });
     }
 
-    // Determine the admin item
-    const adminItem = isAdmin ? { titre: 'Tableau de bord', link: 'admin' } : null;
+    // Add the final item based on authentication status
+    const authItem = isAuthenticated
+      ? { titre: 'Déconnexion', link: 'logout' }
+      : { titre: 'Connexion', link: 'auth/login' };
 
-    //Determine the tableau de bord item
-    const dashBoardItem = isAuthenticated ?{titre: 'Apprendre', link: 'dashboard'}:null
+    this.navigation.push(authItem);
+  }
 
-    // Check if adminItem already exists in the navigation
-    const adminItemExists = this.navigation.some(item => item.link === 'admin');
-    
-    //Check if dashBoardItem already exists in the navigation
 
-    const dashBoardItemExist =  this.navigation.some(item => item.link === 'dashboard');
 
-    // Determine the navigation item to push based on authentication status
-    const navItem = isAuthenticated
-        ? { titre: 'Déconnexion', link: 'logout' }
-        : { titre: 'Connexion', link: 'auth/login' };
-
-    // Add the adminItem if the user is an admin and it doesn't already exist in the navigation
-    if (adminItem && !adminItemExists ) {
-        this.navigation.push(adminItem);
-    }else if (this.isHomeActivated() && dashBoardItemExist) {
-      // Remove the dashboard item if we are on the home page and it exists
-      this.navigation = this.navigation.filter(item => item.link !== 'dashboard');
+  detectTheme() {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.currentTheme.set('dark');
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      this.currentTheme.set('light');
+    } else {
+      this.currentTheme.set('light'); // Default to light if no preference is expressed
     }
+  }
 
 
-    // Add the dashboard item if the user is authenticated and there is not another dashboard item
-    // And if the current route is not home AND if the current device is not a mobile
-    // The dashboard item is only present on large screens
-    if(dashBoardItem && !dashBoardItemExist && !this.isHomeActivated() && !this.isMobile){
-      this.navigation.push(dashBoardItem)
+  listenThemeDection(cdr: ChangeDetectorRef) {
+    this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+    if (this.mediaQueryList) {
+      this.mediaQueryList.addEventListener('change', () => { this.detectTheme(); cdr.markForCheck() });
     }
+  }
 
-    // Push the determined navigation item
-    this.navigation.push(navItem);
-   
-}
+  constructor() {
 
-    
-   
-   detectTheme() {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        this.currentTheme.set('dark') ;
-      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        this.currentTheme.set('light');
-      } else {
-        this.currentTheme.set('light'); // Default to light if no preference is expressed
-      }
-    }
+  }
 
-
-    listenThemeDection(cdr: ChangeDetectorRef){
-      this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-      if (this.mediaQueryList) {
-        this.mediaQueryList.addEventListener('change', () => {this.detectTheme();   cdr.markForCheck()});
-      }
-    }
-
-   constructor() {
-      
-    }
- 
 }

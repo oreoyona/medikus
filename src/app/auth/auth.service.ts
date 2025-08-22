@@ -140,6 +140,14 @@ export class AuthService {
     return this.currentUser && this.currentUser.role === 'admin';
   }
 
+  /**
+   * 
+   * @returns whether the current user has Editor privileges
+   */
+  isEditor(){
+    return this.currentUser && this.currentUser.role == 'editor'
+  }
+
   // /**
   //  * 
   //  * @returns true if the user is indeed authenticated

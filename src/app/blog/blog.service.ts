@@ -18,21 +18,9 @@ export class BlogService {
 
 
     getPosts(): Observable<ApiResponse<Post[]>> {
-        const token = localStorage.getItem('access_token');
-
-        // Start with a base set of headers
-        let headers = new HttpHeaders();
-        if (token) {
-            headers = headers.set('Authorization', `Bearer ${token}`);
-        }
-
-        // NEW: Check if the current user is an admin on the frontend
-        if (this.authService.isAdmin()) {
-            // Add a custom header to signal the backend to ignore the page view
-            headers = headers.set('X-Skip-View-Count', 'true');
-        }
-
-        return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}posts/`, { headers: headers });
+        
+       
+        return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}posts/`);
     }
 
     getPostBySlug(slug: string): Observable<ApiResponse<Post>> {
@@ -96,5 +84,15 @@ export class BlogService {
 
         return processedContent;
     }
+
+
+     generateSlug(title: string): string {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-') // Remplace les espaces par des tirets
+      .replace(/[^\w-]+/g, '') // Supprime les caractères non alphanumériques et non-tirets
+      .replace(/--+/g, '-'); // Remplace les doubles tirets par un seul
+  }
 
 }

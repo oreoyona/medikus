@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,7 +6,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Post } from '../models';
 import { BlogService } from '../blog.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, map, Observable, of, startWith } from 'rxjs';
+import { catchError, map, Observable, of, startWith, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,9 +15,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { CkeditorComponent } from '../../ckeditor/ckeditor.component';
 import { HeaderComponent } from '../../common/header/header.component';
 import { ImageUploadComponent } from "../../common/image-uploader.component";
+import { CkeditorComponent } from '../../ckeditor/ckeditor.component';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { HelpersService } from '../../common/services/helpers.service';
 
 @Component({
   selector: 'app-edit-post',
@@ -33,8 +35,10 @@ import { ImageUploadComponent } from "../../common/image-uploader.component";
     MatIconModule,
     MatAutocompleteModule,
     HeaderComponent,
-    ImageUploadComponent
-],
+    ImageUploadComponent,
+    CkeditorComponent,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './edit-post.component.html',
   styleUrl: './edit-post.component.scss'
 })
@@ -42,41 +46,47 @@ export class EditPostComponent implements OnInit {
 
   authService = inject(AuthService)
   blogService = inject(BlogService)
-  postId!: number // Changed type to number
+  postId!: number
   post: Post | undefined = undefined
   router = inject(Router)
   readonly dialog = inject(MatDialog)
   errorInEditing = signal(false)
   edited = signal(false)
   cd = inject(ChangeDetectorRef)
-  editPostForm: FormGroup // Removed <any> for better type inference
+  editPostForm: FormGroup
   loading = true
   destroyRef = inject(DestroyRef)
   route = inject(ActivatedRoute)
-  originalPostSlug: string | null = null; // To store the original slug for update API call
+  hs = inject(HelpersService)
+  originalPostSlug: string | null = null;
   content = ""
+  loader = false;
+  articleLoading = true
 
   allTags: string[] = [];
   filteredTags!: Observable<string[]>;
   selectedTags: string[] = [];
   tagCtrl = new FormControl('');
+  unpublishLoader = false
+  publishLoader = false
+  errorMsg: WritableSignal<string | null> = signal(null);
+  successMsg: WritableSignal<string | null> = signal(null)
+  postNotFoundError: WritableSignal<string | null> = signal(null);
 
   constructor(private fb: NonNullableFormBuilder) {
-    //form initialization
     this.editPostForm = this.fb.group({
       title: ['', Validators.required],
       slug: ['', Validators.required],
       description: ['', Validators.required],
       postImg: [],
-      date: [''], // Will be populated from post.pub_date (backend's updated_at)
+      date: [''],
       content: [''],
     });
   }
 
   ngOnInit(): void {
-    if (!this.authService.isAdmin()) {
-      alert('Vous devez être connecté pour modifier un article.');
-      this.router.navigate(['/auth']);
+    if (!this.authService.isAdmin() && !this.authService.isEditor()) {
+      this.postNotFoundError.set("Vous n'avez pas les droits nécessaires pour modifier cet article");
       return;
     }
 
@@ -85,11 +95,11 @@ export class EditPostComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
-        this.postId = +idParam; // Convert string to number
+        this.postId = +idParam;
         this.loadPostData(this.postId);
       } else {
-        alert('ID d\'article manquant pour l\'édition.');
-        this.router.navigate(['/admin', { outlets: { admin: ['blog', 'posts'] } }]);
+        this.postNotFoundError.set('ID d\'article manquant pour l\'édition.')
+        this.articleLoading = false
       }
     });
 
@@ -113,42 +123,40 @@ export class EditPostComponent implements OnInit {
   }
 
   loadPostData(postId: number): void {
-    this.loading = true;
+    this.articleLoading = true;
     this.blogService.getPostById(postId).pipe(
       takeUntilDestroyed(this.destroyRef),
       catchError((err) => {
         console.error('Erreur lors de la récupération de l\'article par ID:', err);
-        alert('Erreur lors du chargement de l\'article pour modification.');
-        this.router.navigate(['/admin', { outlets: { admin: ['blog', 'posts'] } }]);
-        return of(null); // Return an observable of null to prevent further processing
+        this.postNotFoundError.set('Erreur lors du chargement de l\'article pour modification.')
+        this.articleLoading = false;
+        return of(null);
       })
     ).subscribe((res) => {
       if (res && res.data) {
         const post = res.data;
-        this.post = post; // Store the fetched post
-        this.originalPostSlug = post.slug; // Store the slug for update operation
+        this.post = post;
+        this.originalPostSlug = post.slug;
 
         this.editPostForm.patchValue({
           title: post.title,
           slug: post.slug,
           description: post.description,
-          date: post.pub_date, // Use pub_date (which is updated_at from backend)
+          date: post.pub_date,
           content: post.content,
           postImg: post.postImg
         });
         this.content = post.content
-        this.selectedTags = post.tags || []; // Populate selected tags
+        this.selectedTags = post.tags || [];
       } else {
-        // Handle case where post data is not found or response is not as expected
-        alert('Article non trouvé ou données invalides.');
-        this.router.navigate(['/admin', { outlets: { admin: ['blog', 'posts'] } }]);
+        this.postNotFoundError.set('Article non trouvé ou données invalides.');
       }
-      this.loading = false;
+      this.articleLoading = false;
     });
   }
 
   onSubmit(): void {
-    // Ensure originalPostSlug is available for the update call
+    this.loader = true
     if (this.editPostForm.valid && this.originalPostSlug) {
       const postData: Partial<Post> = {
         title: this.editPostForm.value.title,
@@ -156,31 +164,106 @@ export class EditPostComponent implements OnInit {
         description: this.editPostForm.value.description,
         tags: this.selectedTags,
         postImg: this.editPostForm.value.postImg,
-        slug: this.originalPostSlug // Ensure the original slug is sent for identification
+        slug: this.originalPostSlug
       };
 
       this.blogService.updatePost(this.postId, postData).subscribe({
         next: (res) => {
+          this.loader = false
           if (res.message === 200 || res.message === 'Post updated successfully') {
-            alert('Article mis à jour avec succès !');
-            
+            this.successMsg.set('Article mis à jour avec succès !');
+
+            timer(5000).subscribe(() => {
+              this.successMsg.set(null)
+            })
+            this.hs.goToTop();
           } else {
             console.error('Erreur lors de la mise à jour:', res.message);
-            alert('Erreur lors de la mise à jour de l\'article: ' + res.message);
+            this.errorMsg.set('Erreur lors de la mise à jour de l\'article: ' + res.message);
           }
         },
         error: (err) => {
+          this.loader = false
+
           console.error('Erreur HTTP lors de la mise à jour:', err);
-          alert('Erreur lors de la mise à jour de l\'article.');
+          this.errorMsg.set('Erreur lors de la mise à jour de l\'article.');
         }
       });
     } else {
-      alert('Formulaire invalide ou slug d\'article manquant.');
+      this.errorMsg.set('Formulaire invalide ou slug d\'article manquant.');
     }
   }
 
+  onPublishDraft(): void {
+    this.publishLoader = true;
+    if (this.editPostForm.valid && this.post) {
+      const postData: Partial<Post> = {
+        title: this.editPostForm.value.title,
+        content: this.editPostForm.value.content,
+        description: this.editPostForm.value.description,
+        tags: this.selectedTags,
+        postImg: this.editPostForm.value.postImg,
+        published: true,
+        draft: false
+      };
+      this.blogService.updatePost(this.postId, postData).subscribe({
+        next: (res) => {
+          this.publishLoader = false;
+          if (res.message === 200 || res.message === 'Post updated successfully') {
+            this.successMsg.set('Article publié avec succès !');
+            this.post!.published = true;
+            this.post!.draft = false;
+
+          } else {
+            console.error('Erreur lors de la publication:', res.message);
+            this.errorMsg.set('Erreur lors de la publication de l\'article: ' + res.message);
+          }
+        },
+        error: (err) => {
+          this.publishLoader = false;
+          console.error('Erreur HTTP lors de la publication:', err);
+          this.errorMsg.set('Erreur lors de la publication de l\'article.');
+        }
+      });
+    } else {
+      this.errorMsg.set('Formulaire invalide ou article manquant.');
+    }
+  }
+
+  unpublishPost(): void {
+    this.unpublishLoader = true;
+    if (this.post && this.post.published) {
+      const postData: Partial<Post> = {
+        published: false,
+        draft: true
+      };
+      this.blogService.updatePost(this.postId, postData).subscribe({
+        next: (res) => {
+          this.unpublishLoader = false;
+          if (res.message === 200 || res.message === 'Post updated successfully') {
+            this.successMsg.set('Article dépublié avec succès et sauvegardé en brouillon !');
+            this.post!.published = false;
+            this.post!.draft = true;
+
+          } else {
+            console.error('Erreur lors de la dépublication:', res.message);
+            this.errorMsg.set('Erreur lors de la dépublication de l\'article: ' + res.message);
+          }
+        },
+        error: (err) => {
+          this.unpublishLoader = false;
+          console.error('Erreur HTTP lors de la dépublication:', err);
+          this.errorMsg.set('Erreur lors de la dépublication de l\'article.');
+        }
+      });
+    } else {
+      this.errorMsg.set('L\'article n\'est pas publié.');
+    }
+  }
+
+
   onCancel(): void {
-    this.router.navigate(['/admin', { outlets: { admin: ['blog', 'posts'] } }]);
+    this.router.navigateByUrl('/admin')
   }
 
   addTagFromInput(event: any): void {

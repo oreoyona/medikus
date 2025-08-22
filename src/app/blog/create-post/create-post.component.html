@@ -8,9 +8,9 @@
       }
 
       @if(errorMsg()){
-        <div class="alert alert-danger">
-          {{errorMsg()}}
-        </div>
+      <div class="alert alert-danger my-4">
+        {{errorMsg()}}
+      </div>
       }
 
       <mat-card-title class="my-2">Créer un nouvel article</mat-card-title>
@@ -20,35 +20,61 @@
         <mat-form-field appearance="outline" class="w-100 mb-3">
           <mat-label>Titre</mat-label>
           <input matInput formControlName="title" required>
-          <mat-error *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched">
+          @if(postForm.get('title')?.invalid && postForm.get('title')?.touched){
+          <mat-error>
             Le titre est requis.
           </mat-error>
+          }
+
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100 mb-3">
           <mat-label>Slug (URL conviviale)</mat-label>
           <input matInput formControlName="slug" required>
-          <mat-error *ngIf="postForm.get('slug')?.invalid && postForm.get('slug')?.touched">
+          @if(postForm.get('slug')?.invalid && postForm.get('slug')?.touched){
+          <mat-error>
             Le slug est requis.
           </mat-error>
+          }
+
         </mat-form-field>
 
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Image actuelle(URL)</mat-label>
+          <input matInput type="text" formControlName="postImg">
+        </mat-form-field>
+
+        <div class="w-100 mb-3">
+          <app-image-upload [imgUrlControl]="postForm.get('postImg')" />
+        </div>
         <!-- Intégration de CKEditor via ton composant app-editor -->
         <app-editor formControlName="content" label="Contenu de l'article"></app-editor>
-        <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" class="alert alert-danger">
+        @if(postForm.get('content')?.invalid && postForm.get('content')?.touched){
+        <div class="alert alert-danger my-3">
           Le contenu est requis.
         </div>
+        }
+
+
+        <!-- Ajout de la description -->
+        <mat-form-field appearance="outline" class="w-100 my-3">
+          <mat-label>Description (optionnel)</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
 
         <!-- Tags input with Autocomplete -->
         <mat-form-field appearance="outline" class="w-100 my-3">
           <mat-label>Tags</mat-label>
           <mat-chip-grid #chipGrid aria-label="Tags de l'article">
-            <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
+            @for(tag of selectedTags; track $index){
+            <mat-chip-row (removed)="removeTag(tag)">
               {{ tag }}
               <button matChipRemove [attr.aria-label]="'remove ' + tag">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
+            }
+
           </mat-chip-grid>
           <input placeholder="Ajouter un tag..." #tagInput [formControl]="tagCtrl" [matChipInputFor]="chipGrid"
             [matAutocomplete]="auto" (matChipInputTokenEnd)="addTagFromInput($event)">
@@ -59,9 +85,21 @@
           </mat-autocomplete>
         </mat-form-field>
 
+        <!-- Case à cocher pour la publication -->
+        <mat-checkbox formControlName="is_published" class="mb-3" style="user-select: none;">Publier l'article
+          maintenant</mat-checkbox>
+        <p class="text-muted">
+          Décochez cette case pour enregistrer l'article en tant que brouillon.
+        </p>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid" class="me-2">
-          {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+          @if(loader){
+          <mat-spinner diameter="20"></mat-spinner>
+          }
+          @else{
+          Créer
+          }
+
         </button>
         <button mat-raised-button color="warn" type="button" (click)="onCancel()">Annuler</button>
       </form>
