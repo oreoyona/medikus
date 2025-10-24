@@ -4,8 +4,12 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { baseUrl } from '../urls';
-import { ApiResponse, Post, Tag } from './models';
+import { ApiResponse, BlogResponse, Post, Tag } from './models';
 import { AuthService } from '../auth/auth.service';
+
+
+
+
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +22,8 @@ export class BlogService {
 
 
     getPosts(): Observable<ApiResponse<Post[]>> {
-        
-       
+
+
         return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}posts/`);
     }
 
@@ -69,6 +73,18 @@ export class BlogService {
         return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}users/${username}/posts`, { params });
     }
 
+    /**
+     * 
+     * @param tagName the tag of the post
+     * @returns All the posts associated with the tag
+     */
+    getPostsByTag(tagName: string, page: number, pageSize: number = 10): Observable<BlogResponse> {
+        const params = new HttpParams()
+            .set('page', page.toString())
+            .set('pageSize', pageSize.toString());
+        return this.http.get<BlogResponse>(`${baseUrl}tags/${tagName}`, {params})
+    }
+
 
 
     processContent(content: string): string {
@@ -86,13 +102,13 @@ export class BlogService {
     }
 
 
-     generateSlug(title: string): string {
-    return title
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-') // Remplace les espaces par des tirets
-      .replace(/[^\w-]+/g, '') // Supprime les caractères non alphanumériques et non-tirets
-      .replace(/--+/g, '-'); // Remplace les doubles tirets par un seul
-  }
+    generateSlug(title: string): string {
+        return title
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-') // Remplace les espaces par des tirets
+            .replace(/[^\w-]+/g, '') // Supprime les caractères non alphanumériques et non-tirets
+            .replace(/--+/g, '-'); // Remplace les doubles tirets par un seul
+    }
 
 }

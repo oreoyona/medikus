@@ -26,7 +26,9 @@ export interface Post {
   postImg?: string,
   author?: string,
   published?: boolean,
-  draft?: boolean
+  draft?: boolean,
+  views_count?: number; // Kept to match our current API response
+
 }
 
 export interface ApiResponse<T> {
@@ -38,3 +40,18 @@ export interface ApiResponse<T> {
   token?: string; // Pour l'authentification
 }
 
+// Interface for the pagination data
+export interface Pagination {
+  total_items: number;
+  total_pages: number;
+  current_page: number;
+  page_size: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+// Interface for the complete API response
+export interface BlogResponse {
+  posts: Post[];
+  pagination: Pagination;
+}

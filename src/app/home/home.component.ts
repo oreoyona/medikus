@@ -21,7 +21,7 @@ import { WebinaireService } from '../admin/create-webinaire/webinaire.service';
   imports: [
     MatIconModule, RouterLink, MatButtonModule, UpperCasePipe,
     MatCardModule, MatGridListModule, SlicePipe, HeaderComponent, MatProgressSpinnerModule,
-    BannerComponent
+    
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

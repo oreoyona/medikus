@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HeaderService } from '../services/header.service';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
     ProfilePictureComponent,
     RouterLinkActive,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    NgOptimizedImage
 ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],

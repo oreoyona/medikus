@@ -15,10 +15,11 @@ import { HelpersService } from '../common/services/helpers.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Import MatProgressSpinnerModule
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-catalogue',
+  standalone: true,
   imports: [
     MatDividerModule,
     MatCardModule,
@@ -35,8 +36,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; /
     FormsModule,
     ReactiveFormsModule,
     MatGridListModule,
-    MatProgressSpinnerModule
-],
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './catalogue.component.html',
   styleUrl: './catalogue.component.scss'
 })
@@ -50,21 +51,23 @@ export class CatalogueComponent implements OnInit {
   pageSize = 6;
   pageIndex = 0;
   noCoursesFound = false;
-  loadingCourses = true; // Add loadingCourses flag
-
+  loadingCourses = true;
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
-
+  
+  // Les tableaux des filtres sont initialisés vides.
   categoryFilter = new FormControl('');
   instructorFilter = new FormControl('');
-  categories = ["Hybride", "En Ligne", "Présentiel"];
+  categories: string[] = [];
   instructors: string[] = [];
 
   ngOnInit(): void {
+    // Nous appelons uniquement loadCourses() dans ngOnInit.
     this.loadCourses();
-    this.loadFilters();
   }
 
-  loadFilters(): void {
+  // Cette méthode est maintenant privée et n'est appelée que par loadCourses().
+  private loadFilters(): void {
+    // Ces lignes sont maintenant exécutées après que this.allCourses est rempli.
     this.categories = [...new Set(this.allCourses.map(course => course.courseType).filter(Boolean))] as string[];
     this.instructors = [...new Set(this.allCourses.map(course => course.instructor?.split(';')[0]).filter(Boolean))] as string[];
   }
@@ -73,6 +76,9 @@ export class CatalogueComponent implements OnInit {
     this.loadingCourses = true;
     this.courseService.getCourses().subscribe((res: any) => {
       this.allCourses = res.data;
+      // IMPORTANT : Nous appelons loadFilters() ici, après que les données
+      // ont été reçues.
+      this.loadFilters();
       this.filteredCourses = [...this.allCourses];
       this.updatePagedCourses();
       this.loadingCourses = false;
@@ -84,13 +90,13 @@ export class CatalogueComponent implements OnInit {
     return validatedUrl || 'info-banner.webp';
   }
 
- searchForm = new FormGroup({
-  term: new FormControl("")
- })
+  searchForm = new FormGroup({
+    term: new FormControl("")
+  })
   search(): void {
     let term = this.searchForm.get('term')?.value
     this.loadingCourses = true;
-    if(term){
+    if (term) {
       this.courseService.getCourseBySearchTerm(term!).subscribe((res: any) => {
         this.allCourses = res.data;
         this.filteredCourses = [...this.allCourses];
@@ -98,7 +104,6 @@ export class CatalogueComponent implements OnInit {
         this.loadingCourses = false;
       });
     }
-   
   }
 
   applyFilters(): void {
@@ -137,6 +142,5 @@ export class CatalogueComponent implements OnInit {
     this.pageSize = e.pageSize;
     this.updatePagedCourses();
   }
-
 
 }

@@ -45,7 +45,7 @@
         </mat-form-field>
 
         <div class="w-100 mb-3">
-          <app-image-upload [imgUrlControl]="postForm.get('postImg')" />
+          <app-image-upload [imgUrlControl]="postForm.get('postImg')!" />
         </div>
         <!-- Intégration de CKEditor via ton composant app-editor -->
         <app-editor formControlName="content" label="Contenu de l'article"></app-editor>

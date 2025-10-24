@@ -1,0 +1,61 @@
+<app-header></app-header>
+
+
+<div class="container mt-4">
+  <h2 class="mb-4">Articles portant le tag: {{tagName}}</h2>
+
+  @if (loading()) {
+  <div class="text-center">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des articles...</p>
+  </div>
+  } @else if (posts().length === 0) {
+  <div class="alert alert-info">
+    Aucun article trouvé.
+  </div>
+  }
+
+  <!-- The main container for the posts. We'll use this class to apply our new grid styles. -->
+  <div class="post-grid">
+    
+    @for (post of posts() | slice:0:10 ; track post.id) {
+    <!-- Each card is now a direct child of the grid container.
+         The grid system will handle the layout, so we no longer need 'col-md-6'. -->
+    <mat-card class="article-card">
+      <mat-card-header>
+        <mat-card-title>{{ post.title }}</mat-card-title>
+        <mat-card-subtitle class="my-2">
+          Par <span class="blog-author" routerLink="/blog/author/{{post.author}}">{{ post.author }}</span> 
+          le {{ post.pub_date | date:'shortDate' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <img [src]="hs.getImgUrl(post.postImg!)" alt="random illustration of the article" height="100%" width="100%"
+          style="object-fit: cover;">  
+        @if (post.tags && post.tags.length > 0) {
+        <p>
+          @for (tag of post.tags; track $index) {
+            @let new_tag = convertToTag(tag);
+          <span class="badge bg-secondary me-1">{{ new_tag.name }}</span>
+          }
+        </p>
+        }
+        
+      </mat-card-content>
+      <mat-card-actions>
+        <a [routerLink]="['/blog/posts', post.id]" mat-flat-button >Lire la suite</a>
+
+        
+        @if (authService.isAdmin()) {
+        <a [routerLink]="['/blog/posts/edit', post.id]" mat-stroked-button color="accent">
+          <mat-icon>edit</mat-icon> Modifier
+        </a>
+        <button mat-flat-button class="delete-btn"(click)="deletePost(post.slug!)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+        }
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+</div>

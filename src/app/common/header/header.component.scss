@@ -17,7 +17,9 @@
     align-items: center;
     cursor: pointer;
     margin-right: 1rem;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden; 
+    height: auto;
+    max-height: 100px !important;
   }
   
   .logo {
@@ -26,8 +28,7 @@
     -ms-user-select: none;     /* Pour Internet Explorer/Edge */
     user-select: none;         /* Propriété standard */
     user-select: none;
-    height: 100px; 
-    width: auto;
+   height: 100px !important;
     max-width: 200px;
     overflow: hidden; /* Prevent overflow */
   }

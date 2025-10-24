@@ -14,7 +14,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-:root{
+:root {
   --mdk-primary: #005cbb;
   --mdk-on-surface: #5f6368;
 }
@@ -57,6 +57,12 @@ header {
   transform: scale(1);
   height: 400px;
   animation: pulse 2s infinite;
+}
+
+.badge {
+
+  cursor: pointer !important;
+
 }
 
 .g-image-height {

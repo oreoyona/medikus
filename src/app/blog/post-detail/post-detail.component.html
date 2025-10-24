@@ -10,7 +10,12 @@
         <mat-card-header class="my-2">
           <mat-card-title>{{ post.title }}</mat-card-title>
           <mat-card-subtitle>
-            Par {{ post.author }} le {{ post.pub_date! | formatDate }}
+             Par
+            <a routerLink="/blog/author/{{post.author}}">
+               {{ post.author }} 
+            </a>
+           
+            le {{ post.pub_date! | formatDate }}
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
@@ -21,7 +26,7 @@
           @if (post.tags && post.tags.length > 0) {
             <p>
               @for (tag of post.tags; track tag) {
-                <span class="badge bg-info me-1 my-2">{{ tag }}</span>
+                <span class="badge bg-info me-1 my-2" routerLink="/blog/posts/tags/{{tag}}">{{ tag }}</span>
               }
             </p>
           }

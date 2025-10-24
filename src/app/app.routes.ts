@@ -41,6 +41,7 @@ import { PostDetailComponent } from './blog/post-detail/post-detail.component';
 import { CreatePostComponent } from './blog/create-post/create-post.component';
 import { ShowPostByAuthorComponent } from './blog/show-post-by-author/show-post-by-author.component';
 import { BlogStatisticsComponent } from './blog-statistics/blog-statistics.component';
+import { ShowPostByTagComponent } from './blog/show-post-by-tag/show-post-by-tag.component';
 
 export const routes: Routes = [
   //COMMON ROUTES
@@ -58,6 +59,7 @@ export const routes: Routes = [
   { path: 'progress', component: ProgressComponent, canActivate: [authGuard, maintenanceModeGuard], data: { animation: 'ProgressPage' } },
   { path: 'blog/posts/:slug', component: PostDetailComponent, data: {animation: 'PostDetailPage'}},
   { path: 'blog/author/:name', component: ShowPostByAuthorComponent, data: {animation: 'ShowAuthorPostPage'}},
+  { path: 'blog/posts/tags/:tagName', component: ShowPostByTagComponent, data: {animation: 'ShowPostsByTagPage'}},
   { path: 'about', component: AboutComponent, canActivate: [maintenanceModeGuard], data: { animation: 'AboutPage' } },
   { path: 'contact', component: ContactComponent,canActivate: [maintenanceModeGuard], data: { animation: 'ContactPage' } },
   { path: 'catalogue', component: CatalogueComponent,canActivate: [maintenanceModeGuard], data: { animation: 'CataloguePage' } },

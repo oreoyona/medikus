@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, AbstractControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -22,7 +22,7 @@ import { ImageDialogComponent } from './image-dialog.component';
 })
 export class ImageUploadComponent implements OnInit {
 
-  @Input() imgUrlControl!: FormControl;
+  @Input() imgUrlControl!: AbstractControl;
 
   private dialog = inject(MatDialog);
 

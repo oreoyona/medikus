@@ -1,4 +1,4 @@
-/* SCSS pour le composant ShowPostByAuthorComponent */
+/* SCSS pour le composant ShowPostByTagComponent */
 
 .container {
   padding-top: 2rem;
@@ -30,7 +30,7 @@
   flex-direction: column;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Ombre subtile pour un effet de profondeur
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
+    
   &:hover {
     transform: translateY(-5px); // Soulève la carte au survol
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); // Ombre plus prononcée
@@ -91,14 +91,5 @@
   cursor: pointer;
   &:hover {
     text-decoration: underline;
-  }
-}
-
-.actions{
-  @media (max-width: 992px) {
-    flex-direction: column;
-    text-align: right;
-    align-items: end;
-    
   }
 }

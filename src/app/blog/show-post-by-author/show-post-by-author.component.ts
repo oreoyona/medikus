@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { HeaderComponent } from "../../common/header/header.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatCardModule } from "@angular/material/card";
@@ -10,9 +10,9 @@ import { Post } from '../models';
 import { BlogService } from '../blog.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { catchError, of, switchMap } from 'rxjs';
+import { catchError, of, single, switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-show-post-by-author',
   standalone: true,
@@ -23,17 +23,25 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     DatePipe,
     RouterLink,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   templateUrl: './show-post-by-author.component.html',
   styleUrl: './show-post-by-author.component.scss'
 })
-export class ShowPostByAuthorComponent implements OnInit{
+export class ShowPostByAuthorComponent implements OnInit {
   // Component state management using Signals
   loading = signal(true);
   loadingMore = signal(false);
   hasMorePosts = signal(true);
   posts = signal<Post[]>([]);
+
+
+  //properties to handle delete posts states
+
+  deletePostLoader = false;
+  deletePostSuccessMsg: WritableSignal<string | null> = signal(null)
+  deletePostErrorMsg: WritableSignal<string | null> = signal(null)
 
   // Dependencies
   bs = inject(BlogService);
@@ -42,6 +50,8 @@ export class ShowPostByAuthorComponent implements OnInit{
   hs = inject(HelpersService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  blogService = inject(BlogService)
+  private _snackBar = inject(MatSnackBar)
 
   // Component properties
   username = "unknow";
@@ -80,7 +90,6 @@ export class ShowPostByAuthorComponent implements OnInit{
     }
 
     // Call the BlogService with pagination parameters.
-    // NOTE: You will need to update your BlogService to accept page and pageSize.
     this.bs.getUserPosts(this.username, this.currentPage, this.pageSize).pipe(
       catchError((err) => {
         console.error('Failed to fetch posts:', err);
@@ -91,8 +100,11 @@ export class ShowPostByAuthorComponent implements OnInit{
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(res => {
       if (res.data) {
+        let filteredPosts = res.data.filter(post =>{
+          return post.published == true || post.published == null
+        })
         // Append the new posts to the existing posts array.
-        this.posts.update(currentPosts => [...currentPosts, ...res.data!]);
+        this.posts.update(currentPosts => [...currentPosts, ...filteredPosts]);
         // Determine if there are more pages to load.
         this.hasMorePosts.set(res.data.length === this.pageSize);
       }
@@ -111,11 +123,29 @@ export class ShowPostByAuthorComponent implements OnInit{
     this.loadPosts();
   }
 
-  /**
-   * Placeholder method for deleting a post.
-   */
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action)
+  }
+
   deletePost(slug: string): void {
-    // Your delete logic here
-    console.log(`Deleting post with slug: ${slug}`);
+    this.deletePostLoader = true
+    this.blogService.deletePost(slug).pipe(takeUntilDestroyed(this.destroyRef),
+      catchError((err) => {
+
+        this._snackBar.open("une erreur inconnue est survenue", "ok")
+        console.log(err)
+        return of(err)
+      }))
+      .subscribe((res) => {
+        if (res.data) {
+          this.deletePostLoader = false
+          this.deletePostSuccessMsg.set("L'article a été supprimé avec succès")
+          this.openSnackBar("L'article a été supprimé avec succès", "ok")
+        }
+
+        else {
+          this._snackBar.open("Erreur dans la suppression de l'article", "ok")
+        }
+      })
   }
 }

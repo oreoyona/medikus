@@ -1,64 +1,69 @@
 <app-header></app-header>
+
 <div class="container mt-4">
-    <h2 class="mb-4">Articles du Blog</h2>
+  <!-- Titre dynamique basé sur l'auteur -->
+  @if (username) {
+    <h2 class="mb-4">Articles écrits par: {{ username }}</h2>
+  }
 
-    @if (loading()) {
-        <div class="text-center">
-            <mat-spinner></mat-spinner>
-            <p>Chargement des articles...</p>
-        </div>
-    } @else if (!posts() || posts().length === 0) {
-        <div class="alert alert-info">
-            Aucun article trouvé.
-        </div>
-    } @else {
-        <div class="row">
-            @for (post of posts(); track post.id) {
-                <div class="col-md-6 mb-4">
-                    <mat-card>
-                        <mat-card-header>
-                            <mat-card-title>{{ post.title }}</mat-card-title>
-                            <mat-card-subtitle class="my-2">
-                               publié
-                                le {{ post.pub_date | date:'shortDate' }}
-                            </mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <img [src]="hs.getImgUrl(post.postImg!)" alt="random illustration of the article" height="100%"
-                                width="100%" style="object-fit: cover;">
-                            @if (post.tags && post.tags.length > 0) {
-                                <p>@for (tag of post.tags; track $index) {
-                                    <span class="badge bg-secondary me-1">{{ tag }}</span>
-                                }
-                                </p>
-                            }
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <a [routerLink]="['/blog/posts', post.id]" mat-flat-button>Lire la suite</a>
-                            @if (authService.isAdmin()) {
-                                <a [routerLink]="['/blog/posts/edit', post.id]" mat-stroked-button color="accent">
-                                    <mat-icon>edit</mat-icon> Modifier
-                                </a>
-                                <button mat-flat-button class="delete-btn" (click)="deletePost(post.slug!)">
-                                    <mat-icon>delete</mat-icon> Supprimer
-                                </button>
-                            }
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
+  <!-- Gestion des états de chargement et d'absence d'articles -->
+  @if (loading()) {
+    <div class="text-center">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des articles...</p>
+    </div>
+  } @else if (posts().length === 0) {
+    <div class="alert alert-info">
+      Aucun article trouvé pour cet auteur.
+    </div>
+  } @else {
+    <!-- Grille d'articles -->
+    <div class="post-grid">
+      @for (post of posts(); track post.id) {
+        <mat-card class="article-card">
+          <mat-card-header>
+            <mat-card-title>{{ post.title }}</mat-card-title>
+            <mat-card-subtitle class="my-2">
+              publié le {{ post.pub_date | date:'shortDate' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <img [src]="hs.getImgUrl(post.postImg!)" alt="Illustration de l'article" height="100%" width="100%" style="object-fit: cover;">
+            @if (post.tags && post.tags.length > 0) {
+              <p>
+                @for (tag of post.tags; track $index) {
+                  <span class="badge bg-secondary me-1">{{ tag }}</span>
+                }
+              </p>
             }
-        </div>
+          </mat-card-content>
+          <mat-card-actions class="actions">
+            <a [routerLink]="['/blog/posts', post.id]" mat-flat-button>Lire la suite</a>
+            @if (authService.isAdmin()) {
+              <a [routerLink]="['/blog/posts/edit', post.id]" mat-stroked-button color="accent" class="m-2">
+                <mat-icon>edit</mat-icon> Modifier
+              </a>
+              <button mat-flat-button class="delete-btn" (click)="deletePost(post.slug!)">
+                <mat-icon>delete</mat-icon> Supprimer
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
 
-        <!-- Infinite Scroll/Lazy Loading Section -->
-        <div class="text-center my-4">
-            @if (loadingMore()) {
-                <mat-spinner diameter="30"></mat-spinner>
-                <p>Chargement de plus d'articles...</p>
-            } @else if (hasMorePosts()) {
-                <button mat-stroked-button color="primary" (click)="loadMorePosts()">Charger plus d'articles</button>
-            } @else {
-                <p class="text-muted">Vous avez atteint la fin.</p>
-            }
-        </div>
-    }
+    <!-- Section du défilement infini et du chargement paresseux -->
+    <div class="text-center my-4">
+      @if (loadingMore()) {
+        <mat-spinner diameter="30"></mat-spinner>
+        <p>Chargement de plus d'articles...</p>
+      } @else if (hasMorePosts()) {
+        <button mat-stroked-button color="primary" (click)="loadMorePosts()">
+          Charger plus d'articles
+        </button>
+      } @else {
+        <p class="text-muted">Vous avez atteint la fin.</p>
+      }
+    </div>
+  }
 </div>
